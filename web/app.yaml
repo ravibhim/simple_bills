@@ -1,5 +1,5 @@
-application: helloworld
-version: 1
+application: simplebills
+version: alpha-001
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -8,8 +8,10 @@ handlers:
 - url: /_ah/spi/.*
   script: api.api
   secure: always
+
 - url: /
   script: main.app
+
 - url: /.+
   script: main.app
   login: required

@@ -9,7 +9,7 @@ EMAIL_SCOPE = endpoints.EMAIL_SCOPE
 API_EXPLORER_CLIENT_ID = endpoints.API_EXPLORER_CLIENT_ID
 
 
-@endpoints.api( name='simple_bills',
+@endpoints.api( name='simplebills',
                 version='v1',
                 allowed_client_ids=[API_EXPLORER_CLIENT_ID],
                 scopes=[EMAIL_SCOPE])
