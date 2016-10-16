@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3> Account: {{ account.name }} </h3>
+
+<h4> {{bills.count}} Bills </h4>
+{% if bills.count > 0 %}
+  <table>
+    <tr>
+      <th> Amount </th>
+      <th> Date </th>
+    </tr>
+
+    {% for bill in bills %}
+      <tr>
+        <td> {{bill.amount}} </td>
+        <td> {{bill.date}} </td>
+      </tr>
+    {% endfor %}
+  </table>
+{% endif %}
+
+
+<!-- Form to create bill -->
+<h4> Create Bill </h4>
+<form action="/account/{{account.key.id}}/create_bill" method="post">
+  <div>
+    <p>
+    Amount:
+    <input value="200" name="bill_amount"/>
+    </p>
+    <p>
+    Day:
+    <input value="21" name="bill_day"/>
+    Month:
+    <input value="3" name="bill_month"/>
+    Year:
+    <input value="2016" name="bill_year"/>
+    </p>
+    <input type="submit" value="Create">
+</form>
+
+
+{% endblock %}

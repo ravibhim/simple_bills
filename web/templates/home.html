@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+Hi {{ profile.nickname }} !!
+
+<h4> Number of Accounts: {{ accounts.count }} </h4>
+
+{% if accounts.count > 0 %}
+  <table>
+    <tr>
+      <th> Name </th>
+    </tr>
+
+    {% for account in accounts %}
+      <tr>
+        <td> <a href="/account/{{ account.key.id }}"> {{ account.name }} </a></td>
+      </tr>
+    {% endfor %}
+  </table>
+{% endif %}
+
+
+<!-- Form to create an account -->
+<h4> Create Account </h4>
+<form action="/create_account" method="post">
+  <div>
+    <input name="account_name"/>
+    <input type="submit" value="Create">
+</form>
+
+
+
+{% endblock %}
