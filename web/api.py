@@ -5,6 +5,7 @@ from protorpc import remote
 
 from api_models import StringMessage
 
+EMAIL_SCOPE = endpoints.EMAIL_SCOPE
 API_EXPLORER_CLIENT_ID = endpoints.API_EXPLORER_CLIENT_ID
 
 
