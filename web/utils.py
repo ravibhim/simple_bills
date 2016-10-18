@@ -12,6 +12,7 @@ def getProfile(user):
     user_email = user.email()
     p_key = ndb.Key(Profile, user_email)
     profile = p_key.get()
+    # TODO: Instead use Model.create_or_get to wrap the get/update operation in a transaction.
 
     if not profile:
         profile = Profile(
