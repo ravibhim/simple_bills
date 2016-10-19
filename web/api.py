@@ -19,23 +19,29 @@ API_EXPLORER_CLIENT_ID = endpoints.API_EXPLORER_CLIENT_ID
                 scopes=[EMAIL_SCOPE])
 class SimpleBillApi(remote.Service):
 
-    def _copyAccountIdsMessage(self, profile):
-        aim = AccountIdsMessage()
+    def _copyAccountsMessage(self, profile):
+        alm = AccountListMessage()
         for accountId in profile.accountIds:
-            aim.data.append(accountId)
-        aim.check_initialized()
-        return aim
+            am = AccountMessage()
+            account = Key(Account, accountId).get()
+            am.accountId = accountId
+            am.name = account.name
 
-    @endpoints.method(message_types.VoidMessage, AccountIdsMessage,
-            path='getAccountIdsCreated',
-            http_method='POST', name='getAccountIdsCreated')
-    def getAccountIdsCreated(self, request):
+            am.check_initialized()
+            alm.accounts.append(am)
+        alm.check_initialized()
+        return alm
+
+    @endpoints.method(message_types.VoidMessage, AccountListMessage,
+            path='getAccountsCreated',
+            http_method='POST', name='getAccountsCreated')
+    def getAccountsCreated(self, request):
         user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
 
         profile = getProfile(user)
-        return self._copyAccountIdsMessage(profile)
+        return self._copyAccountsMessage(profile)
 
 
     def _copyAccountBills(self, accountId):

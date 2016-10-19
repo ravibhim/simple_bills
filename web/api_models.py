@@ -4,8 +4,12 @@ class StringMessage(messages.Message):
     """StringMessage-- outbound (single) string message"""
     data = messages.StringField(1, required=True)
 
-class AccountIdsMessage(messages.Message):
-    data = messages.IntegerField(1, repeated=True)
+class AccountMessage(messages.Message):
+    accountId = messages.IntegerField(1)
+    name = messages.StringField(2)
+
+class AccountListMessage(messages.Message):
+    accounts = messages.MessageField(AccountMessage,1,repeated=True)
 
 class BillListFormMessage(messages.Message):
     accountId = messages.IntegerField(1, required=True)
