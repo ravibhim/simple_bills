@@ -5,9 +5,9 @@ from google.appengine.ext import ndb
 from models import Profile, AccountUnauthorizedAccess
 
 
-def getProfile(user):
+def userProfile(user):
     if not user:
-        raise users.UserNotFoundError("From getProfile(user)")
+        raise users.UserNotFoundError("From userProfile(user)")
 
     user_email = user.email()
     p_key = ndb.Key(Profile, user_email)

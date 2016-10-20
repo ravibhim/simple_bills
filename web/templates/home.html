@@ -14,7 +14,7 @@ Hi {{ profile.nickname }} !!
 
     {% for account in accounts %}
       <tr>
-        <td> <a href="/account/{{ account.key.id }}"> {{ account.name }} </a></td>
+        <td> <a href="/account/{{ account.accountId }}"> {{ account.name }} </a></td> 
       </tr>
     {% endfor %}
   </table>
@@ -28,7 +28,5 @@ Hi {{ profile.nickname }} !!
     <input name="account_name"/>
     <input type="submit" value="Create">
 </form>
-
-
 
 {% endblock %}
