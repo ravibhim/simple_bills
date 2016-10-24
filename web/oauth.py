@@ -4,6 +4,10 @@ import oauth2client
 
 from base import BaseHandler
 
+CLIENT_ID = '1037916704056-t9g7m7vcipm0lpc1l7d39umrq731j8kn.apps.googleusercontent.com'
+CLIENT_SECRET = '2BWS2YfcZG1YhLxtHKakn03O'
+SCOPE = 'https://www.googleapis.com/auth/userinfo.email'
+
 class OAuth2CallbackPage(BaseHandler):
     def get(self):
         flow = oauth2client.client.OAuth2WebServerFlow(
@@ -11,7 +15,8 @@ class OAuth2CallbackPage(BaseHandler):
             client_secret=CLIENT_SECRET,
             scope=SCOPE,
             prompt='consent',
-            redirect_uri='http://localhost:8080/oauth2callback')
+            #redirect_uri='http://localhost:8080/oauth2callback')
+            redirect_uri='https://confrence-central-145321.appspot.com/oauth2callback')
         code = self.request.get('code')
 
         if not code:
@@ -31,7 +36,8 @@ def get_service(session):
     credentials = oauth2client.client.OAuth2Credentials.from_json(session.get('credentials'))
 
     # Build the service object
-    api_root = 'http://localhost:8080/_ah/api'
+    #api_root = 'http://localhost:8080/_ah/api'
+    api_root = 'https://confrence-central-145321.appspot.com/_ah/api'
     api = 'simplebills'
     version = 'v1'
     discovery_url = '%s/discovery/v1/apis/%s/%s/rest' % (api_root, api, version)

@@ -13,14 +13,6 @@ from oauth import *
 
 import settings
 
-
-CLIENT_ID = '1037916704056-t9g7m7vcipm0lpc1l7d39umrq731j8kn.apps.googleusercontent.com'
-CLIENT_SECRET = '2BWS2YfcZG1YhLxtHKakn03O'
-SCOPE = 'https://www.googleapis.com/auth/userinfo.email'
-USER_AGENT = 'my-cmdline-tool/1.0'
-OAUTH_DISPLAY_NAME = 'My Commandline Tool'
-
-
 from google.appengine.ext.ndb import Key
 from models import Account,Bill, AccountUnauthorizedAccess
 from utils import *
@@ -46,7 +38,7 @@ class HomePage(BaseHandler):
         profile = service.getProfile().execute()
 
         response = service.listAccounts().execute()
-        accounts = response['accounts']
+        accounts = response.get('accounts') or []
 
         template_values = {
             'profile': profile,
