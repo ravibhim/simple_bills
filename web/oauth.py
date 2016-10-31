@@ -1,6 +1,7 @@
 import httplib2
 import apiclient
 import oauth2client
+import os
 
 from base import BaseHandler
 
@@ -15,8 +16,7 @@ class OAuth2CallbackPage(BaseHandler):
             client_secret=CLIENT_SECRET,
             scope=SCOPE,
             prompt='consent',
-            #redirect_uri='http://localhost:8080/oauth2callback')
-            redirect_uri='https://confrence-central-145321.appspot.com/oauth2callback')
+            redirect_uri=os.environ['OAUTH_REDIRECT_URL'])
         code = self.request.get('code')
 
         if not code:
@@ -36,12 +36,11 @@ def get_service(session):
     credentials = oauth2client.client.OAuth2Credentials.from_json(session.get('credentials'))
 
     # Build the service object
-    #api_root = 'http://localhost:8080/_ah/api'
-    api_root = 'https://confrence-central-145321.appspot.com/_ah/api'
+    api_root = os.environ['API_ROOT']
     api = 'simplebills'
     version = 'v1'
     discovery_url = '%s/discovery/v1/apis/%s/%s/rest' % (api_root, api, version)
-    http_auth = credentials.authorize(httplib2.Http())
+    http_auth = credentials.authorize(httplib2.Http(timeout=10))
 
     service = apiclient.discovery.build('simplebills', 'v1', discoveryServiceUrl=discovery_url, http=http_auth)
     return service

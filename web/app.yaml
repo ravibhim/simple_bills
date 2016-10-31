@@ -3,6 +3,9 @@ version: alpha-003
 runtime: python27
 api_version: 1
 threadsafe: true
+basic_scaling:
+  idle_timeout: 10m
+  max_instances: 3
 
 handlers:
 - url: /_ah/spi/.*
@@ -21,3 +24,7 @@ libraries:
 
 - name: pycrypto
   version: latest
+
+env_variables:
+  OAUTH_REDIRECT_URL: 'http://localhost:8080/oauth2callback'
+  API_ROOT: 'http://localhost:8080/_ah/api'
