@@ -119,7 +119,7 @@ class SimpleBillApi(remote.Service):
             bm = BillMessage()
             bm.billId = bill.key.id()
             bm.amount = bill.amount
-            bm.date = str(bill.date)
+            bm.date = bill.date.strftime("%d-%m-%Y")
             bm.day = bill.day
             bm.month = bill.month
             bm.year = bill.year

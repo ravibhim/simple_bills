@@ -1,32 +1,26 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% block content %}
+<nav>
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">Simple Bills</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="#">{{ profile.nickname }}</a></li>
+        </ul>
+    </div>
+</nav>
 
-{% block content %}
+<div class="row">
 
-Hi {{ profile.nickname }} !!
+    {% include "sidebar.html" %}
 
-<h4> Number of Accounts: {{ accounts.count }} </h4>
-
-{% if accounts.count > 0 %}
-  <table>
-    <tr>
-      <th> Name </th>
-    </tr>
-
-    {% for account in accounts %}
-      <tr>
-        <td> <a href="/account/{{ account.accountId }}"> {{ account.name }} </a></td> 
-      </tr>
-    {% endfor %}
-  </table>
-{% endif %}
-
-
-<!-- Form to create an account -->
-<h4> Create Account </h4>
-<form action="/create_account" method="post">
-  <div>
-    <input name="account_name"/>
-    <input type="submit" value="Create">
-</form>
+    <div class="content col s9">
+        <h4> Number of Accounts: {{ accounts.count }} </h4> {% if accounts.count > 0 %}
+        <table>
+            <tr>
+                <th> Name </th>
+            </tr>
+        </table>
+        {% endif %}
+    </div>
+</div>
 
 {% endblock %}
