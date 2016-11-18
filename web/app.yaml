@@ -1,5 +1,5 @@
 application: confrence-central-145321
-version: alpha-003
+version: alpha-004
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -33,5 +33,6 @@ libraries:
   version: latest
 
 env_variables:
-  OAUTH_REDIRECT_URL: 'http://localhost:8080/oauth2callback'
-  API_ROOT: 'http://localhost:8080/_ah/api'
+  SERVER: 'http://localhost:8080'
+  OAUTH_REDIRECT_PATH: '/oauth2callback'
+  API_ROOT_PATH: '/_ah/api'

@@ -16,7 +16,8 @@ class OAuth2CallbackPage(BaseHandler):
             client_secret=CLIENT_SECRET,
             scope=SCOPE,
             prompt='consent',
-            redirect_uri=os.environ['OAUTH_REDIRECT_URL'])
+            redirect_uri= '%s%s' % (os.environ['SERVER'], os.environ['OAUTH_REDIRECT_PATH'])
+            )
         code = self.request.get('code')
 
         if not code:
@@ -36,7 +37,7 @@ def get_service(session):
     credentials = oauth2client.client.OAuth2Credentials.from_json(session.get('credentials'))
 
     # Build the service object
-    api_root = os.environ['API_ROOT']
+    api_root = '%s%s' % (os.environ['SERVER'], os.environ['API_ROOT_PATH'])
     api = 'simplebills'
     version = 'v1'
     discovery_url = '%s/discovery/v1/apis/%s/%s/rest' % (api_root, api, version)
