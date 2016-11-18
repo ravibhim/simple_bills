@@ -7,6 +7,7 @@ from datetime import date
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
 from google.appengine.ext import ndb
+from dateutil import parser
 
 from api_models import *
 from oauth import *
@@ -65,10 +66,11 @@ class AccountDetail(BaseHandler):
         service = get_service(self.session)
         profile = service.getProfile().execute()
         response = service.getAccount(body={'accountId':account_id}).execute()
-
+        response_accounts = service.listAccounts().execute()
         template_values = {
                 'account': response.get('account'),
-                'bills': response.get('bills') or []
+                'bills': response.get('bills') or [],
+                'accounts': response_accounts.get('accounts') or [],
         }
         path = os.path.join(os.path.dirname(__file__), 'templates/account_detail.html')
         self.response.out.write(template.render(path, template_values))
@@ -78,14 +80,14 @@ class AccountDetail(BaseHandler):
 class CreateBill(BaseHandler):
     @check_credentials
     def post(self, account_id):
-
         service = get_service(self.session)
+        bill_date = parser.parse(self.request.get('bill_date'))
         body = {
             'accountId': account_id,
             'amount': self.request.get('bill_amount'),
-            'day': self.request.get('bill_day'),
-            'month': self.request.get('bill_month'),
-            'year': self.request.get('bill_year'),
+            'day': bill_date.day,
+            'month': bill_date.month,
+            'year': bill_date.year
         }
         response = service.createBill(body=body).execute()
 
@@ -114,4 +116,3 @@ def main():
 
 if __name__ == '__main__':
   main()
-

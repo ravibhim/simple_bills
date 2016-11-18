@@ -1,45 +1,67 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
+<nav>
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">Simple Bills</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="#">{{ profile.nickname }}</a></li>
+        </ul>
+    </div>
+</nav>
 
-{% block content %}
+<div class="row">
+    {% include "sidebar.html" %}
 
-<h3> Account: {{ account.name }} </h3>
+    <div class="content col s9">
 
-<h4> {{bills.count}} Bills </h4>
-{% if bills.count > 0 %}
-  <table>
-    <tr>
-      <th> Amount </th>
-      <th> Date </th>
-    </tr>
+        <div class="row">
+            <h4 class="headline-main col s8"> Account: <span id="account-name">{{ account.name }}<span> </h4>
+            <!-- <a class="waves-effect waves-light btn btn-billadd">Add a bill</a> -->
+        </div>
+        <div class="row">
+            <div class="card col s6 offset-s3">
+                <h4 class="headline-main col s12"> Create Bill </h4>
+                <form action="/account/{{account.accountId}}/create_bill" method="post">
+                    <div>
+                        <div class="row">
+                            <span class="col s12">Amount: <input value="200" name="bill_amount" /> </span>
+                        </div>
+                        <div class="row">
+                            <span class="col s5">Date: <input name="bill_date" type="date"></span>
+                        </div>
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Create</button>
+                </form>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <h4 class="headline-sub col s12"> {{bills.count}} Bills </h4> {% if bills.count > 0 %}
+            <div class="billsgi-table col s12">
+                <table class="bordered">
+                    <thead>
+                        <tr>
+                            <th data-field="id">Name</th>
+                            <th data-field="name">Amount</th>
+                            <th data-field="Date">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bill in bills %}
+                        <tr>
+                            <td>-</td>
+                            <td>{{bill.amount}}</td>
+                            <td>{{bill.date}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Form to create bill -->
 
-    {% for bill in bills %}
-      <tr>
-        <td> {{bill.amount}} </td>
-        <td> {{bill.date}} </td>
-      </tr>
-    {% endfor %}
-  </table>
-{% endif %}
+
+    </div>
 
 
-<!-- Form to create bill -->
-<h4> Create Bill </h4>
-<form action="/account/{{account.accountId}}/create_bill" method="post">
-  <div>
-    <p>
-    Amount:
-    <input value="200" name="bill_amount"/>
-    </p>
-    <p>
-    Day:
-    <input value="21" name="bill_day"/>
-    Month:
-    <input value="3" name="bill_month"/>
-    Year:
-    <input value="2016" name="bill_year"/>
-    </p>
-    <input type="submit" value="Create">
-</form>
 
-
-{% endblock %}
+    {% endblock %}

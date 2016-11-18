@@ -2,6 +2,10 @@ Development dependencies
 ------------------------
 Install Google Cloud SDK - https://cloud.google.com/sdk/downloads
 
+Install vendor dependencies
+------------------------------
+pip install -r requirements-vendor.txt -t lib
+
 Run the application locally
 ---------------------------
 dev_appserver.py  web/

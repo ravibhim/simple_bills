@@ -12,11 +12,18 @@ handlers:
   script: api.api
   secure: always
 
+- url: /static/css
+  static_dir: static/css
+
+- url: /static/js
+  static_dir: static/js
+
 - url: /
   script: main.app
 
 - url: /.+
   script: main.app
+
 
 libraries:
 - name: endpoints

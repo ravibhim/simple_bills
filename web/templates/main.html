@@ -1,11 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-Welcome to Simple Bills. Please login with your google account to proceed.
-<br>
-<a href={{login_url}}> Login with your Google email. </a>
-
-
+<div class="center-align welcome-content">
+  <h3 >Welcome to Simple Bills.</h3>
+  <a class="waves-effect waves-light btn" href={{login_url}}>Login with your Google email</a>
+</div>
 
 {% endblock %}
