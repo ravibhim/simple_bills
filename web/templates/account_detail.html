@@ -20,8 +20,11 @@
         <div class="row">
             <div class="card col s6 offset-s3">
                 <h4 class="headline-main col s12"> Create Bill </h4>
-                <form action="/account/{{account.accountId}}/create_bill" method="post">
+                <form action="/account/{{account.accountId}}/create_bill" method="post" enctype='multipart/form-data'>
                     <div>
+                        <div class="row">
+                            <span class="col s12">File: <input type="file" name="filename" /> </span>
+                        </div>
                         <div class="row">
                             <span class="col s12">Amount: <input value="200" name="bill_amount" /> </span>
                         </div>
@@ -42,6 +45,7 @@
                             <th data-field="id">Name</th>
                             <th data-field="name">Amount</th>
                             <th data-field="Date">Date</th>
+                            <th data-field="Date">Images</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -50,6 +54,11 @@
                             <td>-</td>
                             <td>{{bill.amount}}</td>
                             <td>{{bill.date}}</td>
+                            <td>
+                              {% for img_url in bill.img_urls %}
+                                <a href="{{img_url.original}}"> Image </a>
+                              {% endfor %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

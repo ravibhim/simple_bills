@@ -1,31 +1,24 @@
-import logging
-from google.appengine.api import users
-from google.appengine.ext import ndb
+import cloudstorage as gcs
+import uuid
 
-from models import Profile, AccountUnauthorizedAccess
+import settings
 
+def uploadBillImageToStaging(file_data):
+    filename = file_data.filename
+    bucket_name = settings.STAGING_FILE_BUCKET
+    file_type = file_data.type
+    data = file_data.value
 
-def userProfile(user):
-    if not user:
-        raise users.UserNotFoundError("From userProfile(user)")
-
-    user_email = user.email()
-    p_key = ndb.Key(Profile, user_email)
-    profile = p_key.get()
-    # TODO: Instead use Model.create_or_get to wrap the get/update operation in a transaction.
-
-    if not profile:
-        profile = Profile(
-            key = p_key,
-            userId = user.user_id(),
-            nickname = user.nickname()
+    staging_filepath= '/' + bucket_name + '/' + str(uuid.uuid4()) + '/' + filename
+    write_retry_params = gcs.RetryParams(backoff_factor=1.1)
+    gcs_file = gcs.open(
+        staging_filepath,
+        'w',
+        content_type=file_type,
+        options={},
+        retry_params=write_retry_params
         )
-        logging.info('METRIC:USER_ADD - {}'.format(user_email))
-        profile.put()
+    gcs_file.write(data)
+    gcs_file.close()
 
-    return profile
-
-def user_owns_account_check(user, account_id):
-    profile = getProfile(user)
-    if (account_id not in profile.accountIds):
-        raise AccountUnauthorizedAccess("{} tried to access account id {}.".format(profile.key.id(), account_id))
+    return staging_filepath

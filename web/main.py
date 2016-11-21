@@ -1,23 +1,16 @@
 import os
-import logging
-import pprint
-
 import webapp2
 from datetime import date
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
-from google.appengine.ext import ndb
 from dateutil import parser
 
-from api_models import *
 from oauth import *
-
 import settings
-
-from google.appengine.ext.ndb import Key
-from models import Account,Bill, AccountUnauthorizedAccess
 from utils import *
 from base import BaseHandler
+
+import pprint
 
 class MainPage(BaseHandler):
     def get(self):
@@ -30,15 +23,14 @@ class MainPage(BaseHandler):
         self.response.out.write(template.render(path, template_values))
 
 
-
 class HomePage(BaseHandler):
     @check_credentials
     def get(self):
-        service = get_service(self.session)
+        profiles_service = get_service(self.session, 'profiles')
+        profile = profiles_service.getProfile().execute()
 
-        profile = service.getProfile().execute()
-
-        response = service.listAccounts().execute()
+        accounts_service = get_service(self.session, 'accounts')
+        response = accounts_service.listAccounts().execute()
         accounts = response.get('accounts') or []
 
         template_values = {
@@ -54,8 +46,8 @@ class CreateAccount(BaseHandler):
     def post(self):
         account_name = self.request.get('account_name')
 
-        service = get_service(self.session)
-        response = service.createAccount(body={'data':account_name}).execute()
+        accounts_service = get_service(self.session, 'accounts')
+        response = accounts_service.createAccount(body={'data':account_name}).execute()
 
         self.redirect('/account/'+response['accountId'])
 
@@ -63,10 +55,12 @@ class CreateAccount(BaseHandler):
 class AccountDetail(BaseHandler):
     @check_credentials
     def get(self, account_id):
-        service = get_service(self.session)
-        profile = service.getProfile().execute()
-        response = service.getAccount(body={'accountId':account_id}).execute()
-        response_accounts = service.listAccounts().execute()
+        profiles_service = get_service(self.session, 'profiles')
+        profile = profiles_service.getProfile().execute()
+
+        account_service = get_service(self.session,'accounts')
+        response = account_service.getAccount(body={'accountId':account_id}).execute()
+        response_accounts = account_service.listAccounts().execute()
         template_values = {
                 'account': response.get('account'),
                 'bills': response.get('bills') or [],
@@ -78,9 +72,21 @@ class AccountDetail(BaseHandler):
 
 
 class CreateBill(BaseHandler):
+    def _isFileUploaded(self):
+        file_data = self.request.POST['filename']
+        return True if file_data != u'' else False
+
     @check_credentials
     def post(self, account_id):
-        service = get_service(self.session)
+        # Put the file in GCS first and get the stage filepath
+        # Send that info to the API so that it would move the file to the right path
+        file_data = self.request.POST['filename']
+        pprint.pprint(self._isFileUploaded())
+        if self._isFileUploaded():
+            staging_filepath = uploadBillImageToStaging(file_data)
+
+
+        bills_service = get_service(self.session, 'bills')
         bill_date = parser.parse(self.request.get('bill_date'))
         body = {
             'accountId': account_id,
@@ -89,7 +95,10 @@ class CreateBill(BaseHandler):
             'month': bill_date.month,
             'year': bill_date.year
         }
-        response = service.createBill(body=body).execute()
+        if self._isFileUploaded():
+            body['staging_filepaths'] = [{'data': staging_filepath}]
+        pprint.pprint(body)
+        response = bills_service.createBill(body=body).execute()
 
         self.redirect('/account/' + account_id)
 
@@ -101,6 +110,7 @@ config['webapp2_extras.sessions'] = {
 }
 
 app = webapp2.WSGIApplication([
+  #('/test', TestPage),
   ('/', MainPage),
   ('/oauth2callback', OAuth2CallbackPage),
   ('/me', HomePage),
@@ -112,7 +122,6 @@ app = webapp2.WSGIApplication([
 
 def main():
   application.RUN()
-
 
 if __name__ == '__main__':
   main()

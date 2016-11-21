@@ -9,6 +9,8 @@ pip install -r requirements-vendor.txt -t lib
 Run the application locally
 ---------------------------
 dev_appserver.py  web/
+dev_appserver.py  --clear_datastore=yes web/
+
 
 Deploy to production
 --------------------
