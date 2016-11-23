@@ -91,9 +91,7 @@ class CreateBill(BaseHandler):
             'accountId': account_id,
             'desc': self.request.get('bill_desc'),
             'amount': self.request.get('bill_amount'),
-            'day': bill_date.day,
-            'month': bill_date.month,
-            'year': bill_date.year
+            'date': self.request.get('bill_date')
         }
         if self._isFileUploaded():
             body['staging_filepaths'] = [{'data': staging_filepath}]
@@ -101,6 +99,39 @@ class CreateBill(BaseHandler):
         response = bills_service.createBill(body=body).execute()
 
         self.redirect('/account/' + account_id)
+
+class EditBill(BaseHandler):
+    @check_credentials
+    def get(self, account_id, bill_id):
+        profiles_service = get_service(self.session, 'profiles')
+        profile = profiles_service.getProfile().execute()
+
+        bills_service = get_service(self.session, 'bills')
+        bill = bills_service.getBill(body={'accountId': account_id, 'billId':bill_id}).execute()
+
+        template_values = {
+            'profile': profile,
+            'account_id': account_id,
+            'bill': bill
+        }
+
+        path = os.path.join(os.path.dirname(__file__), 'templates/bill_edit.html')
+        self.response.out.write(template.render(path, template_values))
+
+    @check_credentials
+    def post(self, account_id, bill_id):
+        bills_service = get_service(self.session, 'bills')
+        bill = bills_service.updateBill(
+                body={
+                    'accountId': account_id,
+                    'billId': bill_id,
+                    'desc': self.request.get('bill_desc'),
+                    'amount': self.request.get('bill_amount'),
+                    'date': self.request.get('bill_date')
+                    }
+                ).execute()
+
+        self.redirect('/account/' + account_id + '/' + bill_id + '/edit_bill')
 
 
 
@@ -117,6 +148,7 @@ app = webapp2.WSGIApplication([
   ('/create_account', CreateAccount),
   ('/account/(\d+)', AccountDetail),
   ('/account/(\d+)/create_bill', CreateBill),
+  ('/account/(\d+)/(.*)?/edit_bill', EditBill),
 ], debug=True, config=config)
 
 

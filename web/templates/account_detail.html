@@ -48,7 +48,8 @@
                             <th data-field="id">Desc</th>
                             <th data-field="name">Amount</th>
                             <th data-field="Date">Date</th>
-                            <th data-field="Date">Images</th>
+                            <th data-field="Images">Images</th>
+                            <th data-field="Actions">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,6 +63,7 @@
                                 <a href="{{img_url.original}}"> Image </a>
                               {% endfor %}
                             </td>
+                            <td><a href="/account/{{account.accountId}}/{{bill.billId}}/edit_bill">Edit</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>

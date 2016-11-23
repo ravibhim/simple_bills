@@ -1,0 +1,20 @@
+
+<form action="/account/{{account_id}}/{{bill.billId}}/edit_bill" method="post" enctype='multipart/form-data'>
+    <div>
+        <div class="row">
+          <span class="col s12">Desc: <input value="{{bill.desc}}" name="bill_desc" /> </span>
+        </div>
+        <div class="row">
+          <span class="col s12">Amount: <input value="{{bill.amount}}" name="bill_amount" /> </span>
+        </div>
+        <div class="row">
+          <span class="col s5">Date: <input value="{{bill.date}}" name="bill_date" type="date"></span>
+        </div>
+        <button class="btn waves-effect waves-light" type="submit" name="action">Update</button>
+</form>
+
+<br/>
+<br/>
+<br/>
+
+<a href="/account/{{account_id}}">Back to Account</a>

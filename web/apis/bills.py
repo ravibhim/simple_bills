@@ -3,8 +3,8 @@ from protorpc import message_types
 from protorpc import messages
 from protorpc import remote
 from google.appengine.ext.ndb import Key
-from datetime import date
 
+from dateutil import parser
 import pprint
 import cloudstorage as gcs
 import os
@@ -38,7 +38,6 @@ class BillsApi(remote.Service):
 
         accountKey = Key(Account, accountId)
         amount = int(request.amount)
-        date_prop = date(int(request.year),int(request.month),int(request.day))
 
         # App generated billId
         billId = str(uuid.uuid4())
@@ -50,14 +49,58 @@ class BillsApi(remote.Service):
             filepaths.append(filepath)
             gcs.copy2(staging_filepath.data, filepath)
 
-        pprint.pprint("DESC=" + request.desc)
         bill = Bill(
                 id=billId,
                 desc=request.desc,
                 amount=int(request.amount),
-                date=date_prop,
+                date=parser.parse(request.date),
                 filepaths=filepaths,
                 parent=accountKey
                 )
         bill.put()
         return buildBillMessage(bill)
+
+
+    @endpoints.method(BillMessage, BillMessage,
+            path='updateBill',
+            http_method='POST', name='updateBill')
+    def updateBill(self,request):
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+
+        accountId = int(request.accountId)
+        checkAccountBelongsToUser(user, accountId)
+        accountKey = Key(Account, accountId)
+
+        billId = request.billId
+        billKey = Key(Bill, billId, parent=accountKey)
+
+        bill = billKey.get()
+        bill.amount = int(request.amount)
+        bill.desc = request.desc
+        bill.date = parser.parse(request.date)
+
+        bill.put()
+        return buildBillMessage(bill)
+
+
+
+    @endpoints.method(BillMessage, BillMessage,
+            path='getBill',
+            http_method='POST', name='getBill')
+    def getBill(self,request):
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+
+        accountId = int(request.accountId)
+        checkAccountBelongsToUser(user, accountId)
+        accountKey = ndb.Key(Account, accountId)
+
+        billId = request.billId
+        billKey = Key(Bill, billId, parent=accountKey)
+        bill = billKey.get()
+
+        return buildBillMessage(bill)
+
