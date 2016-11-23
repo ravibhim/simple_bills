@@ -4,6 +4,7 @@ from google.appengine.ext import blobstore
 
 class Account(ndb.Model):
     name = ndb.StringProperty()
+    tags = ndb.StringProperty(repeated=True)
     createdAt = ndb.DateTimeProperty(auto_now_add=True, indexed=False)
 
 class Bill(ndb.Model):

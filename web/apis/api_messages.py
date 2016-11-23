@@ -11,6 +11,7 @@ class ProfileMessage(messages.Message):
 class AccountMessage(messages.Message):
     accountId = messages.IntegerField(1)
     name = messages.StringField(2)
+    tags = messages.MessageField(StringMessage,3, repeated=True)
 
 class ImageMessage(messages.Message):
     original = messages.StringField(1)
