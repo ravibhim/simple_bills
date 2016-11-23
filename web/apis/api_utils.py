@@ -40,6 +40,7 @@ def buildBillMessage(bill):
     bm = BillMessage()
 
     bm.billId = bill.key.id()
+    bm.desc = bill.desc
     bm.amount = bill.amount
     bm.date = str(bill.date)
     bm.day = bill.day

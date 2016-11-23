@@ -50,8 +50,10 @@ class BillsApi(remote.Service):
             filepaths.append(filepath)
             gcs.copy2(staging_filepath.data, filepath)
 
+        pprint.pprint("DESC=" + request.desc)
         bill = Bill(
                 id=billId,
+                desc=request.desc,
                 amount=int(request.amount),
                 date=date_prop,
                 filepaths=filepaths,

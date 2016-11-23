@@ -19,15 +19,16 @@ class BillMessage(messages.Message):
     accountId = messages.IntegerField(1)
 
     billId = messages.StringField(2)
-    amount = messages.IntegerField(3)
-    date = messages.StringField(4)
+    desc = messages.StringField(3)
+    amount = messages.IntegerField(4)
+    date = messages.StringField(5)
 
-    day = messages.IntegerField(5)
-    month = messages.IntegerField(6)
-    year = messages.IntegerField(7)
-    staging_filepaths = messages.MessageField(StringMessage,8,repeated=True)
-    filepaths = messages.MessageField(StringMessage,9,repeated=True)
-    img_urls = messages.MessageField(ImageMessage,10,repeated=True)
+    day = messages.IntegerField(6)
+    month = messages.IntegerField(7)
+    year = messages.IntegerField(8)
+    staging_filepaths = messages.MessageField(StringMessage,9,repeated=True)
+    filepaths = messages.MessageField(StringMessage,10,repeated=True)
+    img_urls = messages.MessageField(ImageMessage,11,repeated=True)
 
 class AccountDetailMessage(messages.Message):
     account = messages.MessageField(AccountMessage,1)

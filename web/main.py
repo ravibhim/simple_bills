@@ -85,11 +85,11 @@ class CreateBill(BaseHandler):
         if self._isFileUploaded():
             staging_filepath = uploadBillImageToStaging(file_data)
 
-
         bills_service = get_service(self.session, 'bills')
         bill_date = parser.parse(self.request.get('bill_date'))
         body = {
             'accountId': account_id,
+            'desc': self.request.get('bill_desc'),
             'amount': self.request.get('bill_amount'),
             'day': bill_date.day,
             'month': bill_date.month,

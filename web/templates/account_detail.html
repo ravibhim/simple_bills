@@ -26,6 +26,9 @@
                             <span class="col s12">File: <input type="file" name="filename" /> </span>
                         </div>
                         <div class="row">
+                            <span class="col s12">Desc: <input value="Description" name="bill_desc" /> </span>
+                        </div>
+                        <div class="row">
                             <span class="col s12">Amount: <input value="200" name="bill_amount" /> </span>
                         </div>
                         <div class="row">
@@ -42,7 +45,7 @@
                 <table class="bordered">
                     <thead>
                         <tr>
-                            <th data-field="id">Name</th>
+                            <th data-field="id">Desc</th>
                             <th data-field="name">Amount</th>
                             <th data-field="Date">Date</th>
                             <th data-field="Date">Images</th>
@@ -51,7 +54,7 @@
                     <tbody>
                         {% for bill in bills %}
                         <tr>
-                            <td>-</td>
+                            <td>{{bill.desc}}</td>
                             <td>{{bill.amount}}</td>
                             <td>{{bill.date}}</td>
                             <td>

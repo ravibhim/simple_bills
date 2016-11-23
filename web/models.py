@@ -7,6 +7,7 @@ class Account(ndb.Model):
     createdAt = ndb.DateTimeProperty(auto_now_add=True, indexed=False)
 
 class Bill(ndb.Model):
+    desc = ndb.StringProperty()
     amount = ndb.IntegerProperty()
     createdAt = ndb.DateTimeProperty(auto_now_add=True, indexed=False)
     date = ndb.DateProperty()
