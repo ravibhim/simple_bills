@@ -67,12 +67,28 @@ class AccountsApi(remote.Service):
 
             am.accountId = acc_key.id()
             am.name = account_name
-
             return am
 
         return _createAccount(profile, account_name)
 
-    @endpoints.method(AccountMessage, AccountDetailMessage,
+    @endpoints.method(AccountMessage, AccountMessage,
+            path='updateAccount',
+            http_method='POST', name='updateAccount')
+    def updateAccount(self,request):
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+
+        accountId = int(request.accountId)
+        checkAccountBelongsToUser(user, accountId)
+        account = Key(Account, accountId).get()
+        account.tagstr = request.tagstr
+        account.put()
+
+        return self._buildAccountMessage(account)
+
+
+    @endpoints.method(AccountMessage, AccountMessage,
             path='getAccount',
             http_method='POST', name='getAccount')
     def getAccount(self,request):
@@ -86,18 +102,27 @@ class AccountsApi(remote.Service):
 
         accountKey = Key(Account, accountId)
         account = accountKey.get()
+
+        return self._buildAccountMessage(account)
+
+    def _buildAccountMessage(self,account):
+        accountKey = account.key
         bills = Bill.query(ancestor=accountKey).order(-Bill.date)
 
-        adm = AccountDetailMessage()
         am = AccountMessage()
-        am.name = account.name
         am.accountId = account.key.id()
-        adm.account = am
-        adm.bills = []
+        am.name = account.name
+        am.tagstr = account.tagstr
+        am.tags = []
+        for tag in account.tags():
+            sm = StringMessage()
+            sm.data = tag
+            am.tags.append(sm)
+        am.bills = []
         for bill in bills:
             bm = buildBillMessage(bill)
-            adm.bills.append(bm)
+            am.bills.append(bm)
 
-        adm.check_initialized()
+        am.check_initialized()
 
-        return adm
+        return am

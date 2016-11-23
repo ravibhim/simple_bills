@@ -32,6 +32,7 @@ app = webapp2.WSGIApplication([
   ('/me', HomePage),
   ('/create_account', CreateAccount),
   ('/account/(\d+)', AccountDetail),
+  ('/account/(\d+)/settings', AccountSettings),
   ('/account/(\d+)/create_bill', CreateBill),
   ('/account/(\d+)/(.*)?/edit_bill', EditBill),
 ], debug=True, config=config)

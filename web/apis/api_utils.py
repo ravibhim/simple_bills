@@ -47,6 +47,11 @@ def buildBillMessage(bill):
     bm.month = bill.month
     bm.year = bill.year
 
+    for tag in bill.tags:
+        sm = StringMessage()
+        sm.data = tag
+        bm.tags.append(sm)
+
     for filepath in bill.filepaths:
         sm = StringMessage()
         sm.data = filepath
@@ -59,3 +64,4 @@ def buildBillMessage(bill):
         bm.img_urls.append(im)
 
     return bm
+

@@ -14,13 +14,13 @@
     <div class="content col s9">
 
         <div class="row">
-            <h4 class="headline-main col s8"> Account: <span id="account-name">{{ account.name }}<span> </h4>
+            <h4 class="headline-main col s8"> Account: <span id="account-name">{{account_name}}<span> </h4>
             <!-- <a class="waves-effect waves-light btn btn-billadd">Add a bill</a> -->
         </div>
         <div class="row">
             <div class="card col s6 offset-s3">
                 <h4 class="headline-main col s12"> Create Bill </h4>
-                <form action="/account/{{account.accountId}}/create_bill" method="post" enctype='multipart/form-data'>
+                <form action="/account/{{account_id}}/create_bill" method="post" enctype='multipart/form-data'>
                     <div>
                         <div class="row">
                             <span class="col s12">File: <input type="file" name="filename" /> </span>
@@ -33,6 +33,12 @@
                         </div>
                         <div class="row">
                             <span class="col s5">Date: <input name="bill_date" type="date"></span>
+                        </div>
+                        <div class="row">
+                          Tags: <br>
+                          {% for tag in account_tags %}
+                          <input type="checkbox" name="bill_tags" value="{{tag}}" checked>{{tag}}
+                          {% endfor %}
                         </div>
                         <button class="btn waves-effect waves-light" type="submit" name="action">Create</button>
                 </form>
@@ -48,6 +54,7 @@
                             <th data-field="id">Desc</th>
                             <th data-field="name">Amount</th>
                             <th data-field="Date">Date</th>
+                            <th data-field="tags">Tags</th>
                             <th data-field="Images">Images</th>
                             <th data-field="Actions">Actions</th>
                         </tr>
@@ -58,12 +65,13 @@
                             <td>{{bill.desc}}</td>
                             <td>{{bill.amount}}</td>
                             <td>{{bill.date}}</td>
+                            <td>{{bill.tags}}</td>
                             <td>
                               {% for img_url in bill.img_urls %}
                                 <a href="{{img_url.original}}"> Image </a>
                               {% endfor %}
                             </td>
-                            <td><a href="/account/{{account.accountId}}/{{bill.billId}}/edit_bill">Edit</a></td>
+                            <td><a href="/account/{{account_id}}/{{bill.billId}}/edit_bill">Edit</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>

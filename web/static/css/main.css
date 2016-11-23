@@ -78,10 +78,14 @@ nav {
     background-color: red;
 }
 
+/* Ravi's Overrides */
 
-/*
-.welcome-content a {
-    background-color: #4285f4;
-}*/
+/* Need the following to solve for this problem - https://github.com/Dogfalo/materialize/issues/1376 */
+[type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+  position: static;
+  left: 0px; 
+  opacity: 1; 
+}
+
 
 / / / / /

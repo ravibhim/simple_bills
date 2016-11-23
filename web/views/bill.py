@@ -20,11 +20,18 @@ class CreateBill(BaseHandler):
 
         bills_service = get_service(self.session, 'bills')
         bill_date = parser.parse(self.request.get('bill_date'))
+        tags = self.request.get('bill_tags', allow_multiple=True)
+        tags_json = []
+        for tag in tags:
+            tags_json.append({'data': tag})
+
+        #import pdb; pdb.set_trace()
         body = {
             'accountId': account_id,
             'desc': self.request.get('bill_desc'),
             'amount': self.request.get('bill_amount'),
-            'date': self.request.get('bill_date')
+            'date': self.request.get('bill_date'),
+            'tags': tags_json
         }
         if self._isFileUploaded():
             body['staging_filepaths'] = [{'data': staging_filepath}]

@@ -4,15 +4,21 @@ from google.appengine.ext import blobstore
 
 class Account(ndb.Model):
     name = ndb.StringProperty()
-    tags = ndb.StringProperty(repeated=True)
+    tagstr = ndb.StringProperty()
     createdAt = ndb.DateTimeProperty(auto_now_add=True, indexed=False)
+
+    def tags(self):
+        return [x.strip().upper() for x in (self.tagstr or '').split(',')]
+
+
 
 class Bill(ndb.Model):
     desc = ndb.StringProperty()
     amount = ndb.IntegerProperty()
     createdAt = ndb.DateTimeProperty(auto_now_add=True, indexed=False)
     date = ndb.DateProperty()
-    filepaths = ndb.StringProperty(repeated=True)
+    filepaths = ndb.StringProperty(repeated=True, indexed=False)
+    tags = ndb.StringProperty(repeated=True)
 
     day = ndb.ComputedProperty(lambda self: self.date.day if self.date else None)
     month = ndb.ComputedProperty(lambda self: self.date.month if self.date else None)

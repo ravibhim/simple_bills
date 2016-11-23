@@ -39,6 +39,10 @@ class BillsApi(remote.Service):
         accountKey = Key(Account, accountId)
         amount = int(request.amount)
 
+        tags = []
+        for tag in request.tags:
+            tags.append(tag.data)
+
         # App generated billId
         billId = str(uuid.uuid4())
         # Build filenames from staging_filenames (i.e copy files to GCS and build filenames)
@@ -54,6 +58,7 @@ class BillsApi(remote.Service):
                 desc=request.desc,
                 amount=int(request.amount),
                 date=parser.parse(request.date),
+                tags=tags,
                 filepaths=filepaths,
                 parent=accountKey
                 )
