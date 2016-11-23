@@ -48,7 +48,7 @@ class EditBill(BaseHandler):
             'bill': bill
         }
 
-        path = os.path.join(os.path.dirname(__file__), 'templates/bill_edit.html')
+        path = 'templates/edit_bill.html'
         self.response.out.write(template.render(path, template_values))
 
     @check_credentials
