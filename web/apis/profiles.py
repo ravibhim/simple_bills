@@ -1,16 +1,4 @@
-import endpoints
-from protorpc import message_types
-from protorpc import messages
-from protorpc import remote
-
-from models import *
-import settings
-from api_messages import *
-from api_utils import *
-
-EMAIL_SCOPE = endpoints.EMAIL_SCOPE
-API_EXPLORER_CLIENT_ID = endpoints.API_EXPLORER_CLIENT_ID
-WEB_CLIENT_ID = settings.WEB_CLIENT_ID
+from api_imports import *
 
 @endpoints.api(name='profiles',
                 version='v1',

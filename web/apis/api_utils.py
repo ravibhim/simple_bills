@@ -9,6 +9,17 @@ from google.appengine.ext import ndb
 from models import *
 from api_messages import *
 
+def raise_unless_user(user):
+    if not user:
+        raise endpoints.UnauthorizedException('Authorization required')
+
+def extract_array_from_data_list(list):
+    result = []
+    for item in list:
+        result.append(item.data)
+
+    return result
+
 
 def userProfile(user):
     if not user:

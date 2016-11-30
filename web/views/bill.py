@@ -25,7 +25,6 @@ class CreateBill(BaseHandler):
         for tag in tags:
             tags_json.append({'data': tag})
 
-        #import pdb; pdb.set_trace()
         body = {
             'accountId': account_id,
             'desc': self.request.get('bill_desc'),

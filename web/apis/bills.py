@@ -1,24 +1,8 @@
-import endpoints
-from protorpc import message_types
-from protorpc import messages
-from protorpc import remote
-from google.appengine.ext.ndb import Key
+from api_imports import *
 
-from dateutil import parser
-import pprint
 import cloudstorage as gcs
 import os
 import uuid
-
-from models import *
-from api_messages import *
-import settings
-from api_utils import *
-
-
-EMAIL_SCOPE = endpoints.EMAIL_SCOPE
-API_EXPLORER_CLIENT_ID = endpoints.API_EXPLORER_CLIENT_ID
-WEB_CLIENT_ID = settings.WEB_CLIENT_ID
 
 @endpoints.api(name='bills',
                 version='v1',
@@ -41,7 +25,8 @@ class BillsApi(remote.Service):
 
         tags = []
         for tag in request.tags:
-            tags.append(tag.data)
+            if tag.data:
+                tags.append(tag.data)
 
         # App generated billId
         billId = str(uuid.uuid4())

@@ -1,19 +1,7 @@
 # Ref: https://mail.python.org/pipermail/python-list/2012-January/618880.html
 
-import endpoints
-from protorpc import message_types
-from protorpc import messages
-from protorpc import remote
-from google.appengine.ext.ndb import Key
+from api_imports import *
 
-import settings
-from models import *
-from api_messages import *
-from api_utils import *
-
-EMAIL_SCOPE = endpoints.EMAIL_SCOPE
-API_EXPLORER_CLIENT_ID = endpoints.API_EXPLORER_CLIENT_ID
-WEB_CLIENT_ID = settings.WEB_CLIENT_ID
 
 @endpoints.api(name='accounts',
                 version='v1',
@@ -24,9 +12,8 @@ class AccountsApi(remote.Service):
             path='listAccounts',
             http_method='POST', name='listAccounts')
     def listAccounts(self, request):
-        user = endpoints.get_current_user()
-        if not user:
-            raise endpoints.UnauthorizedException('Authorization required')
+        user=endpoints.get_current_user()
+        raise_unless_user(user)
 
         profile = userProfile(user)
         def _copyAccountsMessage(profile):
@@ -48,9 +35,8 @@ class AccountsApi(remote.Service):
             path='createAccount',
             http_method='POST', name='createAccount')
     def createAccount(self,request):
-        user = endpoints.get_current_user()
-        if not user:
-            raise endpoints.UnauthorizedException('Authorization required')
+        user=endpoints.get_current_user()
+        raise_unless_user(user)
 
         profile = userProfile(user)
         account_name = request.data
@@ -75,9 +61,8 @@ class AccountsApi(remote.Service):
             path='updateAccount',
             http_method='POST', name='updateAccount')
     def updateAccount(self,request):
-        user = endpoints.get_current_user()
-        if not user:
-            raise endpoints.UnauthorizedException('Authorization required')
+        user=endpoints.get_current_user()
+        raise_unless_user(user)
 
         accountId = int(request.accountId)
         checkAccountBelongsToUser(user, accountId)
@@ -92,9 +77,8 @@ class AccountsApi(remote.Service):
             path='getAccount',
             http_method='POST', name='getAccount')
     def getAccount(self,request):
-        user = endpoints.get_current_user()
-        if not user:
-            raise endpoints.UnauthorizedException('Authorization required')
+        user=endpoints.get_current_user()
+        raise_unless_user(user)
 
         profile = userProfile(user)
         accountId = int(request.accountId)

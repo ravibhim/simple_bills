@@ -13,5 +13,27 @@ indexes:
 - kind: Bill
   ancestor: yes
   properties:
+  - name: amount
+  - name: date
+    direction: desc
+
+- kind: Bill
+  ancestor: yes
+  properties:
+  - name: amount
+  - name: tags
+  - name: date
+    direction: desc
+
+- kind: Bill
+  ancestor: yes
+  properties:
+  - name: date
+    direction: desc
+
+- kind: Bill
+  ancestor: yes
+  properties:
+  - name: tags
   - name: date
     direction: desc

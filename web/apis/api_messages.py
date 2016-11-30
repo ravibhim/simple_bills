@@ -36,3 +36,16 @@ class AccountMessage(messages.Message):
 
 class AccountListMessage(messages.Message):
     accounts = messages.MessageField(AccountMessage,1,repeated=True)
+
+class SearchBillsRequest(messages.Message):
+    accountId = messages.IntegerField(1)
+    tags = messages.MessageField(StringMessage,2, repeated=True)
+    start_date = messages.StringField(3)
+    end_date = messages.StringField(4)
+    amount = messages.IntegerField(5)
+
+class SearchBillsResponse(messages.Message):
+    request = messages.MessageField(SearchBillsRequest,1)
+
+    num_results = messages.IntegerField(2)
+    results = messages.MessageField(BillMessage,3, repeated=True)

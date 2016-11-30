@@ -23,14 +23,32 @@ class AccountDetail(BaseHandler):
         account_tags = []
         for tag in response['tags']:
             account_tags.append(tag['data'])
-        pprint.pprint(account_tags)
+
+        # Fetch Bills to display
+        search_start_date = self.request.get('search_start_date')
+        search_end_date = self.request.get('search_end_date')
+        search_amount = self.request.get('search_amount')
+        search_bills_service = get_service(self.session, 'search_bills')
+
+        search_request_body = {
+                    'accountId': account_id,
+                    'start_date': search_start_date,
+                    'end_date': search_end_date,
+                }
+        if search_amount:
+            search_request_body['amount'] = search_amount
+
+        response_bills = search_bills_service.searchBills(body=search_request_body).execute()
 
         template_values = {
                 'account_id': response['accountId'],
                 'account_name': response['name'],
                 'account_tags': account_tags,
-                'bills': response.get('bills') or [],
+                'bills': response_bills.get('results') or [],
                 'accounts': response_accounts.get('accounts') or [],
+                'search_start_date': search_start_date,
+                'search_end_date': search_end_date,
+                'search_amount': search_amount
         }
         path = 'templates/account_detail.html'
         self.response.out.write(template.render(path, template_values))
