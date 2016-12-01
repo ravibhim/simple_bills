@@ -48,9 +48,15 @@
 
         <div class="row">
           <form method="get">
-            <span class="col s3">Start Date: <input name="search_start_date" type="date" value="{{search_start_date}}"></span>
-            <span class="col s3">End Date: <input name="search_end_date" type="date" value="{{search_end_date}}"></span>
-            <span class="col s3">Amount: <input name="search_amount" value="{{search_amount}}"></span>
+            <span class="col s2">Start Date: <input name="search_start_date" type="date" value="{{search_start_date}}"></span>
+            <span class="col s2">End Date: <input name="search_end_date" type="date" value="{{search_end_date}}"></span>
+            <span class="col s2">Amount: <input name="search_amount" value="{{search_amount}}"></span>
+            <span class="col s2">
+              Tags: 
+              {% for tag in account_tags %}
+                <input type="checkbox" name="search_tags" value="{{tag}}"> {{tag}}
+              {% endfor %}
+            </span>
             <button class="btn waves-effect waves-light" type="submit" name="action" >Search</button>
           </form>
         </div>

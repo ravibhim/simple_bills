@@ -3,6 +3,13 @@ import uuid
 
 import settings
 
+def listToStringMessages(items):
+    json = []
+    for item in items:
+        json.append({'data': item})
+    return json
+
+
 def uploadBillImageToStaging(file_data):
     filename = file_data.filename
     bucket_name = settings.STAGING_FILE_BUCKET

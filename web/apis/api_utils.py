@@ -1,4 +1,5 @@
 import logging
+import endpoints
 
 from google.appengine.api import images
 from google.appengine.ext import blobstore

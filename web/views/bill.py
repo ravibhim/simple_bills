@@ -2,7 +2,6 @@ from view_imports import *
 
 import os
 from dateutil import parser
-from utils import uploadBillImageToStaging
 
 class CreateBill(BaseHandler):
     def _isFileUploaded(self):
@@ -24,6 +23,7 @@ class CreateBill(BaseHandler):
         tags_json = []
         for tag in tags:
             tags_json.append({'data': tag})
+        tags_json = listToStringMessages(tags)
 
         body = {
             'accountId': account_id,
