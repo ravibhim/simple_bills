@@ -29,6 +29,11 @@ indexes:
   ancestor: yes
   properties:
   - name: date
+
+- kind: Bill
+  ancestor: yes
+  properties:
+  - name: date
     direction: desc
 
 - kind: Bill

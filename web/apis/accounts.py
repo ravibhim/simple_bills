@@ -1,7 +1,5 @@
 # Ref: https://mail.python.org/pipermail/python-list/2012-January/618880.html
-
 from api_imports import *
-
 
 @endpoints.api(name='accounts',
                 version='v1',
@@ -110,3 +108,44 @@ class AccountsApi(remote.Service):
         am.check_initialized()
 
         return am
+
+    @endpoints.method(message_types.VoidMessage, AccountsActivityMessage,
+            path='getAccountsActivity',
+            http_method='POST', name='getAccountsActivity')
+    def getAccountsActivity(self,request):
+        user=endpoints.get_current_user()
+        raise_unless_user(user)
+
+        profile = userProfile(user)
+
+        asam = AccountsActivityMessage()
+        for accountId in profile.accountIds:
+            accountKey = Key(Account, accountId)
+            account = accountKey.get()
+
+            aam = AccountActivityMessage()
+            aam.accountId = accountId
+            aam.name = account.name
+
+            # Get Bills from the last 30 days
+            bills = Bill.query(ancestor=accountKey).order(-Bill.date)
+            bills.filter(Bill.date >= date.today()-timedelta(days=30))
+
+            # Build a hash of date and count
+            activity = {}
+            for bill in bills:
+                bill_date = str(bill.date)
+                day_activity = activity.get(bill_date, {'num_bills': 0})
+                day_activity['num_bills'] +=1
+                activity[bill_date] = day_activity
+
+            for bill_date, value in activity.iteritems():
+                # Build DayActivityMessages
+                dam = DayActivityMessage()
+                dam.date = bill_date
+                dam.num_bills = value['num_bills']
+                aam.activity.append(dam)
+
+            aam.check_initialized()
+            asam.data.append(aam)
+        return asam

@@ -13,13 +13,7 @@
     {% include "sidebar.html" %}
 
     <div class="content col s9">
-        <h4> Number of Accounts: {{ accounts.count }} </h4> {% if accounts.count > 0 %}
-        <table>
-            <tr>
-                <th> Name </th>
-            </tr>
-        </table>
-        {% endif %}
+      {{accounts_activity}}
     </div>
 </div>
 

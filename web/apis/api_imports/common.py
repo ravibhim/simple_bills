@@ -4,6 +4,7 @@ from protorpc import messages
 from protorpc import remote
 from google.appengine.ext.ndb import Key
 from dateutil import parser
+from datetime import date,timedelta
 
 import settings
 from models import *

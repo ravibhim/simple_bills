@@ -37,6 +37,18 @@ class AccountMessage(messages.Message):
 class AccountListMessage(messages.Message):
     accounts = messages.MessageField(AccountMessage,1,repeated=True)
 
+class DayActivityMessage(messages.Message):
+    date = messages.StringField(1)
+    num_bills = messages.IntegerField(2)
+
+class AccountActivityMessage(messages.Message):
+    accountId = messages.IntegerField(1)
+    name = messages.StringField(2)
+    activity = messages.MessageField(DayActivityMessage,3,repeated=True)
+
+class AccountsActivityMessage(messages.Message):
+    data = messages.MessageField(AccountActivityMessage,1,repeated=True)
+
 class SearchBillsRequest(messages.Message):
     accountId = messages.IntegerField(1)
     tags = messages.MessageField(StringMessage,2, repeated=True)

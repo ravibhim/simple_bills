@@ -10,9 +10,12 @@ class HomePage(BaseHandler):
         response = accounts_service.listAccounts().execute()
         accounts = response.get('accounts') or []
 
+        accounts_activity = accounts_service.getAccountsActivity().execute()
+
         template_values = {
             'profile': profile,
-            'accounts': accounts
+            'accounts': accounts,
+            'accounts_activity': accounts_activity
         }
 
         path = 'templates/home.html'
