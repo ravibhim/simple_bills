@@ -1,20 +1,71 @@
 {% extends "base.html" %}{% block content %}
 <nav>
     <div class="nav-wrapper">
-        <a href="#" class="brand-logo">Simple Bills</a>
+        <a href="#" class="brand-logo">SimpleBills</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="#">{{ profile.nickname }}</a></li>
         </ul>
     </div>
 </nav>
 
-<div class="row">
-
-    {% include "sidebar.html" %}
-
-    <div class="content col s9">
-      {{accounts_activity}}
+<div class="account_charts container">
+  <div class="row add_account_home">
+        <form action="/create_account" method="post">
+            <div class="input-field col s4">
+                <input id="account_add" type="text" class="validate" name="account_name">
+                <label for="account_add">Create an Account</label>
+            </div>
+            <div class="col s2">
+                <button class="waves-effect waves-light btn" type="submit" name="action">Add</button>
+            </div>
+        </form>
+  </div>
+  <div>
+    <div class="row account_each card">
+      <div class="col s4">
+        <h4 class="headline_main">Office</h4>
+        <p>No. of Bills: 44</p>
+        <p>Amount Billed: Rs 24000</p>
+        <a href="#">More Details</a>
+      </div>
+      <div class="col s8">
+        <div id="office_chart"></div>
+      </div>
     </div>
+  </div>
 </div>
+<script type="text/javascript">
+google.charts.load('current', {packages: ['corechart', 'line']});
+google.charts.setOnLoadCallback(drawBasic);
+
+function drawBasic() {
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('number', 'X');
+    data.addColumn('number', 'Bills');
+
+    data.addRows([
+      [0, 0],   [1, 2],  [2, 2],  [3, 7],  [4, 3],  [5, 2],
+      [6, 1],  [7, 4],  [8, 5],  [9, 1],  [10, 2], [11, 2],
+      [12, 3], [13, 4], [14, 2], [15, 1], [16, 0], [17, 0],
+      [18, 0], [19, 0], [20, 2], [21, 0], [22, 6], [23, 1],
+      [24, 0], [25, 5], [26, 2], [27, 1], [28, 4], [29, 3],
+      [30, 5]
+    ]);
+
+    var options = {
+      hAxis: {
+        title: 'Days'
+      },
+      vAxis: {
+        title: 'No. of Bills'
+      }
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('office_chart'));
+
+    chart.draw(data, options);
+  }
+</script>
 
 {% endblock %}
