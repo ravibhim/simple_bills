@@ -46,6 +46,10 @@
                           <label for="bill_desc">Bill Description</label>
                         </div>
                         <div class="input-field col s12">
+                          <input id="bill_currency_code" type="text"   name="bill_currency_code">
+                          <label for="bill_currency_code">Bill Currency</label>
+                        </div>
+                        <div class="input-field col s12">
                           <input id="bill_amount" type="text"   name="bill_amount">
                           <label for="bill_amount">Bill Amount</label>
                         </div>
@@ -129,7 +133,7 @@
                       {% for bill in bills %}
                       <tr>
                           <td>{{bill.desc}}</td>
-                          <td>{{bill.amount}}</td>
+                          <td>{{bill.currency_code}} {{bill.amount}}</td>
                           <td>{{bill.date}}</td>
                           <td>{{bill.tags}}</td>
                           <td>

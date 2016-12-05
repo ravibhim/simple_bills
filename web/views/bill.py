@@ -28,6 +28,7 @@ class CreateBill(BaseHandler):
         body = {
             'accountId': account_id,
             'desc': self.request.get('bill_desc'),
+            'currency_code': self.request.get('bill_currency_code'),
             'amount': self.request.get('bill_amount'),
             'date': self.request.get('bill_date'),
             'tags': tags_json
@@ -65,6 +66,7 @@ class EditBill(BaseHandler):
                     'accountId': account_id,
                     'billId': bill_id,
                     'desc': self.request.get('bill_desc'),
+                    'currency_code': self.request.get('bill_currency_code'),
                     'amount': self.request.get('bill_amount'),
                     'date': self.request.get('bill_date')
                     }

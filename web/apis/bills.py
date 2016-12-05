@@ -41,7 +41,8 @@ class BillsApi(remote.Service):
         bill = Bill(
                 id=billId,
                 desc=request.desc,
-                amount=int(request.amount),
+                currency_code=request.currency_code,
+                amount=float(request.amount),
                 date=parser.parse(request.date),
                 tags=tags,
                 filepaths=filepaths,
@@ -67,7 +68,8 @@ class BillsApi(remote.Service):
         billKey = Key(Bill, billId, parent=accountKey)
 
         bill = billKey.get()
-        bill.amount = int(request.amount)
+        bill.currency_code = request.currency_code
+        bill.amount = float(request.amount)
         bill.desc = request.desc
         bill.date = parser.parse(request.date)
 

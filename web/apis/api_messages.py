@@ -16,23 +16,25 @@ class BillMessage(messages.Message):
 
     billId = messages.StringField(2)
     desc = messages.StringField(3)
-    amount = messages.IntegerField(4)
-    date = messages.StringField(5)
-    tags = messages.MessageField(StringMessage,6,repeated=True)
+    currency_code = messages.StringField(4)
+    amount = messages.FloatField(5)
+    date = messages.StringField(6)
+    tags = messages.MessageField(StringMessage,7,repeated=True)
 
-    day = messages.IntegerField(7)
-    month = messages.IntegerField(8)
-    year = messages.IntegerField(9)
-    staging_filepaths = messages.MessageField(StringMessage,10,repeated=True)
-    filepaths = messages.MessageField(StringMessage,11,repeated=True)
-    img_urls = messages.MessageField(ImageMessage,12,repeated=True)
+    day = messages.IntegerField(8)
+    month = messages.IntegerField(9)
+    year = messages.IntegerField(10)
+    staging_filepaths = messages.MessageField(StringMessage,11,repeated=True)
+    filepaths = messages.MessageField(StringMessage,12,repeated=True)
+    img_urls = messages.MessageField(ImageMessage,13,repeated=True)
 
 class AccountMessage(messages.Message):
     accountId = messages.IntegerField(1)
     name = messages.StringField(2)
     tagstr = messages.StringField(3)
-    tags = messages.MessageField(StringMessage,4, repeated=True)
-    bills = messages.MessageField(BillMessage,5, repeated=True)
+    default_currency_code = messages.StringField(4)
+    tags = messages.MessageField(StringMessage,5, repeated=True)
+    bills = messages.MessageField(BillMessage,6, repeated=True)
 
 class AccountListMessage(messages.Message):
     accounts = messages.MessageField(AccountMessage,1,repeated=True)

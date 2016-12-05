@@ -66,6 +66,7 @@ class AccountsApi(remote.Service):
         checkAccountBelongsToUser(user, accountId)
         account = Key(Account, accountId).get()
         account.tagstr = request.tagstr
+        account.default_currency_code = request.default_currency_code
         account.put()
 
         return self._buildAccountMessage(account)
@@ -95,6 +96,7 @@ class AccountsApi(remote.Service):
         am.accountId = account.key.id()
         am.name = account.name
         am.tagstr = account.tagstr
+        am.default_currency_code = account.default_currency_code
         am.tags = []
         for tag in account.tags():
             sm = StringMessage()

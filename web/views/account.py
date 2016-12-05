@@ -70,6 +70,8 @@ class AccountSettings(BaseHandler):
         template_values = {
                 'account_id': account_id,
                 'tagstr': response.get('tagstr') or '',
+                'supported_currencies': settings.SUPPORTED_CURRENCIES,
+                'default_currency_code': response.get('default_currency_code') or '',
         }
 
         path = 'templates/account_settings.html'
@@ -81,7 +83,8 @@ class AccountSettings(BaseHandler):
         response = account_service.updateAccount(
                 body={
                     'accountId': account_id,
-                    'tagstr': self.request.get('account_tagstr')
+                    'tagstr': self.request.get('account_tagstr'),
+                    'default_currency_code': self.request.get('account_default_currency_code')
                     }
                 ).execute()
 
