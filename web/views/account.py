@@ -43,6 +43,7 @@ class AccountDetail(BaseHandler):
         response_bills = search_bills_service.searchBills(body=search_request_body).execute()
 
         template_values = {
+                'profile' : profile,
                 'account_id': response['accountId'],
                 'account_name': response['name'],
                 'account_tags': account_tags,

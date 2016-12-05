@@ -1,3 +1,4 @@
+/* main page css*/
 .welcome-content {
     margin-top: 200px;
 }
@@ -5,59 +6,61 @@
 .welcome-content h3 {
     margin-bottom: 30px;
 }
+body{
+  background-color: #f5f5f5;
+}
+/******************************************************************************/
 
+/* nav bar css */
 nav {
     background-color: white;
     position: fixed;
     z-index: 10;
 }
 
-.headline-main {
-    font-size: 24px;
-    font-weight: 400;
+.brand-logo{
+  font-size: 24px;
+  font-weight: 400;
 }
-
-.headline-sub {
-    font-size: 20px;
-    font-weight: 600;
-}
-
 .nav-wrapper a, .nav-wrapper li {
     color: #333333;
-}
-
-.btn-billadd {
-    margin-top: 13px;
 }
 
 .nav-wrapper a {
     margin-left: 30px;
 }
+/******************************************************************************/
 
-.sidebar-left {
-    position: fixed;
-    margin-top: 64px;
-    width: 25%;
-    height: 100%;
-    margin-bottom: -20px;
+/*common css for all*/
+.headline-main {
+    font-size: 32px;
+    font-weight: 400;
 }
 
-.content {
-    margin-top: 64px !important;
-    margin-left: 25% !important;
-    width: auto;
-    position: relative;
-    overflow: auto;
-    z-index: 1;
+.headline-sub {
+    font-size: 16px;
+    margin-bottom: 4px;
+    font-weight: 400;
+}
+.btn{
+  background-color: #85BB65;
+}
+.active{
+  color: #85BB65 !important;
 }
 
+/******************************************************************************/
+
+/* side-nav view css*/
 .collection-item {
     font-size: 18px;
     padding: 8px 16px;
 }
-
-.sidebar-left ul {
-    border: none;
+.collection a.collection-item{
+  color: #85BB65;
+}
+#side-nav ul{
+  margin-top: 65px;
 }
 
 .account-add {
@@ -74,18 +77,130 @@ nav {
     padding: 0 0.8rem;
 }
 
-.active {
-    background-color: red;
+.side-nav a{
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 28px !important;
 }
+.side-nav .active {
+  background-color: #E3E3E3 !important;
+  color: rgba(0,0,0,0.87) !important;
+}
+
+
+
+/******************************************************************************/
+
+/* accounts with charts view css */
+
+.account_charts{
+  padding: 0 30px;
+  padding-top: 84px;
+  }
+.account_each{
+  padding: 20px;
+}
+.add_account_home{
+  margin-bottom: 0;
+}
+.add_account_home button{
+  margin-top: 10px;
+}
+.add_account_home input{
+  margin-bottom: 0;
+}
+
+/*******************************************************************************/
+
+/* account details view css */
+.account_detail_headline{
+  margin:24px 0;
+}
+.account_detail_headline h4{
+  margin: 0;
+}
+.account_detail_headline i{
+  font-size: 16px;
+  color: #9b9b9b;
+}
+main{
+  padding-top: 65px;
+  padding-left:300px
+}
+main .container{
+  width:95%;
+}
+
+#search_table{
+  background-color: white;
+  padding-top: 20px;
+
+}
+.search_box{
+  border: 1px solid #e0e0e0;
+  border-radius: 3px;
+}
+.billsgi-table th{
+  color: #888888;
+  font-weight: 400;
+}
+.search_btn{
+  text-align: center;
+}
+/******************************************************************************/
+
+/* add a bill model view css*/
+.input-field{
+  margin-top: 6px;
+}
+.bill_date{
+  padding: 0 !important;
+}
+[type="checkbox"]+label {
+  padding-left: 26px;
+}
+.add_file_btn{
+  width: 48px;
+  height: 48px !important;
+  border-radius: 50%;
+  padding: 0;
+}
+.bill_tags_all{
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.bill_tag{
+  display: inline;
+  padding-right: 8px;
+}
+.modal-content h4{
+  text-align: center;
+  background-color: #768996;
+  padding: 12px;
+  margin: -24px;
+  margin-bottom: 8px;
+  color: white;
+  font-size: 24px;
+}
+/******************************************************************************/
+
+
+/*.file_input{
+  padding-top: 20px;
+}*/
+/*.active {
+    background-color: red;
+}*/
 
 /* Ravi's Overrides */
 
 /* Need the following to solve for this problem - https://github.com/Dogfalo/materialize/issues/1376 */
-[type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+/*[type="checkbox"]:not(:checked), [type="checkbox"]:checked {
   position: static;
-  left: 0px; 
-  opacity: 1; 
-}
+  left: 0px;
+  opacity: 1;
+}*/
 
 
 / / / / /

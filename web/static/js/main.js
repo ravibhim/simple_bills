@@ -8,4 +8,5 @@ $(document).ready(function() {
         selectMonths: true,
         selectYears: 30
     });
+    $('.modal').modal();
 });
