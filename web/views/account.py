@@ -25,9 +25,9 @@ class AccountDetail(BaseHandler):
             account_tags.append(tag['data'])
 
         # Fetch Bills to display
+        search_query = self.request.get('search_query')
         search_start_date = self.request.get('search_start_date')
         search_end_date = self.request.get('search_end_date')
-        search_amount = self.request.get('search_amount')
         search_tags = self.request.get('search_tags', allow_multiple=True)
         search_bills_service = get_service(self.session, 'search_bills')
 
@@ -37,8 +37,6 @@ class AccountDetail(BaseHandler):
                     'end_date': search_end_date,
                     'tags': listToStringMessages(search_tags)
                 }
-        if search_amount:
-            search_request_body['amount'] = search_amount
 
         response_bills = search_bills_service.searchBills(body=search_request_body).execute()
 
@@ -51,9 +49,10 @@ class AccountDetail(BaseHandler):
                 'account_default_currency_code': response.get('default_currency_code'),
                 'bills': response_bills.get('results') or [],
                 'accounts': response_accounts.get('accounts') or [],
+                'search_query': search_query,
+                'search_tags': search_tags,
                 'search_start_date': search_start_date,
                 'search_end_date': search_end_date,
-                'search_amount': search_amount
         }
         template = JINJA_ENVIRONMENT.get_template('account_detail.html')
         self.response.out.write(template.render(template_values))

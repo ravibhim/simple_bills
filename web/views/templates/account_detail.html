@@ -103,8 +103,8 @@
           <div class="search_box col s12">
             <form method="get">
               <div class="input-field col s6">
-                <input id="bill_amount" type="text" name="search_amount" value="{{search_amount}}">
-                <label for="bill_amount">Bill Amount</label>
+                <input id="search_query" type="text" name="search_query" value="{{search_query}}">
+                <label for="search_query">Search Query</label>
               </div>
               <span class="col s2">Start Date: <input name="search_start_date" type="date" value="{{search_start_date}}"></span>
               <span class="col s2">End Date: <input name="search_end_date" type="date" value="{{search_end_date}}"></span>
@@ -113,8 +113,8 @@
                   <div class="bill_tags_all">
                     {% for tag in account_tags %}
                     <div class="bill_tag">
-                      <input type="checkbox"  name="search_tags" value="{{tag}}" class="filled-in" id="{{tag}}"/>
-                      <label for="{{tag}}">{{tag}}</label>
+                      <input type="checkbox" name="search_tags" value="{{tag}}" class="filled-in" id="search_{{tag}}" {% if tag in search_tags %} checked {%endif%} />
+                      <label for="search_{{tag}}">{{tag}}</label>
                     </div>
                     {% endfor %}
                   </div>

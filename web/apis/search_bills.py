@@ -36,10 +36,6 @@ class SearchBillsApi(remote.Service):
         if request.end_date:
             bills = bills.filter(Bill.date <= parser.parse(request.end_date))
 
-        # Filter on amount is present
-        if request.amount:
-            bills = bills.filter(Bill.amount == int(request.amount))
-
         for bill in bills:
             bm = buildBillMessage(bill)
             sb_response.results.append(bm)

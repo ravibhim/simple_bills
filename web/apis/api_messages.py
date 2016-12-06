@@ -57,7 +57,6 @@ class SearchBillsRequest(messages.Message):
     tags = messages.MessageField(StringMessage,2, repeated=True)
     start_date = messages.StringField(3)
     end_date = messages.StringField(4)
-    amount = messages.IntegerField(5)
 
 class SearchBillsResponse(messages.Message):
     request = messages.MessageField(SearchBillsRequest,1)
