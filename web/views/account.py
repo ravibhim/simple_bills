@@ -35,7 +35,8 @@ class AccountDetail(BaseHandler):
                     'accountId': account_id,
                     'start_date': search_start_date,
                     'end_date': search_end_date,
-                    'tags': listToStringMessages(search_tags)
+                    'tags': listToStringMessages(search_tags),
+                    'query': search_query
                 }
 
         response_bills = search_bills_service.searchBills(body=search_request_body).execute()
