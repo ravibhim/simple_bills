@@ -1,15 +1,13 @@
 <form action="/account/{{account_id}}/settings" method="post" enctype='multipart/form-data'>
     <div class="row">
+      <span class="col s12">Name: <input value="{{name}}" name="account_name" /> </span>
+    </div>
+    <div class="row">
       <span class="col s12">
         Default Currency Code:
-        <!-- TODO: Simplify this madness -->
         <select name="account_default_currency_code">
           {% for currency in supported_currencies %}
-            {% if default_currency_code == currency %}
-              <option value='{{currency}}' selected> {{currency}} </option>
-            {% else %}
-            <option value='{{currency}}'> {{currency}} </option>
-            {% endif %}
+            <option value={{currency}} {% if default_currency_code == currency %} selected {%endif%}> {{currency}} </option>
           {% endfor %}
         </select>
       </span>
@@ -23,5 +21,6 @@
 <br/>
 <br/>
 <br/>
+
 
 <a href="/account/{{account_id}}">Back to Account</a>

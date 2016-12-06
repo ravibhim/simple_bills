@@ -3,6 +3,11 @@ import uuid
 
 import settings
 
+def isFileUploaded(handler, file_field):
+    file_data = handler.request.POST[file_field]
+    return True if file_data != u'' else False
+
+
 def listToStringMessages(items):
     json = []
     for item in items:

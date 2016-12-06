@@ -32,6 +32,9 @@ libraries:
 - name: pycrypto
   version: latest
 
+- name: jinja2
+  version: latest
+
 env_variables:
   SERVER: 'http://localhost:8080'
   OAUTH_REDIRECT_PATH: '/oauth2callback'

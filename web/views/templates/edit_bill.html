@@ -1,0 +1,46 @@
+<form action="/account/{{account_id}}/{{bill.billId}}/edit_bill" method="post" enctype='multipart/form-data'>
+    <div>
+        <div class="row">
+          <span class="col s12">Desc: <input value="{{bill.desc}}" name="bill_desc" /> </span>
+        </div>
+        <div class="row">
+          Currency:
+          <select name="bill_currency_code">
+            {% for currency in supported_currencies %}
+            <option value={{currency}} {% if(currency == bill.currency_code) %} selected {% endif %}> 
+              {{currency}}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="row">
+          <span class="col s12">Amount: <input value="{{bill.amount}}" name="bill_amount" /> </span>
+        </div>
+        <div class="row">
+          <span class="col s5">Date: <input value="{{bill.date}}" name="bill_date" type="date"></span>
+        </div>
+        <button class="btn waves-effect waves-light" type="submit" name="action">Update</button>
+</form>
+
+<br/>
+<br/>
+<br/>
+
+<h3> Uploaded Files </h3>
+{% for image in bill.images %}
+<a href="{{image.original}}" target="_blank">{{image.filename}}</a>
+</br>
+{% endfor %}
+
+<br/>
+
+<form action="/account/{{account_id}}/{{bill.billId}}/add_file" method="post" enctype='multipart/form-data'>
+  <input type="file" name="filename">
+  <button type="submit" name="action">Add File</button>
+</form>
+
+<br/>
+<br/>
+<br/>
+
+<a href="/account/{{account_id}}">Back to Account</a>

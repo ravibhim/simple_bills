@@ -66,6 +66,7 @@ class AccountsApi(remote.Service):
         checkAccountBelongsToUser(user, accountId)
         account = Key(Account, accountId).get()
         account.tagstr = request.tagstr
+        account.name= request.name
         account.default_currency_code = request.default_currency_code
         account.put()
 

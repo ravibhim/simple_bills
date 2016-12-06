@@ -1,5 +1,7 @@
 import logging
 import endpoints
+import os
+import cloudstorage as gcs
 
 from google.appengine.api import images
 from google.appengine.ext import blobstore
@@ -9,6 +11,8 @@ from google.appengine.ext import ndb
 
 from models import *
 from api_messages import *
+
+import settings
 
 def raise_unless_user(user):
     if not user:
@@ -47,6 +51,18 @@ def checkAccountBelongsToUser(user, account_id):
     if (account_id not in profile.accountIds):
         raise AccountUnauthorizedAccess("{} tried to access account id {}.".format(profile.key.id(), account_id))
 
+def copyStagingFilepathsToGcs(request, account_id, bill_id, bill = None):
+    filepaths = []
+    for staging_filepath in request.staging_filepaths:
+        filename = os.path.basename(staging_filepath.data)
+        filepath = '/' + settings.FILE_BUCKET + '/' + account_id + '/' + bill_id + '/' + filename
+        if bill and (filepath in bill.filepaths):
+            raise endpoints.InternalServerErrorException("{} file already uploaded.".format(filename))
+        filepaths.append(filepath)
+        gcs.copy2(staging_filepath.data, filepath)
+
+    return filepaths
+
 
 def buildBillMessage(bill):
     bm = BillMessage()
@@ -73,8 +89,9 @@ def buildBillMessage(bill):
         im = ImageMessage()
         blob_key = blobstore.create_gs_key('/gs' + filepath)
         img_url = images.get_serving_url(blob_key=blob_key)
+        im.filename = os.path.basename(filepath)
         im.original = img_url + "=s0"
-        bm.img_urls.append(im)
+        bm.images.append(im)
 
     return bm
 

@@ -9,7 +9,8 @@ class ProfileMessage(messages.Message):
     nickname = messages.StringField(2)
 
 class ImageMessage(messages.Message):
-    original = messages.StringField(1)
+    filename = messages.StringField(1)
+    original = messages.StringField(2)
 
 class BillMessage(messages.Message):
     accountId = messages.IntegerField(1)
@@ -26,7 +27,7 @@ class BillMessage(messages.Message):
     year = messages.IntegerField(10)
     staging_filepaths = messages.MessageField(StringMessage,11,repeated=True)
     filepaths = messages.MessageField(StringMessage,12,repeated=True)
-    img_urls = messages.MessageField(ImageMessage,13,repeated=True)
+    images = messages.MessageField(ImageMessage,13,repeated=True)
 
 class AccountMessage(messages.Message):
     accountId = messages.IntegerField(1)

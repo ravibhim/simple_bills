@@ -1,6 +1,5 @@
 from api_imports import *
 
-import cloudstorage as gcs
 import os
 import uuid
 
@@ -30,13 +29,9 @@ class BillsApi(remote.Service):
 
         # App generated billId
         billId = str(uuid.uuid4())
+
         # Build filenames from staging_filenames (i.e copy files to GCS and build filenames)
-        filepaths = []
-        for staging_filepath in request.staging_filepaths:
-            filename = os.path.basename(staging_filepath.data)
-            filepath = '/' + settings.FILE_BUCKET + '/' + str(accountKey.id())+ '/' + billId + '/' + filename
-            filepaths.append(filepath)
-            gcs.copy2(staging_filepath.data, filepath)
+        filepaths = copyStagingFilepathsToGcs(request, str(request.accountId), billId)
 
         bill = Bill(
                 id=billId,
@@ -72,6 +67,29 @@ class BillsApi(remote.Service):
         bill.amount = float(request.amount)
         bill.desc = request.desc
         bill.date = parser.parse(request.date)
+
+        bill.put()
+        return buildBillMessage(bill)
+
+
+    @endpoints.method(BillMessage, BillMessage,
+            path='addFileToBill',
+            http_method='POST', name='addFileToBill')
+    def addFileToBill(self,request):
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+
+        accountId = int(request.accountId)
+        checkAccountBelongsToUser(user, accountId)
+        accountKey = Key(Account, accountId)
+
+        billId = request.billId
+        bill = Key(Bill, billId, parent=accountKey).get()
+
+        filepaths = copyStagingFilepathsToGcs(request, str(request.accountId), billId, bill)
+
+        bill.filepaths.extend(filepaths)
 
         bill.put()
         return buildBillMessage(bill)

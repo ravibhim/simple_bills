@@ -1,20 +1,14 @@
 from view_imports import *
 
-import os
 from dateutil import parser
 
 class CreateBill(BaseHandler):
-    def _isFileUploaded(self):
-        file_data = self.request.POST['filename']
-        return True if file_data != u'' else False
-
     @check_credentials
     def post(self, account_id):
         # Put the file in GCS first and get the stage filepath
         # Send that info to the API so that it would move the file to the right path
         file_data = self.request.POST['filename']
-        pprint.pprint(self._isFileUploaded())
-        if self._isFileUploaded():
+        if isFileUploaded(self,'filename'):
             staging_filepath = uploadBillImageToStaging(file_data)
 
         bills_service = get_service(self.session, 'bills')
@@ -33,12 +27,12 @@ class CreateBill(BaseHandler):
             'date': self.request.get('bill_date'),
             'tags': tags_json
         }
-        if self._isFileUploaded():
+        if isFileUploaded(self, 'filename'):
             body['staging_filepaths'] = [{'data': staging_filepath}]
-        pprint.pprint(body)
         response = bills_service.createBill(body=body).execute()
 
         self.redirect('/account/' + account_id)
+
 
 class EditBill(BaseHandler):
     @check_credentials
@@ -52,11 +46,12 @@ class EditBill(BaseHandler):
         template_values = {
             'profile': profile,
             'account_id': account_id,
-            'bill': bill
+            'bill': bill,
+            'supported_currencies': settings.SUPPORTED_CURRENCIES
         }
 
-        path = 'templates/edit_bill.html'
-        self.response.out.write(template.render(path, template_values))
+        template = JINJA_ENVIRONMENT.get_template('edit_bill.html')
+        self.response.out.write(template.render(template_values))
 
     @check_credentials
     def post(self, account_id, bill_id):
@@ -74,3 +69,19 @@ class EditBill(BaseHandler):
 
         self.redirect('/account/' + account_id + '/' + bill_id + '/edit_bill')
 
+class AddFileToBill(BaseHandler):
+    @check_credentials
+    def post(self, account_id, bill_id):
+        bills_service = get_service(self.session, 'bills')
+
+        if isFileUploaded(self, 'filename'):
+            file_data = self.request.POST['filename']
+            staging_filepath = uploadBillImageToStaging(file_data)
+            body = {
+                    'accountId': account_id,
+                    'billId': bill_id,
+                    'staging_filepaths': [{'data': staging_filepath}]
+            }
+            bills_service.addFileToBill(body=body).execute()
+
+        self.redirect('/account/' + account_id + '/' + bill_id + '/edit_bill')

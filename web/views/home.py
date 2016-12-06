@@ -1,5 +1,14 @@
 from view_imports import *
 
+class MainPage(BaseHandler):
+    def get(self):
+        template_values = {
+            'login_url': '/me'
+        }
+
+        template = JINJA_ENVIRONMENT.get_template('main.html')
+        self.response.out.write(template.render(template_values))
+
 class HomePage(BaseHandler):
     @check_credentials
     def get(self):
@@ -18,5 +27,5 @@ class HomePage(BaseHandler):
             'accounts_activity': accounts_activity
         }
 
-        path = 'templates/home.html'
-        self.response.out.write(template.render(path, template_values))
+        template = JINJA_ENVIRONMENT.get_template('home.html')
+        self.response.out.write(template.render(template_values))

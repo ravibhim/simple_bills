@@ -47,14 +47,16 @@ class AccountDetail(BaseHandler):
                 'account_id': response['accountId'],
                 'account_name': response['name'],
                 'account_tags': account_tags,
+                'supported_currencies': settings.SUPPORTED_CURRENCIES,
+                'account_default_currency_code': response.get('default_currency_code'),
                 'bills': response_bills.get('results') or [],
                 'accounts': response_accounts.get('accounts') or [],
                 'search_start_date': search_start_date,
                 'search_end_date': search_end_date,
                 'search_amount': search_amount
         }
-        path = 'templates/account_detail.html'
-        self.response.out.write(template.render(path, template_values))
+        template = JINJA_ENVIRONMENT.get_template('account_detail.html')
+        self.response.out.write(template.render(template_values))
 
 
 class AccountSettings(BaseHandler):
@@ -69,13 +71,14 @@ class AccountSettings(BaseHandler):
         response_accounts = account_service.listAccounts().execute()
         template_values = {
                 'account_id': account_id,
+                'name': response.get('name'),
                 'tagstr': response.get('tagstr') or '',
                 'supported_currencies': settings.SUPPORTED_CURRENCIES,
                 'default_currency_code': response.get('default_currency_code') or '',
         }
 
-        path = 'templates/account_settings.html'
-        self.response.out.write(template.render(path, template_values))
+        template = JINJA_ENVIRONMENT.get_template('account_settings.html')
+        self.response.out.write(template.render(template_values))
 
     @check_credentials
     def post(self, account_id):
@@ -83,6 +86,7 @@ class AccountSettings(BaseHandler):
         response = account_service.updateAccount(
                 body={
                     'accountId': account_id,
+                    'name': self.request.get('account_name'),
                     'tagstr': self.request.get('account_tagstr'),
                     'default_currency_code': self.request.get('account_default_currency_code')
                     }

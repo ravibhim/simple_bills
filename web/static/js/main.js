@@ -9,4 +9,6 @@ $(document).ready(function() {
         selectYears: 30
     });
     $('.modal').modal();
+
+    $('select').material_select();
 });

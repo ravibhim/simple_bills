@@ -11,8 +11,6 @@ class Account(ndb.Model):
     def tags(self):
         return [x.strip().upper() for x in (self.tagstr or '').split(',')]
 
-
-
 class Bill(ndb.Model):
     desc = ndb.StringProperty()
     currency_code = ndb.StringProperty(indexed=False)
@@ -42,6 +40,7 @@ class Profile(ndb.Model):
     def getAccounts(self):
         return [ndb.Key(Account, account_id).get() for index, account_id in enumerate(self.accountIds)]
 
+# TODO: Use a standard cloud endpoint exception as documented on https://cloud.google.com/appengine/docs/python/endpoints/exceptions
 class AccountUnauthorizedAccess(Exception):
     def __init__(self,value):
         self.value = value
