@@ -27,8 +27,12 @@
 <br/>
 
 <h3> Uploaded Files </h3>
-{% for image in bill.images %}
-<a href="{{image.original}}" target="_blank">{{image.filename}}</a>
+{% for file in bill.files%}
+<a href="{{file.original}}" target="_blank">{{file.filename}}</a>
+<form action="/account/{{account_id}}/{{bill.billId}}/remove_file" method="post">
+  <input class="hide" name="file_to_delete" value="{{file.filename}}"/>
+  <button type="submit">Delete</button>
+</form>
 </br>
 {% endfor %}
 

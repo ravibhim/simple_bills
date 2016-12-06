@@ -133,7 +133,7 @@
                           <th data-field="name">Amount</th>
                           <th data-field="Date">Date</th>
                           <th data-field="tags">Tags</th>
-                          <th data-field="Images">Images</th>
+                          <th data-field="Files">Files</th>
                           <th data-field="Actions">Actions</th>
                       </tr>
                   </thead>
@@ -145,8 +145,8 @@
                           <td>{{bill.date}}</td>
                           <td>{{bill.tags}}</td>
                           <td>
-                            {% for image in bill.images %}
-                              <a href="{{image.original}}">{{image.filename}}</a>
+                            {% for file in bill.files%}
+                              <a href="{{file.original}}">{{file.filename}}</a>
                             {% endfor %}
                           </td>
                           <td><a href="/account/{{account_id}}/{{bill.billId}}/edit_bill">Edit</a></td>

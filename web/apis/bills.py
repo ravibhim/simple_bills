@@ -94,6 +94,32 @@ class BillsApi(remote.Service):
         bill.put()
         return buildBillMessage(bill)
 
+    @endpoints.method(BillMessage, BillMessage,
+            path='removeFileFromBill',
+            http_method='POST', name='removeFileFromBill')
+    def removeFileFromBill(self,request):
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+
+        accountId = int(request.accountId)
+        checkAccountBelongsToUser(user, accountId)
+        accountKey = Key(Account, accountId)
+
+        billId = request.billId
+        bill = Key(Bill, billId, parent=accountKey).get()
+
+        # File to be deleted mentioned in filepaths
+        filename_to_be_deleted = request.filepaths[0].data
+
+        filepath_to_be_deleted = getFilepath(str(accountId), billId, filename_to_be_deleted)
+
+
+        if filepath_to_be_deleted in bill.filepaths:
+            bill.filepaths.remove(filepath_to_be_deleted)
+        bill.put()
+        return buildBillMessage(bill)
+
 
 
     @endpoints.method(BillMessage, BillMessage,

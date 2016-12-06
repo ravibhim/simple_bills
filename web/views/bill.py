@@ -85,3 +85,21 @@ class AddFileToBill(BaseHandler):
             bills_service.addFileToBill(body=body).execute()
 
         self.redirect('/account/' + account_id + '/' + bill_id + '/edit_bill')
+
+class RemoveFileFromBill(BaseHandler):
+    @check_credentials
+    def post(self, account_id, bill_id):
+        file_to_delete = self.request.POST['file_to_delete']
+        pprint.pprint(file_to_delete)
+
+        bills_service = get_service(self.session, 'bills')
+
+        if file_to_delete:
+            body = {
+                    'accountId': account_id,
+                    'billId': bill_id,
+                    'filepaths': [{'data': file_to_delete}]
+            }
+            bills_service.removeFileFromBill(body=body).execute()
+
+        self.redirect('/account/' + account_id + '/' + bill_id + '/edit_bill')

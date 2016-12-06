@@ -51,11 +51,14 @@ def checkAccountBelongsToUser(user, account_id):
     if (account_id not in profile.accountIds):
         raise AccountUnauthorizedAccess("{} tried to access account id {}.".format(profile.key.id(), account_id))
 
+def getFilepath(account_id, bill_id, filename):
+    return '/' + settings.FILE_BUCKET + '/' + account_id + '/' + bill_id + '/' + filename
+
 def copyStagingFilepathsToGcs(request, account_id, bill_id, bill = None):
     filepaths = []
     for staging_filepath in request.staging_filepaths:
         filename = os.path.basename(staging_filepath.data)
-        filepath = '/' + settings.FILE_BUCKET + '/' + account_id + '/' + bill_id + '/' + filename
+        filepath = getFilepath(account_id, bill_id, filename)
         if bill and (filepath in bill.filepaths):
             raise endpoints.InternalServerErrorException("{} file already uploaded.".format(filename))
         filepaths.append(filepath)
@@ -86,12 +89,12 @@ def buildBillMessage(bill):
         sm.data = filepath
         bm.filepaths.append(sm)
 
-        im = ImageMessage()
+        fm = FileMessage()
         blob_key = blobstore.create_gs_key('/gs' + filepath)
         img_url = images.get_serving_url(blob_key=blob_key)
-        im.filename = os.path.basename(filepath)
-        im.original = img_url + "=s0"
-        bm.images.append(im)
+        fm.filename = os.path.basename(filepath)
+        fm.original = img_url + "=s0"
+        bm.files.append(fm)
 
     return bm
 
