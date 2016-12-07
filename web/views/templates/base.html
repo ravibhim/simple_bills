@@ -8,10 +8,20 @@
       <script src="/static/js/main.js"></script>
       <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
+      <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+      <!-- <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" /> -->
+      <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+      <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+      <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous">
+
   </head>
-  <body>
+  <body ng-app="SimpleBills">
       <div>
           {% block content %}{% endblock %}
       </div>
+
+
+      <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
+      <script src="/static/js/app.js"></script>
   </body>
 </html>

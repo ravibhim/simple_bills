@@ -10,7 +10,6 @@ class CreateAccount(BaseHandler):
 
         self.redirect('/account/'+response['accountId'])
 
-
 class AccountDetail(BaseHandler):
     @check_credentials
     def get(self, account_id):
@@ -19,45 +18,25 @@ class AccountDetail(BaseHandler):
 
         account_service = get_service(self.session,'accounts')
         response = account_service.getAccount(body={'accountId':account_id}).execute()
+        has_bills = True if 'bills' in response else False
+
         response_accounts = account_service.listAccounts().execute()
         account_tags = []
         for tag in response['tags']:
             account_tags.append(tag['data'])
 
-        # Fetch Bills to display
-        search_query = self.request.get('search_query')
-        search_start_date = self.request.get('search_start_date')
-        search_end_date = self.request.get('search_end_date')
-        search_tags = self.request.get('search_tags', allow_multiple=True)
-        search_bills_service = get_service(self.session, 'search_bills')
-
-        search_request_body = {
-                    'accountId': account_id,
-                    'start_date': search_start_date,
-                    'end_date': search_end_date,
-                    'tags': listToStringMessages(search_tags),
-                    'query': search_query
-                }
-
-        response_bills = search_bills_service.searchBills(body=search_request_body).execute()
-
         template_values = {
                 'profile' : profile,
                 'account_id': response['accountId'],
                 'account_name': response['name'],
-                'account_tags': account_tags,
+                'account_tags': ",".join(account_tags),
+                'has_bills': has_bills,
                 'supported_currencies': settings.SUPPORTED_CURRENCIES,
                 'account_default_currency_code': response.get('default_currency_code'),
-                'bills': response_bills.get('results') or [],
                 'accounts': response_accounts.get('accounts') or [],
-                'search_query': search_query,
-                'search_tags': search_tags,
-                'search_start_date': search_start_date,
-                'search_end_date': search_end_date,
         }
         template = JINJA_ENVIRONMENT.get_template('account_detail.html')
         self.response.out.write(template.render(template_values))
-
 
 class AccountSettings(BaseHandler):
     @check_credentials

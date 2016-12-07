@@ -9,17 +9,14 @@
 </nav>
 
 <div class="account_charts container">
-  <div class="row add_account_home">
-        <form action="/create_account" method="post">
-            <div class="input-field col s4">
-                <input id="account_add" type="text" class="validate" name="account_name">
-                <label for="account_add">Create an Account</label>
-            </div>
-            <div class="col s2">
-                <button class="waves-effect waves-light btn" type="submit" name="action">Add</button>
-            </div>
-        </form>
+  <div>
+    <a class="modal-trigger waves-effect waves-teal btn-flat right btn-create_account" href="#create_account">Create an Account</a>
+    <div class="clearfix"></div>
   </div>
+
+  {% include "create_account_modal.html" %}
+
+  {% if accounts %}
   <div>
     <div class="row account_each card">
       <div class="col s4">
@@ -33,6 +30,11 @@
       </div>
     </div>
   </div>
+  {% else %}
+  <div class="account_each card">
+    <h3 class="helper-info">Hello {{ profile.nickname }}, start adding bills by creating an account </h3>
+  </div>
+  {% endif %}
 </div>
 <script type="text/javascript">
 google.charts.load('current', {packages: ['corechart', 'line']});
