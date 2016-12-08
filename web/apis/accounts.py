@@ -14,22 +14,28 @@ class AccountsApi(remote.Service):
         raise_unless_user(user)
 
         profile = userProfile(user)
-        def _copyAccountsMessage(profile):
-            alm = AccountListMessage()
-            for accountId in profile.accountIds:
-                am = AccountMessage()
-                account = Key(Account, accountId).get()
-                am.accountId = accountId
-                am.name = account.name
 
-                am.check_initialized()
-                alm.accounts.append(am)
-            alm.check_initialized()
-            return alm
 
-        return _copyAccountsMessage(profile)
+        def _copyAccountMessage(accountId):
+            am = AccountMessage()
+            account = Key(Account, accountId).get()
+            am.accountId = accountId
+            am.name = account.name
 
-    @endpoints.method(StringMessage, AccountMessage,
+            am.check_initialized()
+            return am
+
+        alm = AccountListMessage()
+        for accountId in profile.accountIds:
+            alm.owner_accounts.append(_copyAccountMessage(accountId))
+
+        for accountId in profile.editorForAccountsIds:
+            alm.editor_accounts.append(_copyAccountMessage(accountId))
+
+        alm.check_initialized()
+        return alm
+
+    @endpoints.method(AccountMessage, AccountMessage,
             path='createAccount',
             http_method='POST', name='createAccount')
     def createAccount(self,request):
@@ -37,13 +43,17 @@ class AccountsApi(remote.Service):
         raise_unless_user(user)
 
         profile = userProfile(user)
-        account_name = request.data
+        account_name = request.name
 
         @ndb.transactional(xg=True)
-        def _createAccount(profile, account_name):
+        def _createAccount(profile, account_name, tagstr, default_currency_code):
             am = AccountMessage()
 
-            account = Account(name = account_name)
+            account = Account(
+                    name = account_name,
+                    tagstr = tagstr,
+                    default_currency_code = default_currency_code
+                    )
             acc_key = account.put()
 
             profile.accountIds.append(acc_key.id())
@@ -53,7 +63,8 @@ class AccountsApi(remote.Service):
             am.name = account_name
             return am
 
-        return _createAccount(profile, account_name)
+        return _createAccount(profile, request.name, request.tagstr, request.default_currency_code)
+
 
     @endpoints.method(AccountMessage, AccountMessage,
             path='updateAccount',
@@ -63,12 +74,68 @@ class AccountsApi(remote.Service):
         raise_unless_user(user)
 
         accountId = int(request.accountId)
-        checkAccountBelongsToUser(user, accountId)
+        checkAccountAccess(user, accountId, settings.FULL_SCOPE)
+
         account = Key(Account, accountId).get()
         account.tagstr = request.tagstr
-        account.name= request.name
+        account.name = request.name
         account.default_currency_code = request.default_currency_code
+
         account.put()
+
+        return self._buildAccountMessage(account)
+
+    @endpoints.method(AccountMessage, AccountMessage,
+            path='addEditor',
+            http_method='POST', name='addEditor')
+    @ndb.transactional(xg=True)
+    def addEditor(self,request):
+        user=endpoints.get_current_user()
+        raise_unless_user(user)
+
+        accountId = int(request.accountId)
+        checkAccountAccess(user, accountId, settings.FULL_SCOPE)
+
+        editor = request.editorToAdd
+        editor_profile = Profile.get_by_id(editor)
+        if not editor_profile:
+            raise endpoints.InternalServerErrorException("Profile with email {} not found.".format(editor))
+
+        account = Key(Account, accountId).get()
+        if not editor in account.editors:
+            account.editors.append(editor)
+            account.put()
+
+        if not accountId in editor_profile.editorForAccountsIds:
+            editor_profile.editorForAccountsIds.append(accountId)
+            editor_profile.put()
+
+        return self._buildAccountMessage(account)
+
+    @endpoints.method(AccountMessage, AccountMessage,
+            path='removeEditor',
+            http_method='POST', name='removeEditor')
+    @ndb.transactional(xg=True)
+    def removeEditor(self,request):
+        user=endpoints.get_current_user()
+        raise_unless_user(user)
+
+        accountId = int(request.accountId)
+        checkAccountAccess(user, accountId, settings.FULL_SCOPE)
+
+        editor = request.editorToRemove
+        editor_profile = Profile.get_by_id(editor)
+        if not editor_profile:
+            raise endpoints.InternalServerErrorException("Profile with email {} not found.".format(editor))
+
+        account = Key(Account, accountId).get()
+        if editor in account.editors:
+            account.editors.remove(editor)
+            account.put()
+
+        if accountId in editor_profile.editorForAccountsIds:
+            editor_profile.editorForAccountsIds.remove(accountId)
+            editor_profile.put()
 
         return self._buildAccountMessage(account)
 
@@ -80,9 +147,8 @@ class AccountsApi(remote.Service):
         user=endpoints.get_current_user()
         raise_unless_user(user)
 
-        profile = userProfile(user)
         accountId = int(request.accountId)
-        checkAccountBelongsToUser(user, accountId)
+        checkAccountAccess(user, accountId)
 
         accountKey = Key(Account, accountId)
         account = accountKey.get()
@@ -98,12 +164,17 @@ class AccountsApi(remote.Service):
         am.name = account.name
         am.tagstr = account.tagstr
         am.default_currency_code = account.default_currency_code
+        for editor in account.editors:
+            sm = StringMessage()
+            sm.data = editor
+            am.editors.append(sm)
         am.tags = []
         for tag in account.tags():
             sm = StringMessage()
             sm.data = tag
             am.tags.append(sm)
         am.bills = []
+
         for bill in bills:
             bm = buildBillMessage(bill)
             am.bills.append(bm)

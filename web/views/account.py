@@ -3,10 +3,13 @@ from view_imports import *
 class CreateAccount(BaseHandler):
     @check_credentials
     def post(self):
-        account_name = self.request.get('account_name')
-
         accounts_service = get_service(self.session, 'accounts')
-        response = accounts_service.createAccount(body={'data':account_name}).execute()
+        body = {
+                'name': self.request.get('account_name'),
+                'default_currency_code': self.request.get('account_default_currency_code'),
+                'tagstr': self.request.get('account_tagstr')
+                }
+        response = accounts_service.createAccount(body=body).execute()
 
         self.redirect('/account/'+response['accountId'])
 
@@ -33,7 +36,8 @@ class AccountDetail(BaseHandler):
                 'has_bills': has_bills,
                 'supported_currencies': settings.SUPPORTED_CURRENCIES,
                 'account_default_currency_code': response.get('default_currency_code'),
-                'accounts': response_accounts.get('accounts') or [],
+                'owner_accounts': response_accounts.get('owner_accounts') or [],
+                'editor_accounts': response_accounts.get('editor_accounts') or [],
         }
         template = JINJA_ENVIRONMENT.get_template('account_detail.html')
         self.response.out.write(template.render(template_values))
@@ -49,6 +53,7 @@ class AccountSettings(BaseHandler):
 
         response_accounts = account_service.listAccounts().execute()
         template_values = {
+                'account': response,
                 'account_id': account_id,
                 'name': response.get('name'),
                 'tagstr': response.get('tagstr') or '',
@@ -72,3 +77,30 @@ class AccountSettings(BaseHandler):
                 ).execute()
 
         self.redirect(self.request.path)
+
+class AddEditor(BaseHandler):
+    @check_credentials
+    def post(self, account_id):
+        account_service = get_service(self.session,'accounts')
+        response = account_service.addEditor(
+                body={
+                    'accountId': account_id,
+                    'editorToAdd': self.request.get('account_editor_to_add')
+                    }
+                ).execute()
+
+        self.redirect(self.request.referer)
+
+
+class RemoveEditor(BaseHandler):
+    @check_credentials
+    def post(self, account_id):
+        account_service = get_service(self.session,'accounts')
+        response = account_service.removeEditor(
+                body={
+                    'accountId': account_id,
+                    'editorToRemove': self.request.get('account_editor_to_remove')
+                    }
+                ).execute()
+
+        self.redirect(self.request.referer)

@@ -46,10 +46,16 @@ def userProfile(user):
 
     return profile
 
-def checkAccountBelongsToUser(user, account_id):
+def checkAccountAccess(user, account_id, scope=settings.READ_SCOPE):
     profile = userProfile(user)
-    if (account_id not in profile.accountIds):
-        raise AccountUnauthorizedAccess("{} tried to access account id {}.".format(profile.key.id(), account_id))
+
+    if account_id in profile.accountIds:
+        return True
+
+    if (account_id in profile.editorForAccountsIds) and (scope <= settings.UPDATE_SCOPE):
+        return True
+
+    raise endpoints.InternalServerErrorException("{} tried to access account id {} with scope {}.".format(profile.key.id(), account_id, scope))
 
 def getFilepath(account_id, bill_id, filename):
     return '/' + settings.FILE_BUCKET + '/' + account_id + '/' + bill_id + '/' + filename

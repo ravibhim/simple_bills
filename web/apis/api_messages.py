@@ -35,10 +35,16 @@ class AccountMessage(messages.Message):
     tagstr = messages.StringField(3)
     default_currency_code = messages.StringField(4)
     tags = messages.MessageField(StringMessage,5, repeated=True)
-    bills = messages.MessageField(BillMessage,6, repeated=True)
+    editors = messages.MessageField(StringMessage,6, repeated=True)
+    bills = messages.MessageField(BillMessage,7, repeated=True)
+
+    # Non model attributes
+    editorToAdd = messages.StringField(50)
+    editorToRemove = messages.StringField(60)
 
 class AccountListMessage(messages.Message):
-    accounts = messages.MessageField(AccountMessage,1,repeated=True)
+    owner_accounts = messages.MessageField(AccountMessage,1,repeated=True)
+    editor_accounts = messages.MessageField(AccountMessage,2,repeated=True)
 
 class DayActivityMessage(messages.Message):
     date = messages.StringField(1)

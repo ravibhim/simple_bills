@@ -12,11 +12,24 @@
   <div>
     <a class="modal-trigger waves-effect waves-teal btn-flat right btn-create_account" href="#create_account">Create an Account</a>
     <div class="clearfix"></div>
+    {% include "create_account_modal.html" %}
   </div>
 
-  {% include "create_account_modal.html" %}
+  <!-- List accounts with links -->
+  <div>
+    <h4> Your Accounts </h4>
+    {% for account in owner_accounts %}
+      <a href="/account/{{account.accountId}}">{{account.name}}</a> <br/>
+    {% endfor %}
+      </br>
+    <h4> Shared Accounts </h4>
+    {% for account in editor_accounts %}
+      <a href="/account/{{account.accountId}}">{{account.name}}</a> <br/>
+    {% endfor %}
+  </div>
 
-  {% if accounts %}
+  <!-- Placeholder for Account activity -->
+{% if owner_accounts or editor_accounts %}
   <div>
     <div class="row account_each card">
       <div class="col s4">
@@ -36,6 +49,8 @@
   </div>
   {% endif %}
 </div>
+
+
 <script type="text/javascript">
 google.charts.load('current', {packages: ['corechart', 'line']});
 google.charts.setOnLoadCallback(drawBasic);

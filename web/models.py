@@ -7,9 +7,11 @@ class Account(ndb.Model):
     tagstr = ndb.StringProperty(indexed=False)
     default_currency_code = ndb.StringProperty(indexed=False)
     createdAt = ndb.DateTimeProperty(auto_now_add=True, indexed=False)
+    editors = ndb.StringProperty(indexed=False, repeated=True)
 
     def tags(self):
         return [x.strip().upper() for x in (self.tagstr or '').split(',')]
+
 
 class Bill(ndb.Model):
     desc = ndb.StringProperty()
@@ -35,7 +37,8 @@ class Bill(ndb.Model):
 class Profile(ndb.Model):
     userId = ndb.StringProperty()
     nickname = ndb.StringProperty()
-    accountIds = ndb.IntegerProperty(repeated=True)
+    accountIds = ndb.IntegerProperty(indexed=False, repeated=True)
+    editorForAccountsIds = ndb.IntegerProperty(indexed=False,repeated=True)
 
     def getAccounts(self):
         return [ndb.Key(Account, account_id).get() for index, account_id in enumerate(self.accountIds)]

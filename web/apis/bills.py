@@ -17,7 +17,7 @@ class BillsApi(remote.Service):
             raise endpoints.UnauthorizedException('Authorization required')
 
         accountId = int(request.accountId)
-        checkAccountBelongsToUser(user, accountId)
+        checkAccountAccess(user, accountId, settings.UPDATE_SCOPE)
 
         accountKey = Key(Account, accountId)
         amount = int(request.amount)
@@ -56,7 +56,7 @@ class BillsApi(remote.Service):
             raise endpoints.UnauthorizedException('Authorization required')
 
         accountId = int(request.accountId)
-        checkAccountBelongsToUser(user, accountId)
+        checkAccountAccess(user, accountId, settings.UPDATE_SCOPE)
         accountKey = Key(Account, accountId)
 
         billId = request.billId
@@ -81,7 +81,7 @@ class BillsApi(remote.Service):
             raise endpoints.UnauthorizedException('Authorization required')
 
         accountId = int(request.accountId)
-        checkAccountBelongsToUser(user, accountId)
+        checkAccountAccess(user, accountId, settings.UPDATE_SCOPE)
         accountKey = Key(Account, accountId)
 
         billId = request.billId
@@ -103,7 +103,7 @@ class BillsApi(remote.Service):
             raise endpoints.UnauthorizedException('Authorization required')
 
         accountId = int(request.accountId)
-        checkAccountBelongsToUser(user, accountId)
+        checkAccountAccess(user, accountId, settings.UPDATE_SCOPE)
         accountKey = Key(Account, accountId)
 
         billId = request.billId
@@ -131,7 +131,7 @@ class BillsApi(remote.Service):
             raise endpoints.UnauthorizedException('Authorization required')
 
         accountId = int(request.accountId)
-        checkAccountBelongsToUser(user, accountId)
+        checkAccountAccess(user, accountId, settings.UPDATE_SCOPE)
         accountKey = ndb.Key(Account, accountId)
 
         billId = request.billId

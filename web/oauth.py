@@ -2,6 +2,8 @@ import httplib2
 import apiclient
 import oauth2client
 import os
+import pprint
+from google.appengine.api import urlfetch
 
 from base import BaseHandler
 
@@ -53,14 +55,40 @@ def check_credentials(func):
         page_handler = args[0]
         page_handler.session['return_url'] = page_handler.request.url
 
-        session_credentials = page_handler.session.get('credentials')
+        session_credentials = get_session_credentials(page_handler)
+
         if not session_credentials:
             return page_handler.redirect('/oauth2callback')
 
         credentials = oauth2client.client.OAuth2Credentials.from_json(session_credentials)
         if credentials.access_token_expired:
+            # TODO: Use the refresh token to fetch another access token.
+            # http://stackoverflow.com/questions/27771324/google-api-getting-credentials-from-refresh-token-with-oauth2client-client
             return page_handler.redirect('/oauth2callback')
 
         return func(*args, **kwargs)
     return wrapper
+
+def get_session_credentials(handler):
+    return handler.session.get('credentials')
+
+def is_user_logged_in(handler):
+    session_credentials = get_session_credentials(handler)
+
+    if session_credentials:
+        credentials = oauth2client.client.OAuth2Credentials.from_json(session_credentials)
+        if not credentials.access_token_expired:
+            return True
+
+    return False
+
+# Revoke the Oauth token
+# http://stackoverflow.com/questions/21405274/this-app-would-like-to-have-offline-access-when-access-type-online
+def revoke_access_token(handler):
+    session_credentials = get_session_credentials(handler)
+    if session_credentials:
+        credentials = oauth2client.client.OAuth2Credentials.from_json(session_credentials)
+        urlfetch.fetch('%s?token=%s' % (credentials.revoke_uri, credentials.access_token))
+
+    return True
 

@@ -17,7 +17,7 @@ class SearchBillsApi(remote.Service):
 
         profile = userProfile(user)
         accountId = int(request.accountId)
-        checkAccountBelongsToUser(user, accountId)
+        checkAccountAccess(user, accountId, settings.READ_SCOPE)
 
         accountKey = Key(Account, accountId)
 
