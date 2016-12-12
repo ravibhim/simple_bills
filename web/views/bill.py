@@ -1,6 +1,7 @@
 from view_imports import *
 
 from dateutil import parser
+import json
 
 class CreateBill(BaseHandler):
     @check_credentials
@@ -103,3 +104,25 @@ class RemoveFileFromBill(BaseHandler):
             bills_service.removeFileFromBill(body=body).execute()
 
         self.redirect('/account/' + account_id + '/' + bill_id + '/edit_bill')
+
+class SearchBill(BaseHandler):
+    @check_credentials
+    def get(self, account_id):
+        # Fetch Bills to display
+        search_query = self.request.get('search_query')
+        search_start_date = self.request.get('search_start_date')
+        search_end_date = self.request.get('search_end_date')
+        search_tags = self.request.get('search_tags', allow_multiple=True)
+        search_bills_service = get_service(self.session, 'search_bills')
+
+        search_request_body = {
+                    'accountId': account_id,
+                    'start_date': search_start_date,
+                    'end_date': search_end_date,
+                    'tags': listToStringMessages(search_tags),
+                    'query': search_query
+                }
+
+        response_bills = search_bills_service.searchBills(body=search_request_body).execute()
+        self.response.headers['Content-Type'] = "application/json"
+        self.response.out.write(json.dumps(response_bills))

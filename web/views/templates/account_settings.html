@@ -1,26 +1,33 @@
-<form action="/account/{{account_id}}/settings" method="post" enctype='multipart/form-data'>
-    <div class="row">
-      <span class="col s12">Name: <input value="{{name}}" name="account_name" /> </span>
-    </div>
-    <div class="row">
-      <span class="col s12">
-        Default Currency Code:
-        <select name="account_default_currency_code">
-          {% for currency in supported_currencies %}
-            <option value={{currency}} {% if default_currency_code == currency %} selected {%endif%}> {{currency}} </option>
-          {% endfor %}
-        </select>
-      </span>
-    </div>
-    <div class="row">
-      <span class="col s12">Tag String: <input value="{{tagstr}}" name="account_tagstr" /> </span>
-    </div>
-    <button class="btn waves-effect waves-light" type="submit" name="action">Update</button>
-</form>
-
-<br/>
-<br/>
-<br/>
+{% extends "base.html" %}
+{% block content %}
 
 
-<a href="/account/{{account_id}}">Back to Account</a>
+<div class="container" id="edit_page">
+  <a href="/account/{{account_id}}">Back to Account</a>
+  <div class="card row">
+    <h4>Account settings</h4>
+    <form action="/account/{{account_id}}/settings" method="post" enctype='multipart/form-data'>
+          <div class="input-field col s6">
+            <input id="account_name" type="text" value="{{name}}" name="account_name">
+            <label for="account_name" class="active">Account Name</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="bill_tags" type="text" value="{{tagstr}}" name="account_tagstr">
+            <label for="bill_tags" class="active">Bill Tags</label>
+          </div>
+          <div class="input-field col s4">
+            <select name="account_default_currency_code">
+              {% for currency in supported_currencies %}
+              <option value={{currency}} {% if default_currency_code == currency %} selected {%endif%}> {{currency}} </option>
+              {% endfor %}
+            </select>
+            <label>Default Currency for Bills </label>
+          </div>
+          <div class="col s12">
+            <button class="btn waves-effect waves-light right" type="submit" name="action">Update</button>
+            <div class="clearfix"></div>
+          </div>
+    </form>
+</div>
+
+{% endblock %}
