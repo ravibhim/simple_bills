@@ -27,8 +27,8 @@ class HomePage(BaseHandler):
 
         template_values = {
             'profile': profile,
-            'owner_accounts': response['owner_accounts'] or [],
-            'editor_accounts': response['editor_accounts'] or [],
+            'owner_accounts': response.get('owner_accounts') or [],
+            'editor_accounts': response.get('editor_accounts') or [],
             'supported_currencies': settings.SUPPORTED_CURRENCIES,
             'accounts_activity': accounts_activity
         }

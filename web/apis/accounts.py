@@ -15,7 +15,6 @@ class AccountsApi(remote.Service):
 
         profile = userProfile(user)
 
-
         def _copyAccountMessage(accountId):
             am = AccountMessage()
             account = Key(Account, accountId).get()
