@@ -4,46 +4,60 @@
 
 <div class="container" id="edit_page">
   <a href="/account/{{account_id}}">Back to Account</a>
-  <div class="card row">
-    <h4>Account settings</h4>
-    <form action="/account/{{account_id}}/settings" method="post" enctype='multipart/form-data'>
-          <div class="input-field col s6">
-            <input id="account_name" type="text" value="{{name}}" name="account_name">
-            <label for="account_name" class="active">Account Name</label>
+  <div class="card">
+    <div class="row">
+      <h4>Account settings</h4>
+      <form action="/account/{{account_id}}/settings" method="post" enctype='multipart/form-data'>
+            <div class="input-field col s6">
+              <input id="account_name" type="text" value="{{name}}" name="account_name">
+              <label for="account_name" class="active">Account Name</label>
+            </div>
+            <div class="input-field col s12">
+              <input id="bill_tags" type="text" value="{{tagstr}}" name="account_tagstr">
+              <label for="bill_tags" class="active">Bill Tags</label>
+            </div>
+            <div class="input-field col s4">
+              <select name="account_default_currency_code">
+                {% for currency in supported_currencies %}
+                <option value={{currency}} {% if default_currency_code == currency %} selected {%endif%}> {{currency}} </option>
+                {% endfor %}
+              </select>
+              <label>Default Currency for Bills </label>
+            </div>
+            <div class="col s12">
+              <button class="btn waves-effect waves-light right" type="submit" name="action">Update</button>
+              <div class="clearfix"></div>
+            </div>
+      </form>
+    </div>
+    <div class="divider"></div>
+    <div class="row">
+      <h5 class="subheader"> Account shared with</h5>
+      {% for editor in account.editors %}
+      <div class="col s12">
+        <span class="col s6 filelink">{{editor.data}}</span>
+        <form action="/account/{{account_id}}/remove_editor" method="post">
+          <input class="hide" name="account_editor_to_remove" value="{{editor.data}}"/>
+          <div class="col s6">
+              <button class="icon-submit" type="submit"><i class="material-icons">delete</i></button>
           </div>
-          <div class="input-field col s12">
-            <input id="bill_tags" type="text" value="{{tagstr}}" name="account_tagstr">
-            <label for="bill_tags" class="active">Bill Tags</label>
-          </div>
-          <div class="input-field col s4">
-            <select name="account_default_currency_code">
-              {% for currency in supported_currencies %}
-              <option value={{currency}} {% if default_currency_code == currency %} selected {%endif%}> {{currency}} </option>
-              {% endfor %}
-            </select>
-            <label>Default Currency for Bills </label>
-          </div>
-          <div class="col s12">
-            <button class="btn waves-effect waves-light right" type="submit" name="action">Update</button>
-            <div class="clearfix"></div>
-          </div>
-    </form>
-</div>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="divider"></div>
+    <div class="row">
+      <h5 class="subheader"> Share with </h5>
+      <form action="/account/{{account_id}}/add_editor" method="post">
+        <div class="input-field col s8">
+          <input name="account_editor_to_add" type="text" placeholder="Enter email address"/>
+        </div>
+        <button class="btn waves-effect waves-light"  type="submit">Share</button>
+      </form>
+    </div>
+  </div>
 
-<h4> Account shared with</h4>
-{% for editor in account.editors %}
-<span>{{editor.data}}</span>
-<form action="/account/{{account_id}}/remove_editor" method="post">
-  <input class="hide" name="account_editor_to_remove" value="{{editor.data}}"/>
-  <button type="submit">Remove</button>
-</form>
-</br>
-{% endfor %}
 
-<h4> Share with </h4>
-<form action="/account/{{account_id}}/add_editor" method="post">
-  <input name="account_editor_to_add" />
-  <button type="submit">Add</button>
-</form>
+
 
 {% endblock %}

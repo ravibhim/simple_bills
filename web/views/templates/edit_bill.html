@@ -1,13 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-<nav>
-    <div class="nav-wrapper">
-        <a href="#" class="brand-logo">SimpleBills</a>
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="#">{{ profile.nickname }}</a></li>
-        </ul>
-    </div>
-</nav>
 
 <div class="container" id="edit_page">
   <a href="/account/{{account_id}}">Back to Account</a>
@@ -34,8 +26,6 @@
             <hr />
       </form>
     </div>
-
-
     <div class="uploaded_files">
       <h5 class="subheader"> Uploaded Files </h5>
       {% if bill.files %}
