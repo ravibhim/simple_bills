@@ -1,4 +1,5 @@
 from view_imports import *
+import json
 
 class MainPage(BaseHandler):
     def get(self):
@@ -30,7 +31,8 @@ class HomePage(BaseHandler):
             'owner_accounts': response.get('owner_accounts') or [],
             'editor_accounts': response.get('editor_accounts') or [],
             'supported_currencies': settings.SUPPORTED_CURRENCIES,
-            'accounts_activity': accounts_activity
+            'accounts_activity': accounts_activity,
+            'accounts_activity_json': json.dumps(accounts_activity)
         }
 
         template = JINJA_ENVIRONMENT.get_template('home.html')

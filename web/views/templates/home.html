@@ -40,17 +40,19 @@
      </ul>
   </div>
   <div>
+    {% for account in accounts_activity.data %}
     <div class="row account_each card">
       <div class="col s4">
-        <h4 class="headline_main">Office</h4>
-        <p>No. of Bills: 44</p>
-        <p>Amount Billed: Rs 24000</p>
-        <a href="#">More Details</a>
+        <h4 class="headline_main">{{account.name}}</h4>
+        <p>No. of Bills: {{account.activity|length}}</p>
+        <p>Amount Billed: {{account.currency}} 0</p>
+        <a href="/account/{{account.accountId}}">More Details</a>
       </div>
       <div class="col s8">
-        <div id="office_chart"></div>
+        <div id="office_chart_{{account.accountId}}"></div>
       </div>
     </div>
+    {% endfor %}
   </div>
   {% else %}
   <div class="account_each card">
@@ -59,39 +61,67 @@
   {% endif %}
 </div>
 
-
 <script type="text/javascript">
-google.charts.load('current', {packages: ['corechart', 'line']});
-google.charts.setOnLoadCallback(drawBasic);
+$(function() {
+  var accountsActivity = JSON.parse('{{accounts_activity_json|safe}}');
 
-function drawBasic() {
+  google.charts.load('current', {packages: ['corechart', 'bar']});
 
+  accountsActivity.data.forEach(function(account) {
+    drawAccountActivityGraph(account);
+  });
+
+  function drawAccountActivityGraph(account) {
+    var config = {
+        seriesData: [],
+        maxValue: account.activity.length + 5,
+        accountActivity: account.activity,
+        drawArea: document.getElementById("office_chart_" + account.accountId)
+    };
+
+    account.activity.forEach(function(activity) {
+      config.seriesData.push([
+          new Date(activity.date),
+          parseInt(activity.num_bills)
+      ])
+    });
+
+    google.charts.setOnLoadCallback(function(){ drawBasic(config); });
+  }
+
+  function drawBasic(config) {
     var data = new google.visualization.DataTable();
-    data.addColumn('number', 'X');
+    data.addColumn('date', 'X');
     data.addColumn('number', 'Bills');
 
-    data.addRows([
-      [0, 0],   [1, 2],  [2, 2],  [3, 7],  [4, 3],  [5, 2],
-      [6, 1],  [7, 4],  [8, 5],  [9, 1],  [10, 2], [11, 2],
-      [12, 3], [13, 4], [14, 2], [15, 1], [16, 0], [17, 0],
-      [18, 0], [19, 0], [20, 2], [21, 0], [22, 6], [23, 1],
-      [24, 0], [25, 5], [26, 2], [27, 1], [28, 4], [29, 3],
-      [30, 5]
-    ]);
+    data.addRows(config.seriesData);
 
     var options = {
       hAxis: {
-        title: 'Days'
+        title: 'Date',
+        format: 'M/dd',
+        gridlines: {
+          color: 'transparent'
+        }
       },
       vAxis: {
-        title: 'No. of Bills'
-      }
+        title: 'No. of Bills',
+        minValue: 0,
+        maxValue: config.maxValue,
+        format: '#',
+        gridlines: {
+          color: 'transparent'
+        }
+      },
+      bar: {groupWidth: '5'},
+      legend: {position: 'none'}
     };
 
-    var chart = new google.visualization.LineChart(document.getElementById('office_chart'));
+    var chart = new google.visualization.ColumnChart(config.drawArea);
 
     chart.draw(data, options);
   }
+});
 </script>
 
 {% endblock %}

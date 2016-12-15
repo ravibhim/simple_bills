@@ -202,7 +202,7 @@ class AccountsApi(remote.Service):
 
             # Get Bills from the last 30 days
             bills = Bill.query(ancestor=accountKey).order(-Bill.date)
-            bills.filter(Bill.date >= date.today()-timedelta(days=30))
+            bills = bills.filter(Bill.date >= date.today()-timedelta(days=30))
 
             # Build a hash of date and count
             activity = {}
