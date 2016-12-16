@@ -155,7 +155,6 @@
                     </div>
 
                     <div class="search_box col s12">
-
                         <form>
                             <div id="reportrange" class="card">
                                 <i class="material-icons">date_range</i>
@@ -166,7 +165,7 @@
                             </div>
 
                             <div class="search-wrapper card col s6">
-                                <input id="search_query" type="text" ng-model="search_query" name="search_query" placeholder="Search">
+                                <input id="search_query" type="text" ng-model="search_query" ng-keypress="searchOnEnterKey($event)" name="search_query" placeholder="Search">
                                 <i class="material-icons">search</i>
                             </div>
 

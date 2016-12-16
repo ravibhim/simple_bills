@@ -48,6 +48,12 @@ simpleBills.controller("SearchBillController", function($scope) {
         });
     };
 
+    $scope.searchOnEnterKey = function($event) {
+      if ($event.keyCode == 13) {
+        $scope.fetchBills();
+      }
+    };
+
     $scope.isTagSelected = function(tag) {
         return $scope.search_tags[tag];
     };
