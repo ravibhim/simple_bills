@@ -79,8 +79,6 @@ def copyStagingFilepathsToGcs(request, account_id, bill_id, bill = None):
         if bill and (filepath in bill.filepaths):
             raise endpoints.InternalServerErrorException("{} file already uploaded.".format(filename))
         filepaths.append(filepath)
-        logging.info('staging_filepath:{}'.format(staging_filepath.data))
-        logging.info('filepath:{}'.format(filepath))
         gcs.copy2(
                 '/' + settings.STAGING_FILE_BUCKET + staging_filepath.data,
                 '/' + settings.FILE_BUCKET + filepath)
@@ -119,8 +117,8 @@ def buildBillMessage(bill):
 
     return bm
 
-import pprint
 # http://stackoverflow.com/questions/29847759/cloud-storage-and-secure-download-strategy-on-app-engine-gcs-acl-or-blobstore
+# We dont have this working in development. Not really needed.
 def sign_url(bucket_object, expires_after_seconds=300):
     method = 'GET'
     gcs_filename = '/%s%s' % (settings.FILE_BUCKET, bucket_object)
