@@ -32,6 +32,7 @@ class SearchBillsApi(remote.Service):
         if request.start_date:
             bills = bills.filter(Bill.date >= parser.parse(request.start_date))
 
+
         # Filter on end_date if present
         if request.end_date:
             bills = bills.filter(Bill.date <= parser.parse(request.end_date))
