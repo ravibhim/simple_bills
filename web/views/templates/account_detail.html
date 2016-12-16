@@ -37,12 +37,13 @@
                     <a class="waves-effect waves-light btn modal-trigger" href="#addBill">Add a bill</a>
                 </div>
 
+                <div ng-controller="AddBillController">
                 <form action="/account/{{account_id}}/create_bill" method="post" enctype='multipart/form-data'>
-                    <div id="addBill" class="modal modal-fixed-footer">
+                    <div id="addBill" class="modal modal-fixed-footer" ng-controller="AddBillController">
                         <div class="modal-content">
                             <h4> Add a Bill </h4>
                             <div class="input-field col s12">
-                                <input id="bill_desc" type="text" name="bill_desc">
+                                <input id="bill_desc" ng-model="bill_desc" type="text" name="bill_desc">
                                 <label for="bill_desc">Bill Title</label>
                             </div>
 
@@ -55,7 +56,7 @@
                                 <label>Currency </label>
                             </div>
                             <div class="input-field col s6">
-                                <input id="bill_amount" type="text" name="bill_amount">
+                                <input id="bill_amount" type="text" ng-model="bill_amount" name="bill_amount">
                                 <label for="bill_amount">Bill Amount</label>
                             </div>
 
@@ -66,24 +67,30 @@
                                 </div>
                                 <!-- date picker javascript -->
                                 <script type="text/javascript">
-                                    var today = new Date();
-                                    var dd = today.getDate();
-                                    var mm = today.getMonth() + 1;
-                                    var yyyy = today.getFullYear();
-                                    if (dd < 10) {
-                                        dd = '0' + dd
-                                    }
-                                    if (mm < 10) {
-                                        mm = '0' + mm
-                                    }
-                                    today = dd + '/' + mm + '/' + yyyy
-                                    $('#bill_date').daterangepicker({
-                                        "singleDatePicker": true,
-                                        "startDate": today,
-                                        "locale": {
-                                            "format": "DD/MM/YYYY",
-                                            "separator": " / "
-                                        }
+                                    $(function() {
+                                      var today = new Date();
+                                      var dd = today.getDate();
+                                      var mm = today.getMonth() + 1;
+                                      var yyyy = today.getFullYear();
+
+                                      if (dd < 10) {
+                                          dd = '0' + dd
+                                      }
+
+                                      if (mm < 10) {
+                                          mm = '0' + mm
+                                      }
+
+                                      today = dd + '/' + mm + '/' + yyyy
+
+                                      $('#bill_date').daterangepicker({
+                                          "singleDatePicker": true,
+                                          "startDate": today,
+                                          "locale": {
+                                              "format": "DD/MM/YYYY",
+                                              "separator": " / "
+                                          }
+                                      });
                                     });
                                 </script>
                                 <!-- *************************** -->
@@ -116,11 +123,13 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn modal-action modal-close waves-effect waves-red" type="submit" name="action">Save</button>
+                            <button class="btn modal-action" type="button" ng-click="submitForm($event)">Save</button>
                             <a href="" class="modal-action modal-close waves-effect waves-red btn-flat ">Cancel</a>
                         </div>
                     </div>
                 </form>
+                </div>
+
                 {% if not has_bills %}
                 <div class="card col s12" id="cold_start">
                     <p class="helper-info">

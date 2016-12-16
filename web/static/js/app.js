@@ -43,7 +43,7 @@ simpleBills.controller("SearchBillController", function($scope) {
                 $('#spinner-container').hide();
             },
             error: function() {
-                window.reload();
+                location.reload();
             }
         });
     };
@@ -82,4 +82,43 @@ simpleBills.controller("SearchBillController", function($scope) {
 
     initDateRangePicker();
     $scope.fetchBills();
+});
+
+simpleBills.controller("AddBillController", function($scope) {
+    $scope.accountId = PageConfig ? PageConfig.accountId : "";
+    $scope.requiredFields = ['bill_desc', 'bill_amount'];
+
+    $scope.validateForm = function() {
+      for(var i = 0; i < $scope.requiredFields.length; i++) {
+        if(!$scope[$scope.requiredFields[i]]) {
+          return false;
+        }
+      }
+
+      return true;
+    };
+
+    $scope.highlightRequiredFields = function() {
+      for(var i = 0; i < $scope.requiredFields.length; i++) {
+        var field = $scope.requiredFields[i];
+        var $inputEle = $("input[ng-model='" + field + "'");
+
+        if(!$scope[field]) {
+          $inputEle.addClass('invalid');
+        } else {
+          $inputEle.removeClass('invalid');
+        }
+      }
+    };
+
+    $scope.submitForm = function($event) {
+      if($scope.validateForm()) {
+        var $submitBtn = $($event.currentTarget);
+        $submitBtn.addClass('disabled');
+        $submitBtn.html('Saving ...');
+        $submitBtn.closest('form').submit();
+      } else {
+        $scope.highlightRequiredFields();
+      }
+    };
 });
