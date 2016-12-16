@@ -14,10 +14,9 @@ dev_appserver.py  --clear_datastore=yes web/
 
 Deploy to production
 --------------------
-appcfg.py --no_cookies update web -E SERVER:'https://confrence-central-145321.appspot.com'
+appcfg.py --no_cookies update web -E SERVER:'https://simplebills-152707.appspot.com' -E WEB_CLIENT_ID:'' -E WEB_CLIENT_SECRET:''
 
 Deploy to test version
 ----------------------
-appcfg.py --no_cookies update web -E SERVER:'https://test-dot-confrence-central-145321.appspot.com'
-
-Test line
+1) Mark version as 'test' in app.yaml
+appcfg.py --no_cookies update web -E SERVER:'https://test-dot-simplebills-152707.appspot.com' -E WEB_CLIENT_ID:'' -E WEB_CLIENT_SECRET:''

@@ -2,13 +2,14 @@ import httplib2
 import apiclient
 import oauth2client
 import os
+import settings
 import pprint
 from google.appengine.api import urlfetch
 
 from base import BaseHandler
 
-CLIENT_ID = '1037916704056-t9g7m7vcipm0lpc1l7d39umrq731j8kn.apps.googleusercontent.com'
-CLIENT_SECRET = '2BWS2YfcZG1YhLxtHKakn03O'
+CLIENT_ID = settings.WEB_CLIENT_ID
+CLIENT_SECRET = settings.WEB_CLIENT_SECRET
 SCOPE = 'https://www.googleapis.com/auth/userinfo.email'
 
 class OAuth2CallbackPage(BaseHandler):
@@ -26,6 +27,7 @@ class OAuth2CallbackPage(BaseHandler):
             auth_uri = flow.step1_get_authorize_url()
             return self.redirect(auth_uri)
         else:
+            pprint.pprint(CLIENT_SECRET)
             credentials = flow.step2_exchange(self.request.get('code'))
             self.session['credentials'] = credentials.to_json()
             redirect_url = '/'

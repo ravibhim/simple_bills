@@ -1,11 +1,11 @@
-application: confrence-central-145321
-version: alpha-007
+application: simplebills-152707
+module: default
+version: alpha-001
 runtime: python27
 api_version: 1
 threadsafe: true
-basic_scaling:
-  idle_timeout: 10m
-  max_instances: 3
+manual_scaling:
+  instances: 2
 
 handlers:
 - url: /remote_api
@@ -43,3 +43,7 @@ env_variables:
   SERVER: 'http://localhost:8080'
   OAUTH_REDIRECT_PATH: '/oauth2callback'
   API_ROOT_PATH: '/_ah/api'
+  WEB_CLIENT_ID: '601259546874-04vgln5ohv19gp8dq8mbnu18rfnuo5dl.apps.googleusercontent.com'
+  WEB_CLIENT_SECRET: 'N0xjMEWPfjcGCkxfXlqIAYRS'
+  FILE_BUCKET: 'simplebills'
+  STAGING_FILE_BUCKET: 'simplebills-file-staging-bucket'
