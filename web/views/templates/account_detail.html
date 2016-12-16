@@ -186,7 +186,7 @@
                                         <td>
 
                                             <span ng-repeat="file in bill.files">
-                                  <a href="#{file.original}">#{file.filename}</a>
+                                  <a href="#{file.signed_url}" target="_blank">#{file.filename}</a>
                                 </span>
                                         </td>
                                         <td><a href="/account/#{accountId}/#{bill.billId}/edit_bill" class="edit-btn"><i class="material-icons">edit</i></a></td>

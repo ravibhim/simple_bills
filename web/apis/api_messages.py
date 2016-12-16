@@ -10,7 +10,8 @@ class ProfileMessage(messages.Message):
 
 class FileMessage(messages.Message):
     filename = messages.StringField(1)
-    original = messages.StringField(2)
+    #original = messages.StringField(2)
+    signed_url = messages.StringField(2)
 
 class BillMessage(messages.Message):
     accountId = messages.IntegerField(1)
