@@ -1,4 +1,5 @@
 from view_imports import *
+import json
 
 class CreateAccount(BaseHandler):
     @check_credentials
@@ -24,20 +25,21 @@ class AccountDetail(BaseHandler):
         has_bills = True if 'bills' in response else False
 
         response_accounts = account_service.listAccounts().execute()
-        account_tags = []
-        for tag in response['tags']:
-            account_tags.append(tag['data'])
+        account_tags = stringMessagesToList(response['tags'])
+        account_tags_json = json.dumps(account_tags)
 
         template_values = {
-                'profile' : profile,
-                'account_id': response['accountId'],
-                'account_name': response['name'],
-                'account_tags': ",".join(account_tags),
-                'has_bills': has_bills,
-                'supported_currencies': settings.SUPPORTED_CURRENCIES,
-                'account_default_currency_code': response.get('default_currency_code'),
-                'owner_accounts': response_accounts.get('owner_accounts') or [],
-                'editor_accounts': response_accounts.get('editor_accounts') or [],
+            'profile' : profile,
+            'account_id': response['accountId'],
+            'account_name': response['name'],
+            'account_tags': account_tags,
+            'account_tags_json': account_tags_json,
+            'has_bills': has_bills,
+            'default_currency_code': response.get('default_currency_code') or '',
+            'supported_currencies': settings.SUPPORTED_CURRENCIES,
+            'account_default_currency_code': response.get('default_currency_code'),
+            'owner_accounts': response_accounts.get('owner_accounts') or [],
+            'editor_accounts': response_accounts.get('editor_accounts') or [],
         }
         template = JINJA_ENVIRONMENT.get_template('account_detail.html')
         self.response.out.write(template.render(template_values))

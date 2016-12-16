@@ -63,7 +63,7 @@
 
 <script type="text/javascript">
 $(function() {
-  var accountsActivity = JSON.parse('{{accounts_activity_json|safe}}');
+  var accountsActivity = {{accounts_activity_json|safe}};
 
   google.charts.load('current', {packages: ['corechart', 'bar']});
 
@@ -98,8 +98,8 @@ $(function() {
 
     var options = {
       hAxis: {
-        title: 'Date',
-        format: 'M/dd',
+        format: 'MMM dd',
+        minValue: moment().subtract(15, 'days').toDate(),
         gridlines: {
           color: 'transparent'
         }

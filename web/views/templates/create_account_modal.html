@@ -10,7 +10,7 @@
         <div class="input-field col s4">
             <select name="account_default_currency_code">
               {% for currency in supported_currencies %}
-                <option value={{currency}}> {{currency}} </option>
+                <option value={{currency}} {% if default_currency_code == currency %} selected {%endif%}> {{currency}} </option>
               {% endfor %}
             </select>
             <label for="account_default_currency_code">Default Currency</label>

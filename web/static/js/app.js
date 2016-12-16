@@ -6,7 +6,7 @@ simpleBills.config(function($interpolateProvider) {
 
 simpleBills.controller("SearchBillController", function($scope) {
     $scope.accountId = PageConfig ? PageConfig.accountId : "";
-    $scope.accountTags = PageConfig ? PageConfig.accountTags.split(",") : [];
+    $scope.accountTags = PageConfig ? PageConfig.accountTags : [];
     $scope.bills = [];
     $scope.search_tags = {};
 

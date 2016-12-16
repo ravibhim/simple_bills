@@ -22,11 +22,6 @@ class BillsApi(remote.Service):
         accountKey = Key(Account, accountId)
         amount = int(request.amount)
 
-        tags = []
-        for tag in request.tags:
-            if tag.data:
-                tags.append(tag.data)
-
         # App generated billId
         billId = str(uuid.uuid4())
 
@@ -39,7 +34,7 @@ class BillsApi(remote.Service):
                 currency_code=request.currency_code,
                 amount=float(request.amount),
                 date=parser.parse(request.date),
-                tags=tags,
+                tags=extractArrayFromStringMessageArray(request.tags),
                 filepaths=filepaths,
                 parent=accountKey
                 )
@@ -67,6 +62,7 @@ class BillsApi(remote.Service):
         bill.amount = float(request.amount)
         bill.desc = request.desc
         bill.date = parser.parse(request.date)
+        bill.tags = extractArrayFromStringMessageArray(request.tags)
 
         bill.put()
         return buildBillMessage(bill)

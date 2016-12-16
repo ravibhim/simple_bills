@@ -26,7 +26,7 @@ class SearchBillsApi(remote.Service):
 
         # Filter on tags if present
         if len(request.tags):
-            bills = bills.filter(Bill.tags.IN(extract_array_from_data_list(request.tags)))
+            bills = bills.filter(Bill.tags.IN(extractArrayFromStringMessageArray(request.tags)))
 
         # Filter on start_date if present
         if request.start_date:

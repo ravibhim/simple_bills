@@ -7,12 +7,19 @@ def isFileUploaded(handler, file_field):
     file_data = handler.request.POST[file_field]
     return True if file_data != u'' else False
 
-
 def listToStringMessages(items):
     json = []
-    for item in items:
-        json.append({'data': item})
+    if items:
+        for item in items:
+            json.append({'data': item})
     return json
+
+def stringMessagesToList(msg_json):
+    items = []
+    if msg_json:
+        for data_item in msg_json:
+            items.append(data_item['data'])
+    return items
 
 
 def uploadBillImageToStaging(file_data):

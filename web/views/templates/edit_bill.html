@@ -12,12 +12,28 @@
               <label for="bill_title" class="active">Bill Title</label>
             </div>
             <div class="input-field col s6">
+              <select id="bill_currency_code" name="bill_currency_code">
+                {% for currency in supported_currencies %}
+                  <option value={{currency}} {% if bill.currency_code == currency %} selected {%endif%}> {{currency}} </option>
+                {% endfor %}
+              </select>
+              <label for="bill_currency_code" class="active">Currency</label>
+            </div>
+            <div class="input-field col s6">
               <input id="bill_amount" type="text" value="{{bill.amount}}" name="bill_amount">
               <label for="bill_amount" class="active">Bill Amount</label>
             </div>
             <div class="input-field col s6">
               <input id="bill_date" type="date" value="{{bill.date}}" name="bill_date">
               <label for="bill_date" class="active">Bill Date</label>
+            </div>
+            <div class="input-field col s6">
+              {% for tag in account_tags %}
+                <div class="bill_tag">
+                  <input type="checkbox" id="tag_{{tag}}" name="bill_tags" value="{{tag}}" class="filled-in"  {% if tag in bill_tags %}checked{%endif%}/>
+                  <label for="tag_{{tag}}">{{tag}}</label>
+                </div>
+              {% endfor %}
             </div>
             <div class="col s12 ">
               <button class="btn waves-effect waves-light right btn-update" type="submit" name="action">Update</button>

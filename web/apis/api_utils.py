@@ -29,11 +29,20 @@ def raise_unless_user(user):
     if not user:
         raise endpoints.UnauthorizedException('Authorization required')
 
-def extract_array_from_data_list(list):
+def extractArrayFromStringMessageArray(list):
     result = []
-    for item in list:
-        result.append(item.data)
+    if list:
+        for item in list:
+            result.append(item.data)
+    return result
 
+def buildStringMessagesFromArray(array):
+    result = []
+    if array:
+        for item in array:
+            sm = StringMessage()
+            sm.data = item
+            result.append(sm)
     return result
 
 

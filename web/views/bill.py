@@ -15,9 +15,6 @@ class CreateBill(BaseHandler):
         bills_service = get_service(self.session, 'bills')
         bill_date = parser.parse(self.request.get('bill_date'))
         tags = self.request.get('bill_tags', allow_multiple=True)
-        tags_json = []
-        for tag in tags:
-            tags_json.append({'data': tag})
         tags_json = listToStringMessages(tags)
 
         body = {
@@ -41,13 +38,18 @@ class EditBill(BaseHandler):
         profiles_service = get_service(self.session, 'profiles')
         profile = profiles_service.getProfile().execute()
 
+        account_service = get_service(self.session,'accounts')
+        account_response = account_service.getAccount(body={'accountId':account_id}).execute()
+
         bills_service = get_service(self.session, 'bills')
         bill = bills_service.getBill(body={'accountId': account_id, 'billId':bill_id}).execute()
 
         template_values = {
             'profile': profile,
             'account_id': account_id,
+            'account_tags': stringMessagesToList(account_response.get('tags')),
             'bill': bill,
+            'bill_tags': stringMessagesToList(bill.get('tags')),
             'supported_currencies': settings.SUPPORTED_CURRENCIES
         }
 
@@ -56,6 +58,9 @@ class EditBill(BaseHandler):
 
     @check_credentials
     def post(self, account_id, bill_id):
+        tags = self.request.get('bill_tags', allow_multiple=True)
+        tags_json = listToStringMessages(tags)
+
         bills_service = get_service(self.session, 'bills')
         bill = bills_service.updateBill(
                 body={
@@ -64,7 +69,8 @@ class EditBill(BaseHandler):
                     'desc': self.request.get('bill_desc'),
                     'currency_code': self.request.get('bill_currency_code'),
                     'amount': self.request.get('bill_amount'),
-                    'date': self.request.get('bill_date')
+                    'date': self.request.get('bill_date'),
+                    'tags': tags_json
                     }
                 ).execute()
 

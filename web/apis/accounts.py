@@ -163,17 +163,10 @@ class AccountsApi(remote.Service):
         am.name = account.name
         am.tagstr = account.tagstr
         am.default_currency_code = account.default_currency_code
-        for editor in account.editors:
-            sm = StringMessage()
-            sm.data = editor
-            am.editors.append(sm)
-        am.tags = []
-        for tag in account.tags():
-            sm = StringMessage()
-            sm.data = tag
-            am.tags.append(sm)
-        am.bills = []
+        am.editors = buildStringMessagesFromArray(account.editors)
+        am.tags = buildStringMessagesFromArray(account.tags())
 
+        am.bills = []
         for bill in bills:
             bm = buildBillMessage(bill)
             am.bills.append(bm)
