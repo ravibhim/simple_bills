@@ -2,6 +2,9 @@ from api_imports import *
 
 import os
 import uuid
+import cloudstorage as gcs
+
+from google.appengine.api import taskqueue
 
 @endpoints.api(name='bills',
                 version='v1',
@@ -11,6 +14,7 @@ class BillsApi(remote.Service):
     @endpoints.method(BillMessage, BillMessage,
             path='createBill',
             http_method='POST', name='createBill')
+    @ndb.transactional(xg=True)
     def createBill(self,request):
         user = endpoints.get_current_user()
         if not user:
@@ -25,9 +29,6 @@ class BillsApi(remote.Service):
         # App generated billId
         billId = str(uuid.uuid4())
 
-        # Build filenames from staging_filenames (i.e copy files to GCS and build filenames)
-        filepaths = copyStagingFilepathsToGcs(request, str(request.accountId), billId)
-
         bill = Bill(
                 id=billId,
                 desc=request.desc,
@@ -35,11 +36,34 @@ class BillsApi(remote.Service):
                 amount=float(request.amount),
                 date=parser.parse(request.date),
                 tags=extractArrayFromStringMessageArray(request.tags),
-                filepaths=filepaths,
                 parent=accountKey
                 )
         bill.put()
+
+        self._saveBillFiles(request, billId)
         return buildBillMessage(bill)
+
+    def _saveBillFiles(self,request, billId):
+        for staging_filepath in request.staging_filepaths:
+            billFileId = str(uuid.uuid4())
+            # Copy to GCS and get the path
+            filepath = copyStagingFilepathToGcs(staging_filepath, str(request.accountId), billId, billFileId)
+            billFile = BillFile(
+              id=billFileId,
+              name=os.path.basename(filepath),
+              path=filepath,
+              timestamp=datetime.now(),
+              parent=ndb.Key('Account', int(request.accountId), 'Bill', billId)
+            )
+            billFile.put()
+
+            # Put in a task to detect the filetype
+            taskqueue.add(
+                    method='GET',
+                    url='/account/{}/{}/{}/detect_file_type'.format(str(request.accountId),billId,billFileId),
+                    target='default',
+                    params={}
+                    )
 
 
     @endpoints.method(BillMessage, BillMessage,
@@ -83,11 +107,7 @@ class BillsApi(remote.Service):
         billId = request.billId
         bill = Key(Bill, billId, parent=accountKey).get()
 
-        filepaths = copyStagingFilepathsToGcs(request, str(request.accountId), billId, bill)
-
-        bill.filepaths.extend(filepaths)
-
-        bill.put()
+        self._saveBillFiles(request,billId)
         return buildBillMessage(bill)
 
     @endpoints.method(BillMessage, BillMessage,
@@ -103,19 +123,35 @@ class BillsApi(remote.Service):
         accountKey = Key(Account, accountId)
 
         billId = request.billId
-        bill = Key(Bill, billId, parent=accountKey).get()
+        billKey = Key(Bill, billId, parent=accountKey)
 
-        # File to be deleted mentioned in filepaths
-        filename_to_be_deleted = request.filepaths[0].data
+        billfileId = request.billfileToDeleteId
+        billFileKey = Key(BillFile, billfileId, parent=billKey)
+        billFileKey.delete()
 
-        filepath_to_be_deleted = getFilepath(str(accountId), billId, filename_to_be_deleted)
+        return buildBillMessage(billKey.get())
 
+    @endpoints.method(BillMessage, StringMessage,
+            path='detectBillFileType',
+            http_method='POST', name='detectBillFileType')
+    def detectBillFileType(self,request):
+        accountId = int(request.accountId)
+        accountKey = Key(Account, accountId)
+        billId = request.billId
+        billKey = Key(Bill, billId, parent=accountKey)
 
-        if filepath_to_be_deleted in bill.filepaths:
-            bill.filepaths.remove(filepath_to_be_deleted)
-        bill.put()
-        return buildBillMessage(bill)
+        billfileId = request.billfileToDetect
+        billFile = Key(BillFile, billfileId, parent=billKey).get()
 
+        # Build file path
+        filepath = getFilepath(str(accountId), billId, billfileId, billFile.name)
+        filestat = gcs.stat('/' + settings.FILE_BUCKET + filepath)
+
+        billFile.file_type = filestat.content_type
+        billFile.put()
+
+        return StringMessage(data = 'Detected')
+        #return buildBillMessage(billKey.get())
 
 
     @endpoints.method(BillMessage, BillMessage,

@@ -614,6 +614,10 @@ main .container {
 .uploaded_files {
     margin-bottom: 24px;
 }
+
+.uploaded_files img {
+   width: 128px;
+}
 /*******************************************************************************/
 /* pace theme */
 .pace {

@@ -47,13 +47,18 @@
       {% if bill.files %}
         {% for file in bill.files%}
           <div class="col s12">
-            <a class="col s6 filelink" href="{{file.signed_url}}" target="_blank">{{file.filename}}</a>
-            <form action="/account/{{account_id}}/{{bill.billId}}/remove_file" method="post">
-              <input class="hide" name="file_to_delete" value="{{file.filename}}"/>
-              <div class="col s6">
-                  <button class="icon-submit" type="submit"><i class="material-icons">delete</i></button>
-              </div>
-            </form>
+            <a class="col s6 filelink" href="{{file.signed_url}}" target="_blank">
+              {% if file.file_type == 'application/pdf' %}
+                <img src="/static/images/pdf256.png"/>
+              {% elif file.file_type in ['image/png'] %}
+              <img src="{{file.thumbnail}}"/>
+              {% else %}
+                <img src="/static/images/file256.png"/>
+              {% endif %}
+              {{file.filename}}
+              {{file.file_type}}
+            </a>
+            <a href="/account/{{account_id}}/{{bill.billId}}/{{file.billfileId}}/remove_file">Remove</a>
           </div>
         {% endfor %}
       {% else %}

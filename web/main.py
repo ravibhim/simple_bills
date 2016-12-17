@@ -28,7 +28,8 @@ app = webapp2.WSGIApplication([
   ('/account/(\d+)/search_bills', SearchBill),
   ('/account/(\d+)/(.*)?/edit_bill', EditBill),
   ('/account/(\d+)/(.*)?/add_file', AddFileToBill),
-  ('/account/(\d+)/(.*)?/remove_file', RemoveFileFromBill),
+  ('/account/(\d+)/(.*)?/(.*)?/remove_file', RemoveFileFromBill),
+  ('/account/(\d+)/(.*)?/(.*)?/detect_file_type', DetectBillFileType),
 ], debug=True, config=config)
 
 

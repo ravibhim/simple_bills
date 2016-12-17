@@ -37,18 +37,20 @@ class OAuth2CallbackPage(BaseHandler):
 
             return self.redirect(redirect_url)
 
-def get_service(session, api_name):
-    credentials = oauth2client.client.OAuth2Credentials.from_json(session.get('credentials'))
+def get_service(session, api_name, use_auth=True):
 
     # Build the service object
     api_root = '%s%s' % (os.environ['SERVER'], os.environ['API_ROOT_PATH'])
     api = api_name
     version = 'v1'
     discovery_url = '%s/discovery/v1/apis/%s/%s/rest' % (api_root, api, version)
-    http_auth = credentials.authorize(httplib2.Http(timeout=10))
+    if use_auth:
+        credentials = oauth2client.client.OAuth2Credentials.from_json(session.get('credentials'))
+        http_auth = credentials.authorize(httplib2.Http(timeout=10))
 
-    service = apiclient.discovery.build(api_name, 'v1', discoveryServiceUrl=discovery_url, http=http_auth)
-    return service
+        return apiclient.discovery.build(api_name, 'v1', discoveryServiceUrl=discovery_url, http=http_auth)
+    else:
+        return apiclient.discovery.build(api_name, 'v1', discoveryServiceUrl=discovery_url)
 
 
 def check_credentials(func):

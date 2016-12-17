@@ -42,3 +42,19 @@ indexes:
   - name: tags
   - name: date
     direction: desc
+
+- kind: BillFile
+  ancestor: yes
+  properties:
+  - name: date
+
+- kind: BillFile
+  ancestor: yes
+  properties:
+  - name: date
+    direction: desc
+
+- kind: BillFile
+  ancestor: yes
+  properties:
+  - name: timestamp

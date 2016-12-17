@@ -1,6 +1,4 @@
 from google.appengine.ext import ndb
-from google.appengine.api import images
-from google.appengine.ext import blobstore
 
 class Account(ndb.Model):
     name = ndb.StringProperty()
@@ -26,13 +24,11 @@ class Bill(ndb.Model):
     month = ndb.ComputedProperty(lambda self: self.date.month if self.date else None)
     year = ndb.ComputedProperty(lambda self: self.date.year if self.date else None)
 
-    def img_urls(self, size=''):
-        img_urls = []
-        for filepath in self.filepaths:
-            blob_key = blobstore.create_gs_key('/gs' + filepath)
-            img_url = images.get_serving_url(blob_key=blob_key) + size
-            img_urls.append(img_url)
-        return img_urls
+class BillFile(ndb.Model):
+    name = ndb.StringProperty(indexed=False)
+    path = ndb.StringProperty(indexed=False)
+    file_type = ndb.StringProperty(indexed=False)
+    timestamp = ndb.DateTimeProperty(auto_now_add=True)
 
 class Profile(ndb.Model):
     userId = ndb.StringProperty()

@@ -77,8 +77,8 @@ def checkAccountAccess(user, account_id, scope=settings.READ_SCOPE):
 
     raise endpoints.InternalServerErrorException("{} tried to access account id {} with scope {}.".format(profile.key.id(), account_id, scope))
 
-def getFilepath(account_id, bill_id, filename):
-    return '/' + account_id + '/' + bill_id + '/' + filename
+def getFilepath(account_id, bill_id, bill_file_id, filename):
+    return '/' + account_id + '/' + bill_id + '/' + bill_file_id + '/' + filename
 
 def copyStagingFilepathsToGcs(request, account_id, bill_id, bill = None):
     filepaths = []
@@ -93,6 +93,15 @@ def copyStagingFilepathsToGcs(request, account_id, bill_id, bill = None):
                 '/' + settings.FILE_BUCKET + filepath)
 
     return filepaths
+
+def copyStagingFilepathToGcs(staging_filepath, account_id, bill_id, bill_file_id):
+    filename = os.path.basename(staging_filepath.data)
+    filepath = getFilepath(account_id, bill_id, bill_file_id, filename)
+    gcs.copy2(
+            '/' + settings.STAGING_FILE_BUCKET + staging_filepath.data,
+            '/' + settings.FILE_BUCKET + filepath)
+    return filepath
+
 
 
 def buildBillMessage(bill):
@@ -112,16 +121,22 @@ def buildBillMessage(bill):
         sm.data = tag
         bm.tags.append(sm)
 
-    for filepath in bill.filepaths:
-        sm = StringMessage()
-        sm.data = filepath
-        bm.filepaths.append(sm)
+    billFiles = BillFile.query(ancestor=bill.key).order(BillFile.timestamp)
 
+    for billFile in billFiles:
         fm = FileMessage()
-        #blob_key = blobstore.create_gs_key('/gs' + filepath)
-        #img_url = images.get_serving_url(blob_key=blob_key)
-        fm.filename = os.path.basename(filepath)
-        fm.signed_url= sign_url(filepath)
+        fm.filename = billFile.name
+        fm.signed_url= sign_url(billFile.path)
+        fm.billfileId= billFile.key.id()
+        fm.file_type = billFile.file_type
+        if fm.file_type in settings.SUPPORTED_IMAGE_FILE_TYPES:
+            # Compute thumbnail
+            blob_key = blobstore.create_gs_key('/gs/{}{}'.format(
+                settings.FILE_BUCKET, billFile.path
+                ))
+            img_url = images.get_serving_url(blob_key=blob_key)
+            fm.thumbnail = img_url + "=s128-c"
+
         bm.files.append(fm)
 
     return bm

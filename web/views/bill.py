@@ -95,21 +95,34 @@ class AddFileToBill(BaseHandler):
 
 class RemoveFileFromBill(BaseHandler):
     @check_credentials
-    def post(self, account_id, bill_id):
-        file_to_delete = self.request.POST['file_to_delete']
-        pprint.pprint(file_to_delete)
-
+    def get(self, account_id, bill_id, billfile_id):
         bills_service = get_service(self.session, 'bills')
 
-        if file_to_delete:
+        if billfile_id:
             body = {
                     'accountId': account_id,
                     'billId': bill_id,
-                    'filepaths': [{'data': file_to_delete}]
+                    'billfileToDeleteId': billfile_id,
             }
             bills_service.removeFileFromBill(body=body).execute()
 
         self.redirect('/account/' + account_id + '/' + bill_id + '/edit_bill')
+
+# TODO: Secure this web endpoint.
+class DetectBillFileType(BaseHandler):
+    def get(self, account_id, bill_id, billfile_id):
+        bills_service = get_service(self.session, 'bills', False)
+
+        if billfile_id:
+            body = {
+                    'accountId': account_id,
+                    'billId': bill_id,
+                    'billfileToDetect': billfile_id,
+            }
+            response = bills_service.detectBillFileType(body=body).execute()
+
+            self.response.headers['Content-Type'] = "application/json"
+            self.response.out.write(json.dumps(response))
 
 class SearchBill(BaseHandler):
     @check_credentials

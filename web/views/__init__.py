@@ -1,3 +1,3 @@
 from home import MainPage, HomePage, LogoutPage
 from account import CreateAccount, AccountDetail, AccountSettings, AddEditor, RemoveEditor
-from bill import CreateBill, EditBill, AddFileToBill, RemoveFileFromBill, SearchBill
+from bill import CreateBill, EditBill, AddFileToBill, RemoveFileFromBill,DetectBillFileType, SearchBill

@@ -1,6 +1,9 @@
 import os
 
 SUPPORTED_CURRENCIES = ['INR', 'USD']
+SUPPORTED_IMAGE_FILE_TYPES = [
+        'image/png'
+        ]
 
 READ_SCOPE = 1
 UPDATE_SCOPE = 2
