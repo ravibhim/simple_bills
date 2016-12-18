@@ -43,10 +43,9 @@
     {% for account in accounts_activity.data %}
     <div class="row account_each card">
       <div class="col s4">
-        <h4 class="headline_main">{{account.name}}</h4>
-        <p>No. of Bills: {{account.activity|length}}</p>
-        <p>Amount Billed: {{account.currency}} 0</p>
-        <a href="/account/{{account.accountId}}">More Details</a>
+        <h4 class="headline_main">
+          <a href="/account/{{account.accountId}}">{{account.name}}</a>
+        </h4>
       </div>
       <div class="col s8">
         <div id="office_chart_{{account.accountId}}"></div>
