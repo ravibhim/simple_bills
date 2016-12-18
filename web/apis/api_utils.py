@@ -145,7 +145,7 @@ def buildBillMessage(bill):
 # We dont have this working in development. Not really needed.
 def sign_url(bucket_object, expires_after_seconds=300):
     method = 'GET'
-    gcs_filename = '/%s%s' % (settings.FILE_BUCKET, bucket_object)
+    gcs_filename = urllib.quote('/%s%s' % (settings.FILE_BUCKET, bucket_object))
     content_md5, content_type = None, None
 
     expiration = datetime.utcnow() + timedelta(seconds=expires_after_seconds)
