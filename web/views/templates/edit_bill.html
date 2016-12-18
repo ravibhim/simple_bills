@@ -42,36 +42,29 @@
             <hr />
       </form>
     </div>
+    {% if bill.files %}
     <div class="uploaded_files">
       <h5 class="subheader"> Uploaded Files </h5>
-      {% if bill.files %}
-        {% for file in bill.files%}
-          <div class="col s12">
-            <a class="col s6 filelink" href="{{file.signed_url}}" target="_blank">
-              {% if file.file_type == 'application/pdf' %}
-                <img src="/static/images/pdf256.png"/>
-              {% elif file.file_type in ['image/png'] %}
-              <img src="{{file.thumbnail}}"/>
-              {% else %}
-                <img src="/static/images/file256.png"/>
-              {% endif %}
-              {{file.filename}}
-              {{file.file_type}}
-            </a>
-            <a href="/account/{{account_id}}/{{bill.billId}}/{{file.billfileId}}/remove_file">Remove</a>
-          </div>
-        {% endfor %}
-      {% else %}
-      <div>
-        <p class="col s12">
-          No files to this bill.
-        </p>
-      </div>
-      {% endif %}
+      {% for file in bill.files%}
+        <div class="col s12">
+          <a class="col s6 filelink" href="{{file.signed_url}}" target="_blank">
+            {% if file.file_type == 'application/pdf' %}
+              <img src="/static/images/pdf256.png"/>
+            {% elif file.file_type in ['image/png'] %}
+            <img src="{{file.thumbnail}}"/>
+            {% else %}
+              <img src="/static/images/file256.png"/>
+            {% endif %}
+            {{file.filename}}
+          </a>
+          <a href="/account/{{account_id}}/{{bill.billId}}/{{file.billfileId}}/remove_file">Remove</a>
+        </div>
+      {% endfor %}
     </div>
     <hr />
+    {% endif %}
     <div>
-      <h5 class="subheader">Add another file</h5>
+      <h5 class="subheader">Upload file</h5>
       <form action="/account/{{account_id}}/{{bill.billId}}/add_file" method="post" enctype='multipart/form-data'>
         <div class="col s12">
           <div class="row">
@@ -85,7 +78,7 @@
                 </div>
               </div>
               <div class="col s4">
-                  <button type="submit" class=" right waves-effect waves-light btn btn-submit" name="action">Add File</button>
+                  <button type="submit" class=" right waves-effect waves-light btn btn-submit" name="action">Upload File</button>
               </div>
           </div>
         </div>

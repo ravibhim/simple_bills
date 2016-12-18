@@ -121,7 +121,7 @@ simpleBills.controller("AddBillController", function($scope) {
       if($scope.validateForm()) {
         var $submitBtn = $($event.currentTarget);
         $submitBtn.addClass('disabled');
-        $submitBtn.html('Saving ...');
+        $submitBtn.html('Adding ...');
         $submitBtn.closest('form').submit();
       } else {
         $scope.highlightRequiredFields();

@@ -14,7 +14,7 @@
             </div>
             <div class="input-field col s12">
               <input id="bill_tags" type="text" value="{{tagstr}}" name="account_tagstr">
-              <label for="bill_tags" class="active">Bill Tags</label>
+              <label for="bill_tags" class="active">Bill Tags (Separate tags by a comma ex: credit card, bank)</label>
             </div>
             <div class="input-field col s4">
               <select name="account_default_currency_code">
@@ -31,20 +31,23 @@
       </form>
     </div>
     <div class="divider"></div>
-    <div class="row">
-      <h5 class="subheader"> Account shared with</h5>
-      {% for editor in account.editors %}
-      <div class="col s12">
-        <span class="col s6 filelink">{{editor.data}}</span>
-        <form action="/account/{{account_id}}/remove_editor" method="post">
-          <input class="hide" name="account_editor_to_remove" value="{{editor.data}}"/>
-          <div class="col s6">
-              <button class="icon-submit" type="submit"><i class="material-icons">delete</i></button>
-          </div>
-        </form>
+    {% if account.editors %}
+      <div class="row">
+        <h5 class="subheader"> Account shared with</h5>
+        {% for editor in account.editors %}
+        <div class="col s12">
+          <span class="col s6 filelink">{{editor.data}}</span>
+          <form action="/account/{{account_id}}/remove_editor" method="post">
+            <input class="hide" name="account_editor_to_remove" value="{{editor.data}}"/>
+            <div class="col s6">
+                <button class="icon-submit" type="submit"><i class="material-icons">delete</i></button>
+            </div>
+          </form>
+        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
-    </div>
+    {% endif %}
+
     <div class="divider"></div>
     <div class="row">
       <h5 class="subheader"> Share with </h5>
