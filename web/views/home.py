@@ -45,4 +45,3 @@ class LogoutPage(BaseHandler):
             self.session['credentials'] = None
 
         self.redirect('/')
-

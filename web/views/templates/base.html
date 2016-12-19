@@ -28,7 +28,17 @@
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
     <script src="/static/js/form_validator.js"></script>
     <script src="/static/js/activity_chart.js"></script>
+    <!--<script src="/static/js/html2canvas.js"></script>-->
+    <script src="/static/js/feedback.js"></script>
     <script src="/static/js/app.js"></script>
+    <link href="/static/css/feedback.css" rel="stylesheet">
+
+    <script type="text/javascript">
+        $.feedback({
+            ajaxURL: '//feedback-dash.herokuapp.com/feedbacks',
+            html2canvasURL: '/static/js/html2canvas.js'
+        });
+    </script>
 </body>
 
 </html>
