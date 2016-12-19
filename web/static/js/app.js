@@ -4,6 +4,13 @@ simpleBills.config(function($interpolateProvider) {
     $interpolateProvider.startSymbol('#{').endSymbol('}');
 });
 
+simpleBills.controller("AddAccountController", function($scope) {
+  $scope.formValidator = new CustomFormValidator({
+    requiredFields: ['account_name'],
+    submitBtnLoadingText: 'Creating ...'
+  });
+});
+
 simpleBills.controller("SearchBillController", function($scope) {
     $scope.accountId = PageConfig ? PageConfig.accountId : "";
     $scope.accountTags = PageConfig ? PageConfig.accountTags : [];
@@ -92,39 +99,8 @@ simpleBills.controller("SearchBillController", function($scope) {
 
 simpleBills.controller("AddBillController", function($scope) {
     $scope.accountId = PageConfig ? PageConfig.accountId : "";
-    $scope.requiredFields = ['bill_desc', 'bill_amount'];
 
-    $scope.validateForm = function() {
-      for(var i = 0; i < $scope.requiredFields.length; i++) {
-        if(!$scope[$scope.requiredFields[i]]) {
-          return false;
-        }
-      }
-
-      return true;
-    };
-
-    $scope.highlightRequiredFields = function() {
-      for(var i = 0; i < $scope.requiredFields.length; i++) {
-        var field = $scope.requiredFields[i];
-        var $inputEle = $("input[ng-model='" + field + "'");
-
-        if(!$scope[field]) {
-          $inputEle.addClass('invalid');
-        } else {
-          $inputEle.removeClass('invalid');
-        }
-      }
-    };
-
-    $scope.submitForm = function($event) {
-      if($scope.validateForm()) {
-        var $submitBtn = $($event.currentTarget);
-        $submitBtn.addClass('disabled');
-        $submitBtn.html('Adding ...');
-        $submitBtn.closest('form').submit();
-      } else {
-        $scope.highlightRequiredFields();
-      }
-    };
+    $scope.formValidator = new CustomFormValidator({
+      requiredFields: ['bill_desc', 'bill_amount']
+    });
 });
