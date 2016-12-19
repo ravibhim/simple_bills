@@ -4,6 +4,7 @@ $(document).ready(function() {
         selectYears: 30
     });
     $('.modal').modal();
+    $('select').material_select();
     $('.dropdown-button').dropdown({
       inDuration: 300,
       outDuration: 225,
