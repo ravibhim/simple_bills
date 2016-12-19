@@ -1,16 +1,7 @@
 {% extends "base.html" %} {% block content %}
 
-<nav>
-    <div class="nav-wrapper">
-        <a href="/" class="brand-logo">SimpleBills</a>
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="#" class='dropdown-button' data-activates='dropdown-profile'>{{ profile.nickname }}  <i class="material-icons">arrow_drop_down</i></a></li>
-        </ul>
-        <ul id='dropdown-profile' class='dropdown-content'>
-            <li><a href="#!">Log Out</a></li>
-        </ul>
-    </div>
-</nav>
+{% include 'navbar.html'%}
+
 <div id="side-nav">
     <ul class="side-nav fixed collection with-header z-depth-1">
         <li class="collection-header">
@@ -151,7 +142,7 @@
                             </div>
 
                             <div class="col s12">
-                                <h3 class="headline-sub">Tags</h3> 
+                                <h3 class="headline-sub">Tags</h3>
                                 {% if account_tags %}
                                   <div class="bill_tags_all">
                                       <div class="bill_tag" ng-repeat="tag in accountTags">

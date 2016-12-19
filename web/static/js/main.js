@@ -4,12 +4,15 @@ $(document).ready(function() {
         selectYears: 30
     });
     $('.modal').modal();
+    $('.dropdown-button').dropdown({
+      inDuration: 300,
+      outDuration: 225,
+      constrain_width: false,
+      hover: true,
+      gutter: 0,
+      belowOrigin: true,
+      alignment: 'left'
+    }
+  );
 
-    $('select').material_select();
-    /*
-    $('.datepicker').pickadate({
-        selectMonths: true,
-        selectYears: 15
-    });
-   */
 });

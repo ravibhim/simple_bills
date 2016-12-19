@@ -5,7 +5,7 @@
 <div class="container" id="edit_page">
   <a href="/account/{{account_id}}">Back to Account</a>
   <div class="card">
-    <div class="row">
+    <div class="row" id="account_settings">
       <h4>Account settings</h4>
       <form action="/account/{{account_id}}/settings" method="post" enctype='multipart/form-data'>
             <div class="input-field col s6">
@@ -17,12 +17,12 @@
               <label for="bill_tags" class="active">Bill Tags (Separate tags by a comma ex: credit card, bank)</label>
             </div>
             <div class="input-field col s4">
-              <select name="account_default_currency_code">
+              <select name="account_default_currency_code" id="bill_currency_code">
                 {% for currency in supported_currencies %}
                 <option value={{currency}} {% if default_currency_code == currency %} selected {%endif%}> {{currency}} </option>
                 {% endfor %}
               </select>
-              <label>Default Currency for Bills </label>
+              <label class="bill_currency_label" for="bill_currency_code">Default Currency for Bills </label>
             </div>
             <div class="col s12">
               <button class="btn waves-effect waves-light right" type="submit" name="action">Update</button>

@@ -1,15 +1,7 @@
 {% extends "base.html" %}{% block content %}
-<nav>
-    <div class="nav-wrapper">
-        <a href="/" class="brand-logo">SimpleBills</a>
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="#" class='dropdown-button' data-activates='dropdown-profile'>{{ profile.nickname }}  <i class="material-icons">arrow_drop_down</i></a></li>
-        </ul>
-        <ul id='dropdown-profile' class='dropdown-content'>
-          <li><a href="#!">Log Out</a></li>
-        </ul>
-    </div>
-</nav>
+
+{% include 'navbar.html'%}
+
 <div class="account_charts container">
   <div>
     <a class="modal-trigger  waves-teal btn-flat right btn-create_account" href="#create_account">Create an Account</a>
