@@ -1,6 +1,13 @@
 import os
 
 SUPPORTED_CURRENCIES = ['INR', 'USD']
+SUPPORTED_IMAGE_FILE_TYPES = [
+        'image/png'
+        ]
+
+READ_SCOPE = 1
+UPDATE_SCOPE = 2
+FULL_SCOPE = 3 # Can delete too
 
 
 WEB_CLIENT_ID = os.environ['WEB_CLIENT_ID']

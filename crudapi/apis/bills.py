@@ -44,6 +44,8 @@ class BillsApi(remote.Service):
         return buildBillMessage(bill)
 
     def _saveBillFiles(self,request, billId):
+        accountId = request.accountId
+
         for staging_filepath in request.staging_filepaths:
             billFileId = str(uuid.uuid4())
             # Copy to GCS and get the path
@@ -53,17 +55,16 @@ class BillsApi(remote.Service):
               name=os.path.basename(filepath),
               path=filepath,
               timestamp=datetime.now(),
-              parent=ndb.Key('Account', int(request.accountId), 'Bill', billId)
+              parent=ndb.Key('Account', int(accountId), 'Bill', billId)
             )
-            billFile.put()
+            #billFile.put()
 
-            # Put in a task to detect the filetype
-            taskqueue.add(
-                    method='GET',
-                    url='/account/{}/{}/{}/detect_file_type'.format(str(request.accountId),billId,billFileId),
-                    target='default',
-                    params={}
-                    )
+            # Detect file type
+            filepath = getFilepath(str(accountId), billId, billFileId, billFile.name)
+            filestat = gcs.stat('/' + settings.FILE_BUCKET + filepath)
+
+            billFile.file_type = filestat.content_type
+            billFile.put()
 
 
     @endpoints.method(BillMessage, BillMessage,
@@ -130,28 +131,6 @@ class BillsApi(remote.Service):
         billFileKey.delete()
 
         return buildBillMessage(billKey.get())
-
-    @endpoints.method(BillMessage, StringMessage,
-            path='detectBillFileType',
-            http_method='POST', name='detectBillFileType')
-    def detectBillFileType(self,request):
-        accountId = int(request.accountId)
-        accountKey = Key(Account, accountId)
-        billId = request.billId
-        billKey = Key(Bill, billId, parent=accountKey)
-
-        billfileId = request.billfileToDetect
-        billFile = Key(BillFile, billfileId, parent=billKey).get()
-
-        # Build file path
-        filepath = getFilepath(str(accountId), billId, billfileId, billFile.name)
-        filestat = gcs.stat('/' + settings.FILE_BUCKET + filepath)
-
-        billFile.file_type = filestat.content_type
-        billFile.put()
-
-        return StringMessage(data = 'Detected')
-        #return buildBillMessage(billKey.get())
 
 
     @endpoints.method(BillMessage, BillMessage,

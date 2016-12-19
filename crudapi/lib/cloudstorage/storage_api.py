@@ -38,7 +38,6 @@ except ImportError:
   from google.appengine.api import urlfetch
   from google.appengine.ext import ndb
 
-from google.appengine.api import app_identity
 
 
 def _get_storage_api(retry_params, account_id=None):
@@ -51,24 +50,16 @@ def _get_storage_api(retry_params, account_id=None):
 
   Returns:
     A storage_api instance to handle urlfetch work to GCS.
-    On dev appserver, this instance will talk to a local stub by default.
-    However, if you pass the arguments --appidentity_email_address and
-    --appidentity_private_key_path to dev_appserver.py it will attempt to use
-    the real GCS with these credentials.  Alternatively, you can set a specific
-    access token with common.set_access_token.  You can also pass
-    --default_gcs_bucket_name to set the default bucket.
+    On dev appserver, this instance by default will talk to a local stub
+    unless common.ACCESS_TOKEN is set. That token will be used to talk
+    to the real GCS.
   """
 
 
   api = _StorageApi(_StorageApi.full_control_scope,
                     service_account_id=account_id,
                     retry_params=retry_params)
-
-  # when running local unit tests, the service account is test@localhost
-  # from google.appengine.api.app_identity.app_identity_stub.APP_SERVICE_ACCOUNT_NAME
-  service_account = app_identity.get_service_account_name()
-  if (common.local_run() and not common.get_access_token()
-      and (not service_account or service_account.endswith('@localhost'))):
+  if common.local_run() and not common.get_access_token():
     api.api_url = common.local_api_url()
   if common.get_access_token():
     api.token = common.get_access_token()
@@ -135,7 +126,7 @@ class _StorageApi(rest_api._RestApi):
       resp_tuple = yield super(_StorageApi, self).do_request_async(
           url, method=method, headers=headers, payload=payload,
           deadline=deadline, callback=callback)
-    except urlfetch.DownloadError as e:
+    except urlfetch.DownloadError, e:
       raise errors.TimeoutError(
           'Request to Google Cloud Storage timed out.', e)
 

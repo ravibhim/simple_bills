@@ -19,7 +19,7 @@ class OAuth2CallbackPage(BaseHandler):
             client_secret=CLIENT_SECRET,
             scope=SCOPE,
             prompt='consent',
-            redirect_uri= '%s%s' % (os.environ['SERVER'], os.environ['OAUTH_REDIRECT_PATH'])
+            redirect_uri= '%s://%s%s' % (self.request.environ['wsgi.url_scheme'], self.request.environ['HTTP_HOST'], os.environ['OAUTH_REDIRECT_PATH'])
             )
         code = self.request.get('code')
 
@@ -40,7 +40,7 @@ class OAuth2CallbackPage(BaseHandler):
 def get_service(session, api_name, use_auth=True):
 
     # Build the service object
-    api_root = '%s%s' % (os.environ['SERVER'], os.environ['API_ROOT_PATH'])
+    api_root = '%s%s' % (os.environ['CRUDAPI_SERVER'], os.environ['API_ROOT_PATH'])
     api = api_name
     version = 'v1'
     discovery_url = '%s/discovery/v1/apis/%s/%s/rest' % (api_root, api, version)

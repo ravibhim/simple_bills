@@ -1,0 +1,28 @@
+application: simplebills-152707
+module: default
+version: alpha-002
+runtime: python27
+api_version: 1
+threadsafe: true
+basic_scaling:
+  idle_timeout: 10m
+  max_instances: 1
+
+handlers:
+- url: /_ah/spi/.*
+  script: api.api
+  secure: always
+
+
+libraries:
+- name: endpoints
+  version: latest
+
+- name: pycrypto
+  version: latest
+
+env_variables:
+  WEB_CLIENT_ID: '601259546874-04vgln5ohv19gp8dq8mbnu18rfnuo5dl.apps.googleusercontent.com'
+  WEB_CLIENT_SECRET: 'N0xjMEWPfjcGCkxfXlqIAYRS'
+  FILE_BUCKET: 'simplebills'
+  STAGING_FILE_BUCKET: 'simplebills-file-staging-bucket'

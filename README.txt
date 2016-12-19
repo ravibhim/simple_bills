@@ -8,9 +8,21 @@ pip install -r requirements-vendor.txt -t lib
 
 Run the application locally
 ---------------------------
-dev_appserver.py  web/
-dev_appserver.py  --clear_datastore=yes web/
+dev_appserver.py crudapi/app.yaml web/app.yaml
 
+Setting up Google Cloud Storage python lib
+-----------------------------------------
+https://cloud.google.com/appengine/docs/python/googlecloudstorageclient/setting-up-cloud-storage
+I chose the pip install to install the library in 'lib'
+
+Issue with splitting the endpoints module into multiple modules
+--------------------------------------------------------------
+https://code.google.com/p/googleappengine/issues/detail?id=11606#makechanges
+
+
+Running endpoints as a seperate module
+--------------------------------------
+http://stackoverflow.com/questions/24232580/putting-a-cloud-endpoints-api-in-a-separate-app-engine-module
 
 Deploy to production
 --------------------
@@ -20,3 +32,8 @@ Deploy to test version
 ----------------------
 1) Mark version as 'test' in app.yaml
 appcfg.py --no_cookies update web -E SERVER:'https://test-dot-simplebills-152707.appspot.com' -E WEB_CLIENT_ID:'' -E WEB_CLIENT_SECRET:''
+
+Deploy crudapi
+--------------
+appcfg.py --no_cookies update web -E SERVER:'https://test-dot-simplebills-152707.appspot.com' -E WEB_CLIENT_ID:'' -E WEB_CLIENT_SECRET:''
+
