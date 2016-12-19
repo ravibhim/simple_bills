@@ -4,8 +4,9 @@ version: alpha-001
 runtime: python27
 api_version: 1
 threadsafe: true
-manual_scaling:
-  instances: 1
+basic_scaling:
+  idle_timeout: 10m
+  max_instances: 2
 
 handlers:
 - url: /_ah/spi/.*
