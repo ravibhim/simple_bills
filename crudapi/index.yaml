@@ -23,6 +23,17 @@ indexes:
   - name: date
     direction: desc
 
+- kind: Bill
+  ancestor: yes
+  properties:
+  - name: year
+
+- kind: Bill
+  ancestor: yes
+  properties:
+  - name: year
+  - name: month
+
 - kind: BillFile
   ancestor: yes
   properties:
