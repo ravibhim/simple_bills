@@ -1,9 +1,5 @@
 from api_imports import *
 
-from collections import Counter
-
-import pprint
-
 @endpoints.api(name='stats',
                 version='v1',
                 allowed_client_ids=[WEB_CLIENT_ID, API_EXPLORER_CLIENT_ID],

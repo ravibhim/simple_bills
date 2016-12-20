@@ -28,6 +28,9 @@ class AccountDetail(BaseHandler):
         account_tags = stringMessagesToList(response['tags'])
         account_tags_json = json.dumps(account_tags)
 
+        stats_service = get_service(self.session, 'stats')
+        stats_response = stats_service.accountStatsOnDemand(body={'accountId':account_id}).execute()
+
         template_values = {
             'profile' : profile,
             'account_id': response['accountId'],
@@ -40,6 +43,7 @@ class AccountDetail(BaseHandler):
             'account_default_currency_code': response.get('default_currency_code'),
             'owner_accounts': response_accounts.get('owner_accounts') or [],
             'editor_accounts': response_accounts.get('editor_accounts') or [],
+            'stats': stats_response
         }
         template = JINJA_ENVIRONMENT.get_template('account_detail.html')
         self.response.out.write(template.render(template_values))

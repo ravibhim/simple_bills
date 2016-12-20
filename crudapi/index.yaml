@@ -11,6 +11,11 @@ indexes:
 # your application using appcfg.py.
 
 - kind: Bill
+  properties:
+  - name: year
+  - name: month
+
+- kind: Bill
   ancestor: yes
   properties:
   - name: date

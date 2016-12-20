@@ -20,6 +20,22 @@
 </div>
 {% include "create_account_modal.html" %}
 <main>
+    <div id=stats>
+      Total bills: {{stats.bill_count}}
+      <div class="row">
+        {% for year in stats.year_stats %}
+          <div class="col s3">
+            {{year.year}} ({{year.bill_count}})
+            <div>
+              {% for month in year.month_stats %}
+              {{month.month}} ({{month.bill_count}})
+              {% endfor %}
+            </div>
+
+          </div>
+        {% endfor %}
+      </div>
+    </div>
     <div class="container">
         <div class="row">
             <div class="col s12">
