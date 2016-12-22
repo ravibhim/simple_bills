@@ -151,3 +151,25 @@ class BillsApi(remote.Service):
 
         return buildBillMessage(bill)
 
+
+# Not really being used. Not sure how to post to an endpoint directly using a task queue.
+    @endpoints.method(BillMessage, StringMessage,
+            path='detectBillFileType',
+            http_method='POST', name='detectBillFileType')
+    def detectBillFileType(self,request):
+        accountId = int(request.accountId)
+        accountKey = Key(Account, accountId)
+        billId = request.billId
+        billKey = Key(Bill, billId, parent=accountKey)
+
+        billfileId = request.billfileToDetect
+        billFile = Key(BillFile, billfileId, parent=billKey).get()
+
+        # Build file path
+        filepath = getFilepath(str(accountId), billId, billfileId, billFile.name)
+        filestat = gcs.stat('/' + settings.FILE_BUCKET + filepath)
+
+        billFile.file_type = filestat.content_type
+        billFile.put()
+
+        return StringMessage(data = 'Detected:' + billFile.file_type)
