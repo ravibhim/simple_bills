@@ -46,19 +46,24 @@ var ActivityChart = function(config) {
         drawArea: document.getElementById(self.chartContainerPrefix + account.accountId)
     };
 
-    account.activity.forEach(function(activity) {
-      config.seriesData.push([
-          new Date(activity.date),
-          parseInt(activity.num_bills)
-      ]);
-    });
+    if(account.activity) {
+      account.activity.forEach(function(activity) {
+        config.seriesData.push([
+            new Date(activity.date),
+            parseInt(activity.num_bills)
+        ]);
+      });
+    }
 
     google.charts.setOnLoadCallback(function(){ self.drawBasic(config); });
+
   };
 
-  self.accountsActivity.data.forEach(function(account) {
-    if (account.activity) {
-      self.drawAccountActivityGraph(account);
-    }
-  });
+  if(self.accountsActivity.data) {
+    self.accountsActivity.data.forEach(function(account) {
+      if (account.activity) {
+        self.drawAccountActivityGraph(account);
+      }
+    });
+  }
 };
