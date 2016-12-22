@@ -14,6 +14,7 @@ simpleBills.controller("AddAccountController", function($scope) {
 simpleBills.controller("SearchBillController", function($scope) {
     $scope.accountId = PageConfig ? PageConfig.accountId : "";
     $scope.accountTags = PageConfig ? PageConfig.accountTags : [];
+    $scope.stats = PageConfig ? PageConfig.stats : {};
     $scope.bills = [];
     $scope.search_tags = {};
 
@@ -93,6 +94,84 @@ simpleBills.controller("SearchBillController", function($scope) {
         showSelectedDate(start, end);
     };
 
+    var monthNames = moment.months();
+    $scope.currentYear = moment().year();
+    $scope.currentMonth = moment().month();
+    $scope.currentMonthName = monthNames[$scope.currentMonth];
+
+    $scope.setStartEndDates = function() {
+      var startDay = moment([$scope.currentYear, $scope.currentMonth]).startOf('month').date();
+      var endDay = moment([$scope.currentYear, $scope.currentMonth]).endOf('month').date();
+
+      $scope.search_start_date = [$scope.currentYear, ($scope.currentMonth + 1), startDay].join('-');
+      $scope.search_end_date = [$scope.currentYear, ($scope.currentMonth + 1), endDay].join('-');
+    };
+
+    $scope.setStartEndDates();
+
+    $scope.selectedYearMonthsData = function() {
+      return $scope.allYearsStats()[$scope.currentYear];
+    };
+
+    $scope.updateCurrentYearAndMonthsData = function() {
+      $scope.setStartEndDates();
+      $scope.monthsData = $scope.selectedYearMonthsData();
+      $scope.fetchBills();
+    };
+
+    $scope.updateCurrentMonth = function(month, disabled) {
+      if(disabled) {} else {
+        $scope.currentMonth = month;
+        $scope.setStartEndDates();
+        $scope.currentMonthName = monthNames[month];
+        $scope.fetchBills();
+      }
+    };
+
+    $scope.allYearsStats = function() {
+      var data = {};
+
+      _.each($scope.getStatsYears(), function(year) {
+        data[year] = [];
+        _.each(moment.monthsShort(), function(m) { data[year].push({monthName: m, billCount: 0}); });
+      });
+
+      _.each($scope.stats.year_stats, function(yearStat) {
+        var year = parseInt(yearStat.year);
+
+        _.each(yearStat.month_stats, function(monthStat) {
+          var month = parseInt(monthStat.month) - 1;
+          data[year][month].billCount = parseInt(monthStat.bill_count);
+        });
+
+      });
+
+      return data;
+    };
+
+    $scope.getStatsYears = function() {
+      var years = [];
+
+      _.each($scope.stats.year_stats, function(yearStat) {
+        years.push(parseInt(yearStat.year));
+      });
+
+      years = _.uniq(years);
+
+      var minYear = _.min(years);
+      var maxYear = _.max(years);
+      var ret = [minYear];
+
+      var diff = moment([maxYear,0]).diff(minYear + '-01-01', 'years');
+
+      _.times(diff, function(i) {
+        ret.push(minYear + (i + 1));
+      });
+
+      return ret;
+    };
+
+    // Invoke init methods manually for the first time
     initDateRangePicker();
     $scope.fetchBills();
 });
