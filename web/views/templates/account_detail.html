@@ -80,17 +80,18 @@
                                 </div>
                             </div>
                             <div class="col s12">
-                                <h3 class="headline-sub">Tags</h3> {% if account_tags %}
-                                <div class="bill_tags_all">
-                                    {% for tag in account_tags %}
-                                    <div class="bill_tag">
-                                        <input type="checkbox" name="bill_tags" value="{{tag}}" class="filled-in" id="{{tag}}" />
-                                        <label for="{{tag}}">{{tag}}</label>
-                                    </div>
-                                    {% endfor %}
-                                </div>
+                                <h3 class="headline-sub">Tags</h3> 
+                                {% if account_tags %}
+                                  <div class="bill_tags_all">
+                                      {% for tag in account_tags %}
+                                      <div class="bill_tag">
+                                          <input type="checkbox" name="bill_tags" value="{{tag}}" class="filled-in" id="{{tag}}" />
+                                          <label for="{{tag}}">{{tag}}</label>
+                                      </div>
+                                      {% endfor %}
+                                  </div>
                                 {% else %}
-                                <p class="helper-text">Add bill tags in account settings</p>
+                                  <p class="helper-text">Add bill tags in account settings</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -162,8 +163,6 @@
                                           <label for="search_#{tag}">#{tag}</label>
                                       </div>
                                   </div>
-                                {% else %}
-                                  <p class="helper-text">Add bill tags in account settings</p>
                                 {% endif %}
                             </div>
                             <div class="col s2 search_btn">

@@ -18,7 +18,8 @@ def stringMessagesToList(msg_json):
     items = []
     if msg_json:
         for data_item in msg_json:
-            items.append(data_item['data'])
+            if data_item['data']:
+                items.append(data_item['data'])
     return items
 
 
