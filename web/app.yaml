@@ -1,4 +1,4 @@
-application: simplebills-152707
+application: simplebills-153311
 module: web
 version: alpha-002
 runtime: python27
@@ -6,7 +6,7 @@ api_version: 1
 threadsafe: true
 basic_scaling:
   idle_timeout: 10m
-  max_instances: 1
+  max_instances: 2
 
 handlers:
 - url: /static/css
@@ -37,7 +37,7 @@ env_variables:
   CRUDAPI_SERVER: 'http://localhost:8080'
   OAUTH_REDIRECT_PATH: '/oauth2callback'
   API_ROOT_PATH: '/_ah/api'
-  FILE_BUCKET: 'simplebills'
-  STAGING_FILE_BUCKET: 'simplebills-file-staging-bucket'
-  WEB_CLIENT_ID: '601259546874-04vgln5ohv19gp8dq8mbnu18rfnuo5dl.apps.googleusercontent.com'
-  WEB_CLIENT_SECRET: 'N0xjMEWPfjcGCkxfXlqIAYRS'
+  FILE_BUCKET: 'simplebills-153311.appspot.com'
+  STAGING_FILE_BUCKET: 'staging.simplebills-153311.appspot.com'
+  WEB_CLIENT_ID: '108166075039-bm76la2ddhbbv775unf3qen60s6qqv4c.apps.googleusercontent.com'
+  WEB_CLIENT_SECRET: 'KOC1rulqiSyczakIrW3TZyCt'
