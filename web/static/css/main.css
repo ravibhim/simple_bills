@@ -675,3 +675,57 @@ main .container {
 }
 
 /*****************************************************************************/
+
+// TODO : Move this to a better place
+#month-selector-container {
+  padding: 0 !important;
+  margin-bottom: 15px;
+}
+
+#month-selector-container .custom-tabs {
+  background: #ececec;
+  margin: 0;
+}
+
+#month-selector-container .custom-tabs .custom-tab {
+  display: inline-block;
+  text-align: center;
+  line-height: 48px;
+  height: 48px;
+  padding: 0;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+#month-selector-container .custom-tabs .custom-tab a {
+  color: #85bb65;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0 24px;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  transition: color .28s ease;
+}
+
+#month-selector-container .custom-tabs .custom-tab a:hover {
+  cursor: pointer;
+}
+
+#month-selector-container .custom-tabs .custom-tab a.active {
+  border-bottom: red 2px solid;
+}
+
+#month-selector-container .custom-tabs .custom-tab.disabled a {
+  cursor: disabled;
+  color: #ababab;
+}
+
+#month-selector-container .custom-tabs .custom-tab.disabled a:hover {
+  cursor: default;
+}
+
+.text-align-center {
+  text-align: center;
+}

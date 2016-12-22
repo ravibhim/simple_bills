@@ -20,27 +20,11 @@
 </div>
 {% include "create_account_modal.html" %}
 <main>
-    <div id=stats>
-      Total bills: {{stats.bill_count}}
-      <div class="row">
-        {% for year in stats.year_stats %}
-          <div class="col s3">
-            {{year.year}} ({{year.bill_count}})
-            <div>
-              {% for month in year.month_stats %}
-              {{month.month}} ({{month.bill_count}})
-              {% endfor %}
-            </div>
-
-          </div>
-        {% endfor %}
-      </div>
-    </div>
     <div class="container">
         <div class="row">
             <div class="col s12">
                 <div class="account_detail_headline">
-                    <h4 class="headline-main col s4"><span id="account-name">{{account_name}}<span> <a href="/account/{{account_id}}/settings"><i class="material-icons">settings</i></span></h4>
+                    <h4 class="headline-main col s3"><span id="account-name">{{account_name}}<span> <a href="/account/{{account_id}}/settings"><i class="material-icons">settings</i></span></h4>
                     <a class="waves-effect waves-light btn modal-trigger" href="#addBill">Add a bill</a>
                 </div>
 
@@ -111,7 +95,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn modal-action" type="button" ng-click="submitForm($event)">Add</button>
+                            <button class="btn modal-action" type="button" ng-click="formValidator.submitForm($event)">Add</button>
                             <a href="" class="modal-action modal-close waves-effect waves-red btn-flat ">Cancel</a>
                         </div>
                     </div>
@@ -143,22 +127,34 @@
                     </div>
 
                     <div class="search_box col s12">
-                        <form>
-                            <div id="reportrange" class="card">
-                                <i class="material-icons">date_range</i>
-                                <span></span>
-                                <input id="end_date" type="hidden" ng-value="" ng-model="search_end_date">
-                                <input id="start_date" type="hidden" ng-value="" ng-model-options="{ updateOn: 'change'}" ng-model="search_start_date">
-                                <i class="material-icons">arrow_drop_down</i>
-                            </div>
+                        <div class="col s12">
+                          <p style="text-align: center;">Bills for #{currentMonthName}, #{currentYear}</p>
+                        </div>
+                        <div class="col s12" id="month-selector-container">
+                          <div class="col s1">
+                            <select class="browser-default" ng-change="updateCurrentYearAndMonthsData()" ng-model="currentYear" ng-options="year for year in getStatsYears()"></select>
+                          </div>
 
-                            <div class="search-wrapper card col s6">
+                          <div class="col s11">
+                            <ul class="custom-tabs" ng-init="monthsData = selectedYearMonthsData()">
+                              <li ng-repeat="month in monthsData track by $index" ng-click="updateCurrentMonth($index, (month.billCount < 1))" class="custom-tab #{month.billCount < 1 ? 'disabled' : ''}">
+                                <span ng-init="currentMonthBillCount = month.BillCount"></span>
+                                <a class="#{$index == currentMonth ? 'active' : ''}">#{month.monthName}</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div class="col s12">
+                          <p></p>
+                        </div>
+                        <form>
+                            <div class="search-wrapper card col s3">
                                 <input id="search_query" type="text" ng-model="search_query" ng-keypress="searchOnEnterKey($event)" name="search_query" placeholder="Search">
                                 <i class="material-icons">search</i>
                             </div>
 
-                            <div class="col s12">
-                                <h3 class="headline-sub">Tags</h3>
+                            <div class="col s5">
                                 {% if account_tags %}
                                   <div class="bill_tags_all">
                                       <div class="bill_tag" ng-repeat="tag in accountTags">
@@ -170,7 +166,7 @@
                                   <p class="helper-text">Add bill tags in account settings</p>
                                 {% endif %}
                             </div>
-                            <div class="col s12 search_btn">
+                            <div class="col s2 search_btn">
                                 <button class="btn waves-effect waves-light btn-search" type="button" ng-click="fetchBills()">Search</button>
                             </div>
                         </form>
@@ -188,6 +184,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr ng-show="!bills">
+                                      <td colspan="6" class="text-align-center">There are no bills for the selected month and year.</td>
+                                    </tr>
                                     <tr ng-repeat="bill in bills">
                                         <td>#{bill.desc}</td>
                                         <td>#{bill.currency_code} #{bill.amount}</td>
@@ -218,7 +217,8 @@
 <script type="text/javascript">
     var PageConfig = {
         accountId: "{{account_id}}",
-        accountTags: {{account_tags_json|safe}}
+        accountTags: {{account_tags_json|safe}},
+        stats: {{stats_json|safe}}
     };
 </script>
 
