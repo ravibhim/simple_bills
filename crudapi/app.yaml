@@ -29,5 +29,5 @@ env_variables:
   WEB_CLIENT_SECRET: 'KOC1rulqiSyczakIrW3TZyCt'
   FILE_BUCKET: 'simplebills-153311.appspot.com'
   STAGING_FILE_BUCKET: 'staging.simplebills-153311.appspot.com'
-  SQLALCHEMY_DATABASE_URI: 'mysql+pymysql://root:@127.0.0.1:3306/simple_bills'
+  SQLALCHEMY_DATABASE_URI: 'mysql+pymysql://root:@127.0.0.1:3306/simple_bills?charset=utf8'
 

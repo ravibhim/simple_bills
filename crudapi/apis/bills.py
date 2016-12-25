@@ -20,27 +20,22 @@ class BillsApi(remote.Service):
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
 
-        accountId = int(request.accountId)
+        accountId = request.accountId
         checkAccountAccess(user, accountId, settings.UPDATE_SCOPE)
 
-        accountKey = Key(Account, accountId)
-        amount = int(request.amount)
-
-        # App generated billId
-        billId = str(uuid.uuid4())
-
         bill = Bill(
-                id=billId,
-                desc=request.desc,
+                id=str(uuid.uuid4()),
+                accountId=accountId,
+                title=request.title,
                 currency_code=request.currency_code,
                 amount=float(request.amount),
                 date=parser.parse(request.date),
-                tags=extractArrayFromStringMessageArray(request.tags),
-                parent=accountKey
+                notes=request.notes
                 )
-        bill.put()
 
-        self._saveBillFiles(request, billId)
+        bill = Bill.create(bill)
+
+        #self._saveBillFiles(request, billId)
         return buildBillMessage(bill)
 
     def _saveBillFiles(self,request, billId):

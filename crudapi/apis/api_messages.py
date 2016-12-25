@@ -17,21 +17,22 @@ class FileMessage(messages.Message):
     thumbnail = messages.StringField(10)
 
 class BillMessage(messages.Message):
-    accountId = messages.IntegerField(1)
+    accountId = messages.StringField(1)
 
     billId = messages.StringField(2)
-    desc = messages.StringField(3)
+    title = messages.StringField(3)
     currency_code = messages.StringField(4)
     amount = messages.FloatField(5)
     date = messages.StringField(6)
-    tags = messages.MessageField(StringMessage,7,repeated=True)
+    notes = messages.StringField(7)
+    tags = messages.MessageField(StringMessage,8,repeated=True)
 
-    day = messages.IntegerField(8)
-    month = messages.IntegerField(9)
-    year = messages.IntegerField(10)
-    staging_filepaths = messages.MessageField(StringMessage,11,repeated=True)
-    filepaths = messages.MessageField(StringMessage,12,repeated=True)
-    files = messages.MessageField(FileMessage,13,repeated=True)
+    day = messages.IntegerField(9)
+    month = messages.IntegerField(10)
+    year = messages.IntegerField(11)
+    staging_filepaths = messages.MessageField(StringMessage,12,repeated=True)
+    filepaths = messages.MessageField(StringMessage,13,repeated=True)
+    files = messages.MessageField(FileMessage,14,repeated=True)
 
     billfileToDeleteId = messages.StringField(50)
     billfileToDetect = messages.StringField(60)

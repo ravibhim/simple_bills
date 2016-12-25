@@ -68,16 +68,18 @@ def userProfile(user):
 
     return profile
 
+# TODO: Continue from here.
 def checkAccountAccess(user, account_id, scope=settings.READ_SCOPE):
     profile = userProfile(user)
+    account = Account.get(account_id)
 
-    if account_id in profile.accountIds:
+    if account.profileId == profile.id:
         return True
 
-    if (account_id in profile.editorForAccountsIds) and (scope <= settings.UPDATE_SCOPE):
-        return True
+    #if (account_id in profile.editorForAccountsIds) and (scope <= settings.UPDATE_SCOPE):
+        #return True
 
-    raise endpoints.InternalServerErrorException("{} tried to access account id {} with scope {}.".format(profile.key.id(), account_id, scope))
+    raise endpoints.InternalServerErrorException("{} tried to access account id {} with scope {}.".format(profile.email(), account_id, scope))
 
 def getFilepath(account_id, bill_id, bill_file_id, filename):
     return '/' + account_id + '/' + bill_id + '/' + bill_file_id + '/' + filename
@@ -109,15 +111,18 @@ def copyStagingFilepathToGcs(staging_filepath, account_id, bill_id, bill_file_id
 def buildBillMessage(bill):
     bm = BillMessage()
 
-    bm.billId = bill.key.id()
-    bm.desc = bill.desc
+    bm.billId = bill.id
+    bm.title = bill.title
     bm.currency_code = bill.currency_code
     bm.amount = bill.amount
+    bm.notes = bill.notes
     bm.date = str(bill.date)
-    bm.day = bill.day
-    bm.month = bill.month
-    bm.year = bill.year
+    bm.day = bill.day()
+    bm.month = bill.month()
+    bm.year = bill.year()
 
+    return bm
+'''
     for tag in bill.tags:
         sm = StringMessage()
         sm.data = tag
@@ -140,8 +145,8 @@ def buildBillMessage(bill):
             fm.thumbnail = img_url + "=s128-c"
 
         bm.files.append(fm)
+'''
 
-    return bm
 
 # http://stackoverflow.com/questions/29847759/cloud-storage-and-secure-download-strategy-on-app-engine-gcs-acl-or-blobstore
 # We dont have this working in development. Not really needed.

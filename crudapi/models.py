@@ -11,7 +11,7 @@ class AccountX(ndb.Model):
         return [x.strip().upper() for x in (self.tagstr or '').split(',')]
 
 
-class Bill(ndb.Model):
+class BillX(ndb.Model):
     desc = ndb.StringProperty()
     currency_code = ndb.StringProperty(indexed=False)
     amount = ndb.FloatProperty()
