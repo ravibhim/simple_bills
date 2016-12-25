@@ -37,7 +37,7 @@ class BillMessage(messages.Message):
     billfileToDetect = messages.StringField(60)
 
 class AccountMessage(messages.Message):
-    accountId = messages.IntegerField(1)
+    accountId = messages.StringField(1)
     name = messages.StringField(2)
     tagstr = messages.StringField(3)
     default_currency_code = messages.StringField(4)

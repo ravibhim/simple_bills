@@ -1,6 +1,6 @@
 from google.appengine.ext import ndb
 
-class Account(ndb.Model):
+class AccountX(ndb.Model):
     name = ndb.StringProperty()
     tagstr = ndb.StringProperty(indexed=False)
     default_currency_code = ndb.StringProperty(indexed=False)
@@ -30,7 +30,7 @@ class BillFile(ndb.Model):
     file_type = ndb.StringProperty(indexed=False)
     timestamp = ndb.DateTimeProperty(auto_now_add=True)
 
-class Profile(ndb.Model):
+class ProfileX(ndb.Model):
     userId = ndb.StringProperty()
     nickname = ndb.StringProperty()
     accountIds = ndb.IntegerProperty(indexed=False, repeated=True)

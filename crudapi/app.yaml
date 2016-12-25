@@ -21,8 +21,13 @@ libraries:
 - name: pycrypto
   version: latest
 
+- name: MySQLdb
+  version: "latest"
+
 env_variables:
   WEB_CLIENT_ID: '108166075039-bm76la2ddhbbv775unf3qen60s6qqv4c.apps.googleusercontent.com'
   WEB_CLIENT_SECRET: 'KOC1rulqiSyczakIrW3TZyCt'
   FILE_BUCKET: 'simplebills-153311.appspot.com'
   STAGING_FILE_BUCKET: 'staging.simplebills-153311.appspot.com'
+  SQLALCHEMY_DATABASE_URI: 'mysql+pymysql://root:@127.0.0.1:3306/simple_bills'
+

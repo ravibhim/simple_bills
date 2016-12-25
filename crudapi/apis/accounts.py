@@ -1,6 +1,8 @@
 # Ref: https://mail.python.org/pipermail/python-list/2012-January/618880.html
 from api_imports import *
 
+import pprint
+
 @endpoints.api(name='accounts',
                 version='v1',
                 allowed_client_ids=[WEB_CLIENT_ID, API_EXPLORER_CLIENT_ID],
@@ -31,6 +33,13 @@ class AccountsApi(remote.Service):
         for accountId in profile.editorForAccountsIds:
             alm.editor_accounts.append(_copyAccountMessage(accountId))
 
+
+        #for record in db.session.query(CommonLog):
+        #    pprint("{}:{}".format(record.id, record.message))
+        #db =connect_to_cloudsql()
+        #db.query("SELECT * from common_logs")
+        #r = db.store_result()
+        #pprint.pprint(r.fetch_row())
         alm.check_initialized()
         return alm
 
@@ -42,27 +51,23 @@ class AccountsApi(remote.Service):
         raise_unless_user(user)
 
         profile = userProfile(user)
-        account_name = request.name
 
-        @ndb.transactional(xg=True)
-        def _createAccount(profile, account_name, tagstr, default_currency_code):
-            am = AccountMessage()
+        name = request.name
+        tagstr = request.tagstr,
+        defaultCurrencyCode = request.default_currency_code
 
-            account = Account(
-                    name = account_name,
-                    tagstr = tagstr,
-                    default_currency_code = default_currency_code
-                    )
-            acc_key = account.put()
+        account = Account(
+                profileId = profile.id,
+                name = name,
+                tagstr = tagstr,
+                defaultCurrencyCode = defaultCurrencyCode,
+                )
+        session = Session()
+        session.add(account)
+        session.commit()
+        session.refresh(account)
 
-            profile.accountIds.append(acc_key.id())
-            profile.put()
-
-            am.accountId = acc_key.id()
-            am.name = account_name
-            return am
-
-        return _createAccount(profile, request.name, request.tagstr, request.default_currency_code)
+        return self._buildAccountMessage(account)
 
 
     @endpoints.method(AccountMessage, AccountMessage,
@@ -155,21 +160,20 @@ class AccountsApi(remote.Service):
         return self._buildAccountMessage(account)
 
     def _buildAccountMessage(self,account):
-        accountKey = account.key
-        bills = Bill.query(ancestor=accountKey).order(-Bill.date)
 
         am = AccountMessage()
-        am.accountId = account.key.id()
+        am.accountId = account.id
         am.name = account.name
         am.tagstr = account.tagstr
-        am.default_currency_code = account.default_currency_code
-        am.editors = buildStringMessagesFromArray(account.editors)
+        am.default_currency_code = account.defaultCurrencyCode
+        #am.editors = buildStringMessagesFromArray(account.editors)
         am.tags = buildStringMessagesFromArray(account.tags())
 
-        am.bills = []
-        for bill in bills:
-            bm = buildBillMessage(bill)
-            am.bills.append(bm)
+        #bills = Bill.query(ancestor=accountKey).order(-Bill.date)
+        #am.bills = []
+        #for bill in bills:
+        #    bm = buildBillMessage(bill)
+        #    am.bills.append(bm)
 
         am.check_initialized()
 
