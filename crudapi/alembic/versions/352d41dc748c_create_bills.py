@@ -26,7 +26,8 @@ def upgrade():
             sa.Column('currency_code', sa.String(16), nullable=False),
             sa.Column('date', sa.Date),
             sa.Column('notes', sa.UnicodeText()),
-            sa.Column('createdAt', sa.DateTime)
+            sa.Column('createdAt', sa.DateTime),
+            sa.Column('tagsHashString', sa.Unicode(256))
             )
 
 

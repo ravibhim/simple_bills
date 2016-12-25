@@ -51,6 +51,7 @@ class Bill(Base):
     createdAt = Column(DateTime, default=datetime.datetime.utcnow)
     date = Column(Date)
     notes = Column(String)
+    tagsHashString = Column(String)
 
     @classmethod
     def create(self,bill):
@@ -67,4 +68,7 @@ class Bill(Base):
         return self.date.month if self.date else None
     def year(self):
         return self.date.year if self.date else None
+
+    def tags(self):
+        return hashStringToArray(self.tagsHashString)
 

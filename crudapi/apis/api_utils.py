@@ -68,7 +68,6 @@ def userProfile(user):
 
     return profile
 
-# TODO: Continue from here.
 def checkAccountAccess(user, account_id, scope=settings.READ_SCOPE):
     profile = userProfile(user)
     account = Account.get(account_id)
@@ -121,12 +120,12 @@ def buildBillMessage(bill):
     bm.month = bill.month()
     bm.year = bill.year()
 
-    return bm
-'''
-    for tag in bill.tags:
+    for tag in hashStringToArray(bill.tagsHashString):
         sm = StringMessage()
         sm.data = tag
         bm.tags.append(sm)
+    return bm
+'''
 
     billFiles = BillFile.query(ancestor=bill.key).order(BillFile.timestamp)
 
@@ -178,4 +177,13 @@ def sign_url(bucket_object, expires_after_seconds=300):
     return '{endpoint}{resource}?{querystring}'.format(endpoint=GCS_ACCESS_ENDPOINT,
                                                        resource=gcs_filename,
                                                        querystring=urllib.urlencode(query_params))
+
+
+def hashStringToArray(hash_string):
+    return [x for x in hash_string.split('##') if x]
+
+def arrayToHashString(array):
+    if not array:
+        return ''
+    return '##{}##'.format('##'.join(array))
 

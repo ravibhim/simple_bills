@@ -30,7 +30,8 @@ class BillsApi(remote.Service):
                 currency_code=request.currency_code,
                 amount=float(request.amount),
                 date=parser.parse(request.date),
-                notes=request.notes
+                notes=request.notes,
+                tagsHashString=arrayToHashString(extractArrayFromStringMessageArray(request.tags))
                 )
 
         bill = Bill.create(bill)
