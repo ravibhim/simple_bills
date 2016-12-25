@@ -1,6 +1,6 @@
 from google.appengine.ext import ndb
 
-class Account(ndb.Model):
+class AccountX(ndb.Model):
     name = ndb.StringProperty()
     tagstr = ndb.StringProperty(indexed=False)
     default_currency_code = ndb.StringProperty(indexed=False)
@@ -11,7 +11,7 @@ class Account(ndb.Model):
         return [x.strip().upper() for x in (self.tagstr or '').split(',')]
 
 
-class Bill(ndb.Model):
+class BillX(ndb.Model):
     desc = ndb.StringProperty()
     currency_code = ndb.StringProperty(indexed=False)
     amount = ndb.FloatProperty()
@@ -24,13 +24,13 @@ class Bill(ndb.Model):
     month = ndb.ComputedProperty(lambda self: self.date.month if self.date else None)
     year = ndb.ComputedProperty(lambda self: self.date.year if self.date else None)
 
-class BillFile(ndb.Model):
+class BillFileX(ndb.Model):
     name = ndb.StringProperty(indexed=False)
     path = ndb.StringProperty(indexed=False)
     file_type = ndb.StringProperty(indexed=False)
     timestamp = ndb.DateTimeProperty(auto_now_add=True)
 
-class Profile(ndb.Model):
+class ProfileX(ndb.Model):
     userId = ndb.StringProperty()
     nickname = ndb.StringProperty()
     accountIds = ndb.IntegerProperty(indexed=False, repeated=True)

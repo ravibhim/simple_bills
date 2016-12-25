@@ -17,27 +17,28 @@ class FileMessage(messages.Message):
     thumbnail = messages.StringField(10)
 
 class BillMessage(messages.Message):
-    accountId = messages.IntegerField(1)
+    accountId = messages.StringField(1)
 
     billId = messages.StringField(2)
-    desc = messages.StringField(3)
+    title = messages.StringField(3)
     currency_code = messages.StringField(4)
     amount = messages.FloatField(5)
     date = messages.StringField(6)
-    tags = messages.MessageField(StringMessage,7,repeated=True)
+    notes = messages.StringField(7)
+    tags = messages.MessageField(StringMessage,8,repeated=True)
 
-    day = messages.IntegerField(8)
-    month = messages.IntegerField(9)
-    year = messages.IntegerField(10)
-    staging_filepaths = messages.MessageField(StringMessage,11,repeated=True)
-    filepaths = messages.MessageField(StringMessage,12,repeated=True)
-    files = messages.MessageField(FileMessage,13,repeated=True)
+    day = messages.IntegerField(9)
+    month = messages.IntegerField(10)
+    year = messages.IntegerField(11)
+    staging_filepaths = messages.MessageField(StringMessage,12,repeated=True)
+    filepaths = messages.MessageField(StringMessage,13,repeated=True)
+    files = messages.MessageField(FileMessage,14,repeated=True)
 
     billfileToDeleteId = messages.StringField(50)
     billfileToDetect = messages.StringField(60)
 
 class AccountMessage(messages.Message):
-    accountId = messages.IntegerField(1)
+    accountId = messages.StringField(1)
     name = messages.StringField(2)
     tagstr = messages.StringField(3)
     default_currency_code = messages.StringField(4)
@@ -58,7 +59,7 @@ class DayActivityMessage(messages.Message):
     num_bills = messages.IntegerField(2)
 
 class AccountActivityMessage(messages.Message):
-    accountId = messages.IntegerField(1)
+    accountId = messages.StringField(1)
     name = messages.StringField(2)
     activity = messages.MessageField(DayActivityMessage,3,repeated=True)
 
@@ -66,7 +67,7 @@ class AccountsActivityMessage(messages.Message):
     data = messages.MessageField(AccountActivityMessage,1,repeated=True)
 
 class SearchBillsRequest(messages.Message):
-    accountId = messages.IntegerField(1)
+    accountId = messages.StringField(1)
     tags = messages.MessageField(StringMessage,2, repeated=True)
     start_date = messages.StringField(3)
     end_date = messages.StringField(4)

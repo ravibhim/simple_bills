@@ -22,8 +22,10 @@ GCS_ACCESS_ENDPOINT = 'https://storage.googleapis.com'
 
 from models import *
 from api_messages import *
-
 import settings
+from sql_models import *
+
+import pprint
 
 def raise_unless_user(user):
     if not user:
@@ -49,33 +51,34 @@ def buildStringMessagesFromArray(array):
 def userProfile(user):
     if not user:
         raise users.UserNotFoundError("From userProfile(user)")
-
     user_email = user.email()
-    p_key = ndb.Key(Profile, user_email)
-    profile = p_key.get()
-    # TODO: Instead use Model.create_or_get to wrap the get/update operation in a transaction.
+
+    session = Session()
+    profile = session.query(Profile).filter(Profile.email == user_email).first()
 
     if not profile:
         profile = Profile(
-            key = p_key,
             userId = user.user_id(),
+            email = user_email,
             nickname = user.nickname()
         )
+        session.add(profile)
+        session.commit()
         logging.info('METRIC:USER_ADD - {}'.format(user_email))
-        profile.put()
 
     return profile
 
 def checkAccountAccess(user, account_id, scope=settings.READ_SCOPE):
     profile = userProfile(user)
+    account = Account.get(account_id)
 
-    if account_id in profile.accountIds:
+    if profile.ownsAccount(account):
         return True
 
-    if (account_id in profile.editorForAccountsIds) and (scope <= settings.UPDATE_SCOPE):
+    if profile.editorOfAccount(account, scope):
         return True
 
-    raise endpoints.InternalServerErrorException("{} tried to access account id {} with scope {}.".format(profile.key.id(), account_id, scope))
+    raise endpoints.InternalServerErrorException("{} tried to access account id {} with scope {}.".format(profile.email, account_id, scope))
 
 def getFilepath(account_id, bill_id, bill_file_id, filename):
     return '/' + account_id + '/' + bill_id + '/' + bill_file_id + '/' + filename
@@ -107,27 +110,26 @@ def copyStagingFilepathToGcs(staging_filepath, account_id, bill_id, bill_file_id
 def buildBillMessage(bill):
     bm = BillMessage()
 
-    bm.billId = bill.key.id()
-    bm.desc = bill.desc
+    bm.billId = bill.id
+    bm.title = bill.title
     bm.currency_code = bill.currency_code
     bm.amount = bill.amount
+    bm.notes = bill.notes
     bm.date = str(bill.date)
     bm.day = bill.day
     bm.month = bill.month
     bm.year = bill.year
 
-    for tag in bill.tags:
+    for tag in hashStringToArray(bill.tagsHashString):
         sm = StringMessage()
         sm.data = tag
         bm.tags.append(sm)
 
-    billFiles = BillFile.query(ancestor=bill.key).order(BillFile.timestamp)
-
-    for billFile in billFiles:
+    for billFile in bill.BillFiles:
         fm = FileMessage()
         fm.filename = billFile.name
         fm.signed_url= sign_url(billFile.path)
-        fm.billfileId= billFile.key.id()
+        fm.billfileId= billFile.id
         fm.file_type = billFile.file_type
         if fm.file_type in settings.SUPPORTED_IMAGE_FILE_TYPES:
             # Compute thumbnail
@@ -141,6 +143,7 @@ def buildBillMessage(bill):
 
     return bm
 
+
 # http://stackoverflow.com/questions/29847759/cloud-storage-and-secure-download-strategy-on-app-engine-gcs-acl-or-blobstore
 # We dont have this working in development. Not really needed.
 def sign_url(bucket_object, expires_after_seconds=300):
@@ -148,7 +151,7 @@ def sign_url(bucket_object, expires_after_seconds=300):
     gcs_filename = urllib.quote('/%s%s' % (settings.FILE_BUCKET, bucket_object))
     content_md5, content_type = None, None
 
-    expiration = datetime.utcnow() + timedelta(seconds=expires_after_seconds)
+    expiration = datetime.datetime.utcnow() + timedelta(seconds=expires_after_seconds)
     expiration = int(time.mktime(expiration.timetuple()))
 
     # Generate the string to sign.
@@ -171,4 +174,13 @@ def sign_url(bucket_object, expires_after_seconds=300):
     return '{endpoint}{resource}?{querystring}'.format(endpoint=GCS_ACCESS_ENDPOINT,
                                                        resource=gcs_filename,
                                                        querystring=urllib.urlencode(query_params))
+
+
+def hashStringToArray(hash_string):
+    return [x for x in hash_string.split('##') if x]
+
+def arrayToHashString(array):
+    if not array:
+        return ''
+    return '##{}##'.format('##'.join(array))
 

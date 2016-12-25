@@ -14,57 +14,55 @@ class BillsApi(remote.Service):
     @endpoints.method(BillMessage, BillMessage,
             path='createBill',
             http_method='POST', name='createBill')
-    @ndb.transactional(xg=True)
     def createBill(self,request):
         user = endpoints.get_current_user()
-        if not user:
-            raise endpoints.UnauthorizedException('Authorization required')
+        raise_unless_user(user)
 
-        accountId = int(request.accountId)
-        checkAccountAccess(user, accountId, settings.UPDATE_SCOPE)
+        accountId = request.accountId
+        checkAccountAccess(user, accountId, settings.EDITOR_SCOPE)
 
-        accountKey = Key(Account, accountId)
-        amount = int(request.amount)
-
-        # App generated billId
         billId = str(uuid.uuid4())
 
         bill = Bill(
                 id=billId,
-                desc=request.desc,
+                accountId=accountId,
+                title=request.title,
                 currency_code=request.currency_code,
                 amount=float(request.amount),
                 date=parser.parse(request.date),
-                tags=extractArrayFromStringMessageArray(request.tags),
-                parent=accountKey
+                notes=request.notes,
+                tagsHashString=arrayToHashString(extractArrayFromStringMessageArray(request.tags))
                 )
-        bill.put()
 
-        self._saveBillFiles(request, billId)
+        billFiles = self._buildBillFiles(request, billId)
+        bill = Bill.createWithFiles(bill, billFiles)
         return buildBillMessage(bill)
 
-    def _saveBillFiles(self,request, billId):
+    def _buildBillFiles(self,request, billId):
         accountId = request.accountId
-
+        billFiles = []
         for staging_filepath in request.staging_filepaths:
-            billFileId = str(uuid.uuid4())
-            # Copy to GCS and get the path
-            filepath = copyStagingFilepathToGcs(staging_filepath, str(request.accountId), billId, billFileId)
-            billFile = BillFile(
-              id=billFileId,
-              name=os.path.basename(filepath),
-              path=filepath,
-              timestamp=datetime.now(),
-              parent=ndb.Key('Account', int(accountId), 'Bill', billId)
-            )
-            #billFile.put()
+            billFileId=str(uuid.uuid4())
+            filepath = copyStagingFilepathToGcs(staging_filepath, accountId, billId, billFileId)
+            billFiles.append(self._buildBillFile(
+                id=billFileId,
+                billId = billId,
+                name = os.path.basename(filepath),
+                path=filepath
+                ))
+        return billFiles
 
-            # Detect file type
-            filepath = getFilepath(str(accountId), billId, billFileId, billFile.name)
-            filestat = gcs.stat('/' + settings.FILE_BUCKET + filepath)
+    def _buildBillFile(self,id,billId,name,path):
+        billFile = BillFile(
+                id=id,
+                billId=billId,
+                name=name,
+                path=path
+        )
+        filestat = gcs.stat('/' + settings.FILE_BUCKET + path)
+        billFile.file_type = filestat.content_type
+        return billFile
 
-            billFile.file_type = filestat.content_type
-            billFile.put()
 
 
     @endpoints.method(BillMessage, BillMessage,
@@ -72,24 +70,20 @@ class BillsApi(remote.Service):
             http_method='POST', name='updateBill')
     def updateBill(self,request):
         user = endpoints.get_current_user()
-        if not user:
-            raise endpoints.UnauthorizedException('Authorization required')
+        raise_unless_user(user)
 
-        accountId = int(request.accountId)
-        checkAccountAccess(user, accountId, settings.UPDATE_SCOPE)
-        accountKey = Key(Account, accountId)
+        accountId = request.accountId
+        checkAccountAccess(user, accountId, settings.EDITOR_SCOPE)
 
-        billId = request.billId
-        billKey = Key(Bill, billId, parent=accountKey)
-
-        bill = billKey.get()
+        bill = Bill.get(accountId, request.billId)
         bill.currency_code = request.currency_code
         bill.amount = float(request.amount)
-        bill.desc = request.desc
+        bill.title = request.title
         bill.date = parser.parse(request.date)
-        bill.tags = extractArrayFromStringMessageArray(request.tags)
+        bill.tagsHashString = arrayToHashString(extractArrayFromStringMessageArray(request.tags))
 
-        bill.put()
+        bill = Bill.create(bill)
+
         return buildBillMessage(bill)
 
 
@@ -98,39 +92,37 @@ class BillsApi(remote.Service):
             http_method='POST', name='addFileToBill')
     def addFileToBill(self,request):
         user = endpoints.get_current_user()
-        if not user:
-            raise endpoints.UnauthorizedException('Authorization required')
+        raise_unless_user(user)
 
-        accountId = int(request.accountId)
-        checkAccountAccess(user, accountId, settings.UPDATE_SCOPE)
-        accountKey = Key(Account, accountId)
+        accountId = request.accountId
+        checkAccountAccess(user, accountId, settings.EDITOR_SCOPE)
 
         billId = request.billId
-        bill = Key(Bill, billId, parent=accountKey).get()
+        bill = Bill.get(accountId, billId)
+        if bill:
+            billFiles = self._buildBillFiles(request,billId)
+            bill.addFiles(billFiles)
+            bill = Bill.get(accountId, billId)
+            return buildBillMessage(bill)
 
-        self._saveBillFiles(request,billId)
-        return buildBillMessage(bill)
 
     @endpoints.method(BillMessage, BillMessage,
             path='removeFileFromBill',
             http_method='POST', name='removeFileFromBill')
     def removeFileFromBill(self,request):
         user = endpoints.get_current_user()
-        if not user:
-            raise endpoints.UnauthorizedException('Authorization required')
+        raise_unless_user(user)
 
-        accountId = int(request.accountId)
-        checkAccountAccess(user, accountId, settings.UPDATE_SCOPE)
-        accountKey = Key(Account, accountId)
+        accountId = request.accountId
+        checkAccountAccess(user, accountId, settings.EDITOR_SCOPE)
 
         billId = request.billId
-        billKey = Key(Bill, billId, parent=accountKey)
+        bill = Bill.get(accountId, billId)
 
-        billfileId = request.billfileToDeleteId
-        billFileKey = Key(BillFile, billfileId, parent=billKey)
-        billFileKey.delete()
-
-        return buildBillMessage(billKey.get())
+        if bill:
+            bill.removeFile(request.billfileToDeleteId)
+            bill = Bill.get(accountId, billId)
+            return buildBillMessage(bill)
 
 
     @endpoints.method(BillMessage, BillMessage,
@@ -138,16 +130,11 @@ class BillsApi(remote.Service):
             http_method='POST', name='getBill')
     def getBill(self,request):
         user = endpoints.get_current_user()
-        if not user:
-            raise endpoints.UnauthorizedException('Authorization required')
+        raise_unless_user(user)
 
-        accountId = int(request.accountId)
-        checkAccountAccess(user, accountId, settings.UPDATE_SCOPE)
-        accountKey = ndb.Key(Account, accountId)
-
-        billId = request.billId
-        billKey = Key(Bill, billId, parent=accountKey)
-        bill = billKey.get()
+        accountId = request.accountId
+        checkAccountAccess(user, accountId, settings.EDITOR_SCOPE)
+        bill = Bill.get(accountId, request.billId)
 
         return buildBillMessage(bill)
 

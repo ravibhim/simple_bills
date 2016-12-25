@@ -22,7 +22,6 @@ class AccountDetail(BaseHandler):
 
         account_service = get_service(self.session,'accounts')
         response = account_service.getAccount(body={'accountId':account_id}).execute()
-        has_bills = True if 'bills' in response else False
 
         response_accounts = account_service.listAccounts().execute()
         account_tags = stringMessagesToList(response['tags'])
@@ -30,6 +29,8 @@ class AccountDetail(BaseHandler):
 
         stats_service = get_service(self.session, 'stats')
         stats_response = stats_service.accountStatsOnDemand(body={'accountId':account_id}).execute()
+
+        has_bills = True if int(stats_response['bill_count']) > 0 else False
 
         template_values = {
             'profile' : profile,

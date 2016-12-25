@@ -12,27 +12,25 @@ class StatsApi(remote.Service):
         user=endpoints.get_current_user()
         raise_unless_user(user)
 
-        accountKey = Key(Account, int(request.accountId))
+        accountId = request.accountId
+        checkAccountAccess(user, accountId)
+        account = Account.get(accountId)
 
-        # Get all the distinct years.
-        years = Bill.query(projection=['year'], distinct=True, ancestor = accountKey).fetch()
-        year_counts = {}
-        for year in years:
-            year_counts[year.year] = Bill.query(Bill.year == year.year, ancestor = accountKey).count()
+        year_bill_counts = account.year_bill_counts()
 
         asm = AccountStatsMessage()
-        asm.bill_count = sum(year_counts.values())
-        for year in years:
+        asm.bill_count = sum(year_bill_counts.values())
+        for year in year_bill_counts.keys():
             ysm = YearStatsMessage()
-            ysm.year = year.year
-            ysm.bill_count = year_counts[year.year]
+            ysm.year = year
+            ysm.bill_count = year_bill_counts[year]
 
             # Get distinct months
-            months = Bill.query(Bill.year == year.year, projection=['month'], distinct=True, ancestor = accountKey).fetch()
-            for month in months:
+            month_bill_counts = account.month_bill_counts(year)
+            for month in month_bill_counts.keys():
                 msm = MonthStatsMessage()
-                msm.month = month.month
-                msm.bill_count = Bill.query(Bill.year == year.year, Bill.month == month.month, ancestor = accountKey).count()
+                msm.month = month
+                msm.bill_count = month_bill_counts[month]
                 ysm.month_stats.append(msm)
 
             asm.year_stats.append(ysm)
