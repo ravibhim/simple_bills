@@ -12,31 +12,40 @@ class SearchBillsApi(remote.Service):
         user = endpoints.get_current_user()
         raise_unless_user(user)
 
-        sb_response = SearchBillsResponse()
-        sb_response.request = request
+        accountId = request.accountId
+        checkAccountAccess(user, accountId)
+        account = Account.get(accountId)
 
-        profile = userProfile(user)
-        accountId = int(request.accountId)
-        checkAccountAccess(user, accountId, settings.READ_SCOPE)
 
-        accountKey = Key(Account, accountId)
-
-        # Get all bills
-        bills = Bill.query(ancestor=accountKey).order(-Bill.date)
+        # Get all bills for the date range
+        #bills = Bill.query(ancestor=accountKey).order(-Bill.date)
 
         # Filter on tags if present
-        if len(request.tags):
-            bills = bills.filter(Bill.tags.IN(extractArrayFromStringMessageArray(request.tags)))
+        #if len(request.tags):
+            #bills = bills.filter(Bill.tags.IN(extractArrayFromStringMessageArray(request.tags)))
 
         # Filter on start_date if present
-        if request.start_date:
-            bills = bills.filter(Bill.date >= parser.parse(request.start_date))
-
+        #if request.start_date:
+            #bills = bills.filter(Bill.date >= parser.parse(request.start_date))
 
         # Filter on end_date if present
-        if request.end_date:
-            bills = bills.filter(Bill.date <= parser.parse(request.end_date))
+        #if request.end_date:
+            #bills = bills.filter(Bill.date <= parser.parse(request.end_date))
 
+
+        bills = account.search_bills(parser.parse(request.start_date),parser.parse(request.end_date))
+
+        sb_response = SearchBillsResponse()
+        sb_response.request = request
+        for bill in bills:
+            bm = buildBillMessage(bill)
+            sb_response.results.append(bm)
+        sb_response.num_results = bills.count()
+
+        sb_response.check_initialized()
+        return sb_response
+
+'''
         # Do a brute force token intersection for now.
         if request.query:
             search_bills = []
@@ -50,12 +59,4 @@ class SearchBillsApi(remote.Service):
             num_results = len(bills)
         else:
             num_results = bills.count()
-
-        for bill in bills:
-            bm = buildBillMessage(bill)
-            sb_response.results.append(bm)
-        sb_response.num_results = num_results
-
-        sb_response.check_initialized()
-        return sb_response
-
+'''

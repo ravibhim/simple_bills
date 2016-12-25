@@ -24,7 +24,11 @@ def upgrade():
             sa.Column('title', sa.Unicode(1024), nullable=False),
             sa.Column('amount', sa.Float(), nullable=False),
             sa.Column('currency_code', sa.String(16), nullable=False),
-            sa.Column('date', sa.Date),
+            sa.Column('date', sa.Date, nullable=False),
+            sa.Column('day', sa.Integer, nullable=False),
+            sa.Column('month', sa.Integer, nullable=False),
+            sa.Column('year', sa.Integer, nullable=False),
+
             sa.Column('notes', sa.UnicodeText()),
             sa.Column('createdAt', sa.DateTime),
             sa.Column('tagsHashString', sa.Unicode(256))

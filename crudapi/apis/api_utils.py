@@ -72,13 +72,13 @@ def checkAccountAccess(user, account_id, scope=settings.READ_SCOPE):
     profile = userProfile(user)
     account = Account.get(account_id)
 
-    if account.profileId == profile.id:
+    if profile.ownsAccount(account):
         return True
 
-    #if (account_id in profile.editorForAccountsIds) and (scope <= settings.UPDATE_SCOPE):
-        #return True
+    if profile.editorOfAccount(account, scope):
+        return True
 
-    raise endpoints.InternalServerErrorException("{} tried to access account id {} with scope {}.".format(profile.email(), account_id, scope))
+    raise endpoints.InternalServerErrorException("{} tried to access account id {} with scope {}.".format(profile.email, account_id, scope))
 
 def getFilepath(account_id, bill_id, bill_file_id, filename):
     return '/' + account_id + '/' + bill_id + '/' + bill_file_id + '/' + filename
@@ -116,24 +116,20 @@ def buildBillMessage(bill):
     bm.amount = bill.amount
     bm.notes = bill.notes
     bm.date = str(bill.date)
-    bm.day = bill.day()
-    bm.month = bill.month()
-    bm.year = bill.year()
+    bm.day = bill.day
+    bm.month = bill.month
+    bm.year = bill.year
 
     for tag in hashStringToArray(bill.tagsHashString):
         sm = StringMessage()
         sm.data = tag
         bm.tags.append(sm)
-    return bm
-'''
 
-    billFiles = BillFile.query(ancestor=bill.key).order(BillFile.timestamp)
-
-    for billFile in billFiles:
+    for billFile in bill.BillFiles:
         fm = FileMessage()
         fm.filename = billFile.name
         fm.signed_url= sign_url(billFile.path)
-        fm.billfileId= billFile.key.id()
+        fm.billfileId= billFile.id
         fm.file_type = billFile.file_type
         if fm.file_type in settings.SUPPORTED_IMAGE_FILE_TYPES:
             # Compute thumbnail
@@ -144,7 +140,8 @@ def buildBillMessage(bill):
             fm.thumbnail = img_url + "=s128-c"
 
         bm.files.append(fm)
-'''
+
+    return bm
 
 
 # http://stackoverflow.com/questions/29847759/cloud-storage-and-secure-download-strategy-on-app-engine-gcs-acl-or-blobstore
@@ -154,7 +151,7 @@ def sign_url(bucket_object, expires_after_seconds=300):
     gcs_filename = urllib.quote('/%s%s' % (settings.FILE_BUCKET, bucket_object))
     content_md5, content_type = None, None
 
-    expiration = datetime.utcnow() + timedelta(seconds=expires_after_seconds)
+    expiration = datetime.datetime.utcnow() + timedelta(seconds=expires_after_seconds)
     expiration = int(time.mktime(expiration.timetuple()))
 
     # Generate the string to sign.

@@ -6,7 +6,7 @@ SUPPORTED_IMAGE_FILE_TYPES = [
         ]
 
 READ_SCOPE = 1
-UPDATE_SCOPE = 2
+EDITOR_SCOPE = 2
 FULL_SCOPE = 3 # Can delete too
 
 

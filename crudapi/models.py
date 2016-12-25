@@ -24,7 +24,7 @@ class BillX(ndb.Model):
     month = ndb.ComputedProperty(lambda self: self.date.month if self.date else None)
     year = ndb.ComputedProperty(lambda self: self.date.year if self.date else None)
 
-class BillFile(ndb.Model):
+class BillFileX(ndb.Model):
     name = ndb.StringProperty(indexed=False)
     path = ndb.StringProperty(indexed=False)
     file_type = ndb.StringProperty(indexed=False)
