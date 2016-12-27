@@ -20,20 +20,14 @@ class SearchBillsApi(remote.Service):
         # Get all bills for the date range
         #bills = Bill.query(ancestor=accountKey).order(-Bill.date)
 
-        # Filter on tags if present
-        #if len(request.tags):
-            #bills = bills.filter(Bill.tags.IN(extractArrayFromStringMessageArray(request.tags)))
-
-        # Filter on start_date if present
-        #if request.start_date:
-            #bills = bills.filter(Bill.date >= parser.parse(request.start_date))
-
-        # Filter on end_date if present
-        #if request.end_date:
-            #bills = bills.filter(Bill.date <= parser.parse(request.end_date))
 
 
-        bills = account.search_bills(parser.parse(request.start_date),parser.parse(request.end_date))
+        bills = account.search_bills(
+                    parser.parse(request.start_date),
+                    parser.parse(request.end_date),
+                    extractArrayFromStringMessageArray(request.tags),
+                    request.query
+                    )
 
         sb_response = SearchBillsResponse()
         sb_response.request = request

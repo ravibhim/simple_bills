@@ -3,6 +3,7 @@ import datetime
 import uuid
 
 from sqlalchemy import *
+from sqlalchemy import or_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship
 from sqlalchemy.event import listen
@@ -170,7 +171,7 @@ class Account(Base):
         session.close()
         return result
 
-    def search_bills(self, start_date, end_date):
+    def search_bills(self, start_date, end_date, tags,query):
         session = Session()
         result = (
                 Session().query(Bill)
@@ -178,6 +179,15 @@ class Account(Base):
                 .filter(Bill.date >= start_date)
                 .filter(Bill.date <= end_date)
             )
+        if len(tags):
+            tags_likes = ["%##{}##%".format(tag) for tag in tags]
+            result = result.filter(
+                        or_(*[Bill.tagsHashString.like(tags_like) for tags_like in tags_likes])
+                    )
+        if query:
+            result = result.filter(Bill.title.ilike("%{}%".format(query)))
+
+
         session.close()
         return result
 
