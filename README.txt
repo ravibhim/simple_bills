@@ -25,3 +25,10 @@ Running endpoints as a seperate module
 http://stackoverflow.com/questions/24232580/putting-a-cloud-endpoints-api-in-a-separate-app-engine-module
 
 
+Running DB Migrations
+--------------------------------------
+$ cd crudapi
+$ pip install alembic pymysql
+$ mysql -u root
+$ mysql> create database simple_bills;
+$ alembic upgrade head
