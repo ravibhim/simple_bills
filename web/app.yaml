@@ -1,6 +1,6 @@
 application: simplebills-153311
-module: web
-version: alpha-004
+module: www
+version: www-alpha-004
 runtime: python27
 api_version: 1
 threadsafe: true

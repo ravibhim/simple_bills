@@ -160,7 +160,7 @@ class Account(Base):
 
     def month_bill_counts(self,year):
         session = Session()
-        result = dict(Session().query(Bill.month, func.count(Bill.month))
+        result = dict(session.query(Bill.month, func.count(Bill.month))
                     .filter(Bill.accountId == self.id)
                     .filter(Bill.year == year)
                     .group_by(Bill.month)
@@ -172,7 +172,7 @@ class Account(Base):
     def search_bills(self, start_date, end_date, tags,query):
         session = Session()
         result = (
-                Session().query(Bill)
+                session.query(Bill)
                 .filter(Bill.accountId == self.id)
                 .filter(Bill.date >= start_date)
                 .filter(Bill.date <= end_date)
