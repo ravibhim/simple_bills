@@ -66,34 +66,6 @@ simpleBills.controller("SearchBillController", function($scope) {
         return $scope.search_tags[tag];
     };
 
-    var initDateRangePicker = function() {
-        var start = moment().subtract(29, 'days');
-        var end = moment();
-
-        function showSelectedDate(start, end) {
-            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-
-            $scope.search_start_date = start.format('YYYY-MM-DD');
-            $scope.search_end_date = end.format('YYYY-MM-DD');
-
-            $scope.fetchBills();
-        }
-
-        $('#reportrange').daterangepicker({
-            startDate: start,
-            endDate: end,
-            opens: "left",
-            ranges: {
-                'Today': [moment(), moment()],
-                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                'Last 30 Days': [moment().subtract(29, 'days'), moment()]
-            }
-        }, showSelectedDate);
-
-        showSelectedDate(start, end);
-    };
-
     var monthNames = moment.months();
     $scope.currentYear = moment().year();
     $scope.currentMonth = moment().month();
@@ -172,7 +144,6 @@ simpleBills.controller("SearchBillController", function($scope) {
     };
 
     // Invoke init methods manually for the first time
-    initDateRangePicker();
     $scope.fetchBills();
 });
 
