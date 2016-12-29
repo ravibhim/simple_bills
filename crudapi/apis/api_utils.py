@@ -16,6 +16,7 @@ import urllib
 from datetime import datetime, timedelta
 import os
 import base64
+import uuid
 
 GCS_ACCESS_ENDPOINT = 'https://storage.googleapis.com'
 
@@ -58,6 +59,7 @@ def userProfile(user):
 
     if not profile:
         profile = Profile(
+            id = str(uuid.uuid4()),
             userId = user.user_id(),
             email = user_email,
             nickname = user.nickname()

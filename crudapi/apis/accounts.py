@@ -1,8 +1,6 @@
 # Ref: https://mail.python.org/pipermail/python-list/2012-January/618880.html
 from api_imports import *
 
-import pprint
-
 @endpoints.api(name='accounts',
                 version='v1',
                 allowed_client_ids=[WEB_CLIENT_ID, API_EXPLORER_CLIENT_ID],
@@ -45,6 +43,7 @@ class AccountsApi(remote.Service):
         profile = userProfile(user)
 
         account = Account(
+                id = str(uuid.uuid4()),
                 profileId = profile.id,
                 name = request.name,
                 tagstr = request.tagstr,

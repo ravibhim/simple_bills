@@ -1,7 +1,5 @@
 import os
 import datetime
-import uuid
-
 from sqlalchemy import *
 from sqlalchemy import or_
 from sqlalchemy.ext.declarative import declarative_base
@@ -24,7 +22,7 @@ Session = scoped_session(sessionmaker(bind=eng))
 class Profile(Base):
     __tablename__ = 'profiles'
 
-    id = Column(String, primary_key=True, default=str(uuid.uuid4()))
+    id = Column(String, primary_key=True)
     email = Column(String, primary_key=True)
     userId = Column(String)
     nickname = Column(String)
@@ -77,7 +75,7 @@ class AccountProfileRole(Base):
 class Account(Base):
     __tablename__ = 'accounts'
 
-    id = Column(String, primary_key=True, default=str(uuid.uuid4()))
+    id = Column(String, primary_key=True)
     profileId = Column(String, ForeignKey("profiles.id"))
     name = Column(String)
     tagstr = Column(String)
