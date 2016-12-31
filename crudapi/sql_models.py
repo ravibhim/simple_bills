@@ -332,6 +332,7 @@ class Invitation(Base):
     accountId = Column(String)
     senderId = Column(String, ForeignKey("profiles.id"))
     receiverEmail = Column(String)
+    state = Column(String, default="CREATED")
     expiresAt = Column(Integer)
     createdAt = Column(DateTime, default=datetime.datetime.utcnow)
 
@@ -343,3 +344,30 @@ class Invitation(Base):
         session.refresh(invitation)
         session.close()
         return invitation
+
+    @classmethod
+    def get(self,invitation_id):
+        session = Session()
+        result = (
+                session.query(Invitation)
+                .filter(Invitation.id == invitation_id)
+                .first()
+            )
+        session.close()
+        return result
+
+    def expired(self):
+        return self.expiresAt < datetime.datetime.utcnow()
+
+    def used(self):
+        return self.state!='CREATED'
+
+    def mark_used(self):
+        session = Session()
+        currentInvitation = session.query(Invitation).filter(Invitation.id == self.id).first()
+        currentInvitation.state = 'USED'
+        session.add(currentInvitation)
+        session.commit()
+        session.close()
+        return currentInvitation
+

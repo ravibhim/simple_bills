@@ -88,8 +88,6 @@ class AccountsApi(remote.Service):
         editorProfile = Profile.get(editor)
         status_msg = None
         if not editorProfile:
-            #raise endpoints.InternalServerErrorException("Profile with email {} not found.".format(editor))
-            # TODO: Continue from here.
             account.sendInvitation(profile.email,editor)
             status_msg = "Invitation sent to {}.".format(editor)
         else:

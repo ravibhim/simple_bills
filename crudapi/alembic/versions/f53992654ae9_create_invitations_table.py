@@ -23,6 +23,7 @@ def upgrade():
          sa.Column('accountId', sa.String(128), nullable=False),
          sa.Column('senderId', sa.String(128), nullable = False),
          sa.Column('receiverEmail', sa.String(128), nullable=False),
+         sa.Column('state', sa.String(128), nullable=False),
          sa.Column('expiresAt', sa.DateTime, nullable=False),
          sa.Column('createdAt', sa.DateTime)
          )
