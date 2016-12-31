@@ -75,7 +75,6 @@ class AccountsApi(remote.Service):
     @endpoints.method(AccountMessage, AccountMessage,
             path='addEditor',
             http_method='POST', name='addEditor')
-    @ndb.transactional(xg=True)
     def addEditor(self,request):
         user=endpoints.get_current_user()
         raise_unless_user(user)
@@ -91,12 +90,11 @@ class AccountsApi(remote.Service):
         account = Account.get(accountId)
         account.addEditor(editorProfile)
 
-        return self._buildAccountMessage(account)
+        return self._buildAccountMessage(account, status_msg = "Account shared with {}.".format(editor))
 
     @endpoints.method(AccountMessage, AccountMessage,
             path='removeEditor',
             http_method='POST', name='removeEditor')
-    @ndb.transactional(xg=True)
     def removeEditor(self,request):
         user=endpoints.get_current_user()
         raise_unless_user(user)
@@ -108,7 +106,7 @@ class AccountsApi(remote.Service):
         account = Account.get(accountId)
         account.removeEditor(editor)
 
-        return self._buildAccountMessage(account)
+        return self._buildAccountMessage(account, status_msg = "Access removed for {}.".format(editor))
 
 
     @endpoints.method(AccountMessage, AccountMessage,
@@ -124,7 +122,7 @@ class AccountsApi(remote.Service):
 
         return self._buildAccountMessage(account)
 
-    def _buildAccountMessage(self,account):
+    def _buildAccountMessage(self,account,status_msg = None):
         am = AccountMessage()
         am.accountId = account.id
         am.name = account.name
@@ -132,6 +130,8 @@ class AccountsApi(remote.Service):
         am.default_currency_code = account.defaultCurrencyCode
         am.editors = buildStringMessagesFromArray(account.editors())
         am.tags = buildStringMessagesFromArray(account.tags())
+        if status_msg:
+            am.status_msg = status_msg
 
         am.check_initialized()
 

@@ -21,6 +21,11 @@
 
 <body ng-app="SimpleBills">
     <div>
+
+        {% if flash_msg %}
+          <div id='flash_msg'> {{flash_msg[0][0]}} </div>
+        {% endif %}
+
         {% block content %}{% endblock %}
     </div>
 

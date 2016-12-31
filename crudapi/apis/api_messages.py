@@ -50,6 +50,8 @@ class AccountMessage(messages.Message):
     editorToAdd = messages.StringField(50)
     editorToRemove = messages.StringField(60)
 
+    status_msg = messages.StringField(100)
+
 class AccountListMessage(messages.Message):
     owner_accounts = messages.MessageField(AccountMessage,1,repeated=True)
     editor_accounts = messages.MessageField(AccountMessage,2,repeated=True)

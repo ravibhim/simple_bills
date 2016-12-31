@@ -67,6 +67,7 @@ class AccountSettings(BaseHandler):
                 'tagstr': response.get('tagstr') or '',
                 'supported_currencies': settings.SUPPORTED_CURRENCIES,
                 'default_currency_code': response.get('default_currency_code') or '',
+                'flash_msg': self.session.get_flashes(),
         }
 
         template = JINJA_ENVIRONMENT.get_template('account_settings.html')
@@ -96,6 +97,7 @@ class AddEditor(BaseHandler):
                     'editorToAdd': self.request.get('account_editor_to_add')
                     }
                 ).execute()
+        self.session.add_flash(response['status_msg'])
 
         self.redirect(self.request.referer)
 
@@ -110,5 +112,6 @@ class RemoveEditor(BaseHandler):
                     'editorToRemove': self.request.get('account_editor_to_remove')
                     }
                 ).execute()
+        self.session.add_flash(response['status_msg'])
 
         self.redirect(self.request.referer)
