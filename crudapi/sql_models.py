@@ -1,10 +1,14 @@
 import os
 import datetime
+import uuid
+
 from sqlalchemy import *
 from sqlalchemy import or_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship
 from sqlalchemy.event import listen
+
+from google.appengine.api import mail
 
 import pprint
 import settings
@@ -26,6 +30,7 @@ class Profile(Base):
     email = Column(String, primary_key=True)
     userId = Column(String)
     nickname = Column(String)
+    createdAt = Column(DateTime, default=datetime.datetime.utcnow)
 
     Accounts = relationship("Account", order_by="Account.createdAt")
     roleAccounts = relationship("Account", secondary='account_profile_roles')
@@ -133,6 +138,35 @@ class Account(Base):
         result = [x.email for x in thisAccount.roleProfiles]
         session.close()
         return result
+
+    def sendInvitation(self, senderEmail, receiverEmail):
+        invitation = Invitation.create(
+                Invitation(
+                    id = str(uuid.uuid4()),
+                    accountId = self.id,
+                    senderId = self.profileId,
+                    receiverEmail = receiverEmail,
+                    expiresAt = datetime.datetime.utcnow() + datetime.timedelta(days=1)
+                    )
+                )
+
+        message = mail.EmailMessage(
+                sender=os.environ['ADMIN'],
+                # TODO: Change owner to actual email address.
+                subject='{} wants to share the account {} on SimpleBills.co'.format(senderEmail, self.name),
+                to=receiverEmail,
+                html= """
+Please click the following link to setup your account and access the account {}.
+
+<p><a href="{}/invitation/{}"> Access {}</a> </p>
+
+Note: Your invitation expires in 24 hours.
+
+""".format(self.name,os.environ['WEB_SERVER'], invitation.id, self.name)
+                )
+
+        message.send()
+
 
 
     def tags(self):
@@ -291,3 +325,21 @@ class BillFile(Base):
             )
         session.close()
         return result
+
+class Invitation(Base):
+    __tablename__ = 'invitations'
+    id = Column(String, primary_key=True)
+    accountId = Column(String)
+    senderId = Column(String, ForeignKey("profiles.id"))
+    receiverEmail = Column(String)
+    expiresAt = Column(Integer)
+    createdAt = Column(DateTime, default=datetime.datetime.utcnow)
+
+    @classmethod
+    def create(self,invitation):
+        session = Session()
+        session.add(invitation)
+        session.commit()
+        session.refresh(invitation)
+        session.close()
+        return invitation

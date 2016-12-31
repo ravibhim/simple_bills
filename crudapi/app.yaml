@@ -30,4 +30,6 @@ env_variables:
   FILE_BUCKET: 'simplebills-153311.appspot.com'
   STAGING_FILE_BUCKET: 'staging.simplebills-153311.appspot.com'
   SQLALCHEMY_DATABASE_URI: 'mysql+pymysql://root:@127.0.0.1:3306/simple_bills?charset=utf8'
+  WEB_SERVER: 'http://localhost:8081/'
+  ADMIN: 'swetha.bcode@gmail.com'
 
