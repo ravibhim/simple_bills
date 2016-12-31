@@ -32,7 +32,8 @@ class HomePage(BaseHandler):
             'editor_accounts': response.get('editor_accounts') or [],
             'supported_currencies': settings.SUPPORTED_CURRENCIES,
             'accounts_activity': accounts_activity,
-            'accounts_activity_json': json.dumps(accounts_activity)
+            'accounts_activity_json': json.dumps(accounts_activity),
+            'flash_msg': self.session.get_flashes()
         }
 
         template = JINJA_ENVIRONMENT.get_template('home.html')
@@ -45,3 +46,19 @@ class LogoutPage(BaseHandler):
             self.session['credentials'] = None
 
         self.redirect('/')
+
+class UseInvitation(BaseHandler):
+    @check_credentials
+    def get(self,invitation_id):
+        profiles_service = get_service(self.session, 'profiles')
+        profile = profiles_service.getProfile().execute()
+
+        response = profiles_service.useInvitation(
+                body = {
+                    'invitationId': invitation_id
+                    }
+                ).execute()
+
+
+        self.session.add_flash(response['message'])
+        self.redirect('/me')

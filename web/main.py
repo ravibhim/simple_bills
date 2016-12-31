@@ -5,8 +5,6 @@ from base import BaseHandler
 from oauth import OAuth2CallbackPage
 from views import *
 
-import pprint
-
 
 config = {}
 config['webapp2_extras.sessions'] = {
@@ -30,6 +28,7 @@ app = webapp2.WSGIApplication([
   ('/account/(.*)?/(.*)?/add_file', AddFileToBill),
   ('/account/(.*)?/(.*)?/(.*)?/remove_file', RemoveFileFromBill),
   ('/account/(.*)?/(.*)?/(.*)?/detect_file_type', DetectBillFileType),
+  ('/useinvitation/([^/]*)?', UseInvitation),
 ], debug=True, config=config)
 
 

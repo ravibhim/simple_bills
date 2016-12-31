@@ -10,7 +10,6 @@ class ProfileMessage(messages.Message):
 
 class FileMessage(messages.Message):
     filename = messages.StringField(1)
-    #original = messages.StringField(2)
     signed_url = messages.StringField(2)
     billfileId = messages.StringField(3)
     file_type = messages.StringField(4)
@@ -80,3 +79,11 @@ class SearchBillsResponse(messages.Message):
 
     num_results = messages.IntegerField(2)
     results = messages.MessageField(BillMessage,3, repeated=True)
+
+class UseInvitationMessage(messages.Message):
+    invitationId = messages.StringField(1)
+
+class StatusMessage(messages.Message):
+    status = messages.StringField(1)
+    message = messages.StringField(2)
+

@@ -27,7 +27,6 @@ class OAuth2CallbackPage(BaseHandler):
             auth_uri = flow.step1_get_authorize_url()
             return self.redirect(auth_uri)
         else:
-            pprint.pprint(CLIENT_SECRET)
             credentials = flow.step2_exchange(self.request.get('code'))
             self.session['credentials'] = credentials.to_json()
             redirect_url = '/'

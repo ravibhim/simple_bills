@@ -78,19 +78,23 @@ class AccountsApi(remote.Service):
     def addEditor(self,request):
         user=endpoints.get_current_user()
         raise_unless_user(user)
+        profile = userProfile(user)
 
         accountId = request.accountId
         checkAccountAccess(user, accountId, settings.FULL_SCOPE)
+        account = Account.get(accountId)
 
         editor = request.editorToAdd
         editorProfile = Profile.get(editor)
+        status_msg = None
         if not editorProfile:
-            raise endpoints.InternalServerErrorException("Profile with email {} not found.".format(editor))
+            account.sendInvitation(profile.email,editor)
+            status_msg = "Invitation sent to {}.".format(editor)
+        else:
+            account.addEditor(editorProfile)
+            status_msg = "Account shared with {}.".format(editor)
 
-        account = Account.get(accountId)
-        account.addEditor(editorProfile)
-
-        return self._buildAccountMessage(account, status_msg = "Account shared with {}.".format(editor))
+        return self._buildAccountMessage(account, status_msg=status_msg)
 
     @endpoints.method(AccountMessage, AccountMessage,
             path='removeEditor',

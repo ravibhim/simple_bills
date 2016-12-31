@@ -26,8 +26,6 @@ from api_messages import *
 import settings
 from sql_models import *
 
-import pprint
-
 def raise_unless_user(user):
     if not user:
         raise endpoints.UnauthorizedException('Authorization required')
