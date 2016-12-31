@@ -2,6 +2,9 @@
 {% block content %}
 
 <div class="container" id="edit_page">
+  {% if flash_msg %}
+    <div id='flash_msg'> {{flash_msg[0][0]}} </div>
+  {% endif %}
   <a href="/account/{{account_id}}">Back to Account</a>
   <div class="card row">
     <h4>Edit a Bill</h4>

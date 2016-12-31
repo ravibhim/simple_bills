@@ -50,7 +50,8 @@ class EditBill(BaseHandler):
             'account_tags': stringMessagesToList(account_response.get('tags')),
             'bill': bill,
             'bill_tags': stringMessagesToList(bill.get('tags')),
-            'supported_currencies': settings.SUPPORTED_CURRENCIES
+            'supported_currencies': settings.SUPPORTED_CURRENCIES,
+            'flash_msg': self.session.get_flashes()
         }
 
         template = JINJA_ENVIRONMENT.get_template('edit_bill.html')
@@ -74,6 +75,7 @@ class EditBill(BaseHandler):
                     }
                 ).execute()
 
+        self.session.add_flash('Bill updated.')
         self.redirect('/account/' + account_id + '/' + bill_id + '/edit_bill')
 
 class AddFileToBill(BaseHandler):
