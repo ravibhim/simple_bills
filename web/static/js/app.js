@@ -88,7 +88,26 @@ simpleBills.controller("SearchBillController", function($scope) {
     $scope.updateCurrentYearAndMonthsData = function() {
       $scope.setStartEndDates();
       $scope.monthsData = $scope.selectedYearMonthsData();
+      $scope.determineTheMonthToShow();
       $scope.fetchBills();
+    };
+
+    $scope.determineTheMonthToShow = function() {
+       // select the months that has bills
+       var data = _.filter($scope.monthsData, function(m) { return m.billCount > 0; });
+
+       if (data.length > 0) {
+         var preSelectedMonth;
+         // If the selected year is the current year then pre-select the current month
+         if ($scope.currentYear == moment().year()) {
+           preSelectedMonth = moment().month();
+         } else {
+           // Pre-select the month based on the available data for that particular year
+           preSelectedMonth = moment().month(data[0].monthName).month();
+         }
+
+         $scope.updateCurrentMonth(preSelectedMonth, false);
+       }
     };
 
     $scope.updateCurrentMonth = function(month, disabled) {
@@ -127,6 +146,9 @@ simpleBills.controller("SearchBillController", function($scope) {
       _.each($scope.stats.year_stats, function(yearStat) {
         years.push(parseInt(yearStat.year));
       });
+
+      // Add current year by default
+      years.push(moment().year());
 
       years = _.uniq(years);
 
