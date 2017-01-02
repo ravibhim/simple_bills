@@ -158,7 +158,7 @@ class Account(Base):
                 html= """
 Please click the following link to setup your account and access the account {}.
 
-<p><a href="{}/invitation/{}"> Access {}</a> </p>
+<p><a href="{}/useinvitation/{}"> Access {}</a> </p>
 
 Note: Your invitation expires in 24 hours.
 
