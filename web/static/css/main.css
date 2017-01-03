@@ -1,18 +1,74 @@
 /* main page css*/
 
-.welcome-content {
-    margin-top: 200px;
-}
-
-.welcome-content h3 {
-    margin-bottom: 30px;
-}
 
 body {
     background-color: #f5f5f5;
 }
 
+nav#index{
+  background-color: transparent;
+  box-shadow: none;
+}
+#index #logo{
+  height: 28px;
+  margin-right: 8px
+}
+#index a.brand-logo {
+  font-size: 28px;
+  margin-left: 50px;
+  margin-top: 20px;
+}
+#index .btn-flat{
+  margin-top: 36px;
+  margin-right: 110px;
+}
+#index-container{
+  text-align: center;
+  padding-top: 76px;
+}
 
+.content{
+  width:950px;
+  margin: auto;
+}
+
+#index-container #home_screen{
+  display: inline-block;
+  width: 720px;
+  text-align: center;
+}
+#home_screen img{
+  width: 720px;
+}
+#index-container .app_description{
+  vertical-align: top;
+  display: inline-block;
+  width: 220px;
+  margin-top: 80px;
+}
+#index-container .each_desc{
+  text-align: center;
+  margin-left: 24px;
+  margin-bottom: 40px;
+  color: #888888;
+}
+.each_desc img{
+  height: 30px;
+}
+#index-container a{
+  margin-top: 24px;
+  height: 56px;
+}
+.get_started{
+  display: block;
+  height: 24px;
+  padding-top: 4px;
+}
+.get_started_tag{
+  text-transform: initial;
+  display: block;
+  font-size: 12px;
+}
 /******************************************************************************/
 
 
@@ -24,11 +80,13 @@ nav {
     z-index: 10;
 }
 
-.brand-logo {
+nav .brand-logo {
     font-size: 24px;
     font-weight: 400;
 }
-
+nav #logo{
+  margin-right: 6px;
+}
 .nav-wrapper a, .nav-wrapper li {
     color: #333333;
 }
@@ -42,28 +100,31 @@ nav .nav-wrapper i {
     vertical-align: middle;
     display: inline-block;
 }
-
-#nav-mobile .dropdown-button {
-    margin-right: 40px;
+#profile{
+  margin-right: 40px;
+}
+#profile a.dropdown-button {
+  height: 64px;
+  line-height: 64px;
+  display: inline-block;
+}
+#profile .active{
+  color: #333333 !important;
 }
 
-#nav-mobile .active {
-    color: #333333 !important;
+#profile_dropdown{
+  margin-top: -4px;
+  margin-left: 30px;
+  background-color: #eeeeee;
 }
-
-#dropdown-profile {
-    width: 120px !important;
-    right: 50px !important;
-    top: 65px !important;
-    margin-left: 120px;
+#profile_dropdown a:hover{
+  background-color: white !important;
 }
-
-#dropdown-profile a {
+#profile_dropdown a {
     margin: 0;
     color: #85bb65;
     text-align: center;
 }
-
 
 /******************************************************************************/
 
@@ -368,13 +429,27 @@ a {
 
 .account_detail_headline {
     margin: 24px 0;
-    margin-bottom: 12px;
+    margin-bottom: 72px;
 }
 
 .account_detail_headline h4 {
     margin: 0;
+    display: inline-block;
+    text-transform: capitalize;
 }
-
+#account_settings{
+  color: #9b9b9b;
+  font-size: 12px;
+  background-color: white;
+  padding: 0 10px;
+  vertical-align: top;
+  margin-left: 16px;
+}
+#account_settings i {
+  font-size: 16px;
+  color: #9b9b9b;
+  margin-right: 6px;
+}
 .spinner-green-only {
     border-color: #85bb65;
 }
@@ -382,16 +457,6 @@ a {
 #bill_date:focus {
     border-bottom: none;
     box-shadow: none;
-}
-
-.account_detail_headline i {
-    font-size: 16px;
-    color: #9b9b9b;
-}
-
-#account_name {
-    text-transform: capitalize;
-    ;
 }
 
 main {
@@ -681,16 +746,31 @@ main .container {
   padding: 0 !important;
   margin-bottom: 15px;
 }
-
+#month-selector-container select{
+  border: none;
+  height: 48px;
+  width: 80px;
+  padding: 9px 24px 6px 16px;
+  background-image: url(/static/images/dropdown_arrow.svg);
+  background-repeat: no-repeat;
+  background-position: right;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.24);
+}
 #month-selector-container .custom-tabs {
   background: #ececec;
   margin: 0;
 }
 
+#month-selector-container select:focus{
+  outline: none;
+}
 #month-selector-container .custom-tabs .custom-tab {
   display: inline-block;
   text-align: center;
   line-height: 48px;
+  width: 8.31%;
   height: 48px;
   padding: 0;
   margin: 0;
@@ -703,7 +783,7 @@ main .container {
   width: 100%;
   height: 100%;
   padding: 0 24px;
-  font-size: 14px;
+  font-size: 13.5px;
   text-overflow: ellipsis;
   overflow: hidden;
   transition: color .28s ease;
@@ -726,6 +806,36 @@ main .container {
   cursor: default;
 }
 
-.text-align-center {
-  text-align: center;
+#account_headline{
+  margin-top: 26px;
+  margin-bottom: 22px;
+}
+
+#search_box [type="checkbox"].filled-in:not(:checked)+label:after {
+    height: 16px;
+    width: 16px;
+}
+#search_box [type="checkbox"].filled-in:checked+label:after {
+    top: 0;
+    width: 16px;
+    height: 16px;
+  }
+#search_box [type="checkbox"]+label {
+    padding-left: 22px;
+    height: 20px;
+    line-height: 20px;
+}
+#search_box .bill_tag label{
+  font-size: 14px;
+}
+#search_box [type="checkbox"].filled-in:checked+label:before {
+    width: 6px;
+    height: 12px;
+    margin-top: 1px;
+  }
+#bills_found{
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #9b9b9b;
+  font-size: 12px;
 }

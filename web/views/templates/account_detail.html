@@ -24,8 +24,11 @@
         <div class="row">
             <div class="col s12">
                 <div class="account_detail_headline">
-                    <h4 class="headline-main col s3"><span id="account-name">{{account_name}}<span> <a href="/account/{{account_id}}/settings"><i class="material-icons">settings</i></span></h4>
-                    <a class="waves-effect waves-light btn modal-trigger" href="#addBill">Add a bill</a>
+                    <div class="col s8">
+                      <h4 class="headline-main">{{account_name}}</h4>
+                      <a id="account_settings" href="/account/{{account_id}}/settings" class="waves-effect waves-light btn"><i class="material-icons left">settings</i>settings</a>
+                    </div>
+                    <a class="waves-effect waves-light btn modal-trigger right" href="#addBill">Add a bill</a>
                 </div>
 
                 <div ng-controller="AddBillController">
@@ -80,7 +83,7 @@
                                 </div>
                             </div>
                             <div class="col s12">
-                                <h3 class="headline-sub">Tags</h3> 
+                                <h3 class="headline-sub">Tags</h3>
                                 {% if account_tags %}
                                   <div class="bill_tags_all">
                                       {% for tag in account_tags %}
@@ -127,35 +130,31 @@
                         </div>
                     </div>
 
-                    <div class="search_box col s12">
-                        <div class="col s12">
-                          <p style="text-align: center;">Bills for #{currentMonthName}, #{currentYear}</p>
+                    <div class="search_box col s12" id="search_box">
+                      <div id="month-selector-container">
+                        <div class="col s1">
+                          <select class="browser-default" ng-change="updateCurrentYearAndMonthsData()" ng-model="currentYear" ng-options="year for year in getStatsYears()"></select>
                         </div>
-                        <div class="col s12" id="month-selector-container">
-                          <div class="col s1">
-                            <select class="browser-default" ng-change="updateCurrentYearAndMonthsData()" ng-model="currentYear" ng-options="year for year in getStatsYears()"></select>
-                          </div>
-
-                          <div class="col s11">
-                            <ul class="custom-tabs" ng-init="monthsData = selectedYearMonthsData()">
-                              <li ng-repeat="month in monthsData track by $index" ng-click="updateCurrentMonth($index, (month.billCount < 1))" class="custom-tab #{month.billCount < 1 ? 'disabled' : ''}">
-                                <span ng-init="currentMonthBillCount = month.BillCount"></span>
-                                <a class="#{$index == currentMonth ? 'active' : ''}">#{month.monthName}</a>
-                              </li>
-                            </ul>
-                          </div>
+                        <div class="col s11">
+                          <ul class="custom-tabs" ng-init="monthsData = selectedYearMonthsData()">
+                            <li ng-repeat="month in monthsData track by $index" ng-click="updateCurrentMonth($index, (month.billCount < 1))" class="custom-tab #{month.billCount < 1 ? 'disabled' : ''}">
+                              <span ng-init="currentMonthBillCount = month.BillCount"></span>
+                              <a class="#{$index == currentMonth ? 'active' : ''}">#{month.monthName}</a>
+                            </li>
+                          </ul>
                         </div>
-
+                      </div>
                         <div class="col s12">
-                          <p></p>
+                          <h5 class="center-align " id="account_headline">Bills for #{currentMonthName}, #{currentYear}</h5>
                         </div>
                         <form>
-                            <div class="search-wrapper card col s3">
+                            <div class="search-wrapper card col s4">
                                 <input id="search_query" type="text" ng-model="search_query" ng-keypress="searchOnEnterKey($event)" name="search_query" placeholder="Search">
                                 <i class="material-icons">search</i>
                             </div>
 
-                            <div class="col s5">
+                            <div class="col s12">
+                                <h3 class="headline-sub">Tags</h3>
                                 {% if account_tags %}
                                   <div class="bill_tags_all">
                                       <div class="bill_tag" ng-repeat="tag in accountTags">
@@ -165,10 +164,13 @@
                                   </div>
                                 {% endif %}
                             </div>
-                            <div class="col s2 search_btn">
+                            <!-- <div class="col s2 search_btn">
                                 <button class="btn waves-effect waves-light btn-search" type="button" ng-click="fetchBills()">Search</button>
-                            </div>
+                            </div> -->
                         </form>
+                        <div class="col s12">
+                          <p id="bills_found">4 Bills found</p>
+                        </div>
 
                         <div class="billsgi-table col s12">
                             <table class="bordered col s12">
