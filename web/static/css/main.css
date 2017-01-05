@@ -437,7 +437,7 @@ a {
     display: inline-block;
     text-transform: capitalize;
 }
-#account_settings{
+#settings_btn{
   color: #9b9b9b;
   font-size: 12px;
   background-color: white;
@@ -445,7 +445,7 @@ a {
   vertical-align: top;
   margin-left: 16px;
 }
-#account_settings i {
+#settings_btn i {
   font-size: 16px;
   color: #9b9b9b;
   margin-right: 6px;
@@ -518,7 +518,7 @@ main .container {
     top: 10px;
     right: 10px;
     cursor: pointer;
-    background-color: #fafafa;
+    color: #9b9b9b;
 }
 
 #search_query {
@@ -749,8 +749,10 @@ main .container {
 #month-selector-container select{
   border: none;
   height: 48px;
-  width: 80px;
-  padding: 9px 24px 6px 16px;
+  position: relative;
+  z-index: 20;
+  width: 72px;
+  padding: 9px 18px 6px 16px;
   background-image: url(/static/images/dropdown_arrow.svg);
   background-repeat: no-repeat;
   background-position: right;
@@ -782,10 +784,8 @@ main .container {
   display: block;
   width: 100%;
   height: 100%;
-  padding: 0 24px;
+  padding: 0 30%;
   font-size: 13.5px;
-  text-overflow: ellipsis;
-  overflow: hidden;
   transition: color .28s ease;
 }
 
@@ -835,7 +835,24 @@ main .container {
   }
 #bills_found{
   margin-top: 0;
+  margin-left: 6px;
   margin-bottom: 10px;
-  color: #9b9b9b;
   font-size: 12px;
+  color: #333333;
+}
+
+#flash_msg{
+  text-align: center;
+  background-color: #323232;
+  color: white;
+  height: 48px;
+  padding: 10px 20px;
+  line-height: 28px;
+  width: 420px;
+  border-radius: 2px;
+  margin: auto;
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  z-index: 20;
 }
