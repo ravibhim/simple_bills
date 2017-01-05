@@ -13,7 +13,6 @@ $(document).ready(function() {
       gutter: 0,
       belowOrigin: true,
       alignment: 'right'
-    }
-  );
-
+      });
+    $('#flash_msg').fadeIn('fast').delay(4000).fadeOut('fast');
 });
