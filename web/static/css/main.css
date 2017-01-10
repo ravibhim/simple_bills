@@ -4,41 +4,32 @@
 body {
     background-color: #f5f5f5;
 }
-
-nav#index{
-  background-color: transparent;
-  box-shadow: none;
+#home-nav{
+  background-color: rgba(255, 255, 255, 0.8);
 }
-#index #logo{
-  height: 28px;
-  margin-right: 8px
-}
-#index a.brand-logo {
-  font-size: 28px;
-  margin-left: 50px;
-  margin-top: 20px;
-}
-#index .btn-flat{
-  margin-top: 36px;
-  margin-right: 110px;
+#login-btn{
+  line-height: 36px;
+  margin-top: 14px;
+  margin-right: 40px;
+  color: #85bb65;
 }
 #index-container{
   text-align: center;
-  padding-top: 76px;
+  padding-top: 90px;
 }
 
 .content{
-  width:950px;
+  width:1030px;
   margin: auto;
 }
 
 #index-container #home_screen{
   display: inline-block;
-  width: 720px;
+  width: 800px;
   text-align: center;
 }
 #home_screen img{
-  width: 720px;
+  width: 800px;
 }
 #index-container .app_description{
   vertical-align: top;
@@ -68,6 +59,14 @@ nav#index{
   text-transform: initial;
   display: block;
   font-size: 12px;
+}
+footer.page-footer {
+    margin-top: 20px;
+    padding-top: 20px;
+    background-color: transparent;
+}
+footer.page-footer .footer-copyright{
+  background-color: #444;
 }
 /******************************************************************************/
 
