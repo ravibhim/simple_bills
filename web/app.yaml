@@ -4,6 +4,7 @@ version: www-alpha-006
 runtime: python27
 api_version: 1
 threadsafe: true
+secure: always
 basic_scaling:
   idle_timeout: 10m
   max_instances: 2
