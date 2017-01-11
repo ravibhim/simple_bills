@@ -1,14 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<nav id="index">
+<nav id="home-nav">
     <div class="nav-wrapper">
         <a href="/" class="brand-logo"><img id="logo" src="/static/images/simple_bills_logo.svg">SimpleBills</a>
-        <a class="waves-effect waves-teal btn-flat right" href={{login_url}}>Log in</a>
+        <a class="waves-effect waves-teal btn-flat right" id="login-btn" href={{login_url}}>Log in</a>
     </div>
 </nav>
 <div id="index-container">
-
   <div class="content">
     <div id="home_screen">
       <h5>Simple Bills safekeeps digital copies of your bills.</h5>
@@ -30,8 +29,15 @@
       </div>
     </div>
   </div>
-
   <a class="waves-effect waves-light btn" href={{login_url}}><span class="get_started">Get started</span><span class="get_started_tag">(It's Free)</span></a>
 </div>
+<footer class="page-footer">
+   <div class="footer-copyright">
+     <div class="container">
+       © 2017 Copyright
+           <a class="grey-text text-lighten-4 right" href="http://www.beautifulcode.in/">BeautifulCode</a>
+     </div>
+   </div>
+</footer>
 
 {% endblock %}
