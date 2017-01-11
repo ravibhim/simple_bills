@@ -24,15 +24,15 @@ class HomePage(BaseHandler):
         accounts_service = get_service(self.session, 'accounts')
         response = accounts_service.listAccounts().execute()
 
-        accounts_activity = accounts_service.getAccountsActivity().execute()
+        #accounts_activity = accounts_service.getAccountsActivity().execute()
 
         template_values = {
             'profile': profile,
             'owner_accounts': response.get('owner_accounts') or [],
             'editor_accounts': response.get('editor_accounts') or [],
             'supported_currencies': settings.SUPPORTED_CURRENCIES,
-            'accounts_activity': accounts_activity,
-            'accounts_activity_json': json.dumps(accounts_activity),
+            #'accounts_activity': accounts_activity,
+            #'accounts_activity_json': json.dumps(accounts_activity),
             'flash_msg': self.session.get_flashes()
         }
 

@@ -31,34 +31,11 @@
         {% endif %}
      </ul>
   </div>
-  <div>
-    {% for account in accounts_activity.data %}
-    <div class="row account_each card">
-      <div class="col s4">
-        <h4 class="headline_main">
-          <a href="/account/{{account.accountId}}">{{account.name}}</a>
-        </h4>
-      </div>
-      <div class="col s8">
-        <div id="activity_chart_{{account.accountId}}"></div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
   {% else %}
   <div class="account_each card">
     <h3 class="helper-info">Hello {{ profile.nickname }}, start adding bills by creating an account </h3>
   </div>
   {% endif %}
 </div>
-
-<script type="text/javascript">
-$(function() {
-  var activityCharts = new ActivityChart({
-    accountsActivity: {{accounts_activity_json|safe}},
-    chartContainerPrefix: 'activity_chart_'
-  });
-});
-</script>
 
 {% endblock %}
