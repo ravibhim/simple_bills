@@ -18,7 +18,8 @@ class OAuth2CallbackPage(BaseHandler):
             client_id=CLIENT_ID,
             client_secret=CLIENT_SECRET,
             scope=SCOPE,
-            prompt='consent',
+            # http://stackoverflow.com/questions/21097008/the-app-keeps-asking-for-permission-to-have-offline-access-why
+            approval_prompt='auto',
             redirect_uri= '%s://%s%s' % (self.request.environ['wsgi.url_scheme'], self.request.environ['HTTP_HOST'], os.environ['OAUTH_REDIRECT_PATH'])
             )
         code = self.request.get('code')
