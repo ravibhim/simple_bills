@@ -26,6 +26,7 @@ app = webapp2.WSGIApplication([
   ('/account/(.*)?/search_bills', SearchBill),
   ('/account/(.*)?/(.*)?/edit_bill', EditBill),
   ('/account/(.*)?/(.*)?/add_file', AddFileToBill),
+  ('/account/(.*)?/(.*)?/delete', DeleteBill),
   ('/account/(.*)?/(.*)?/(.*)?/remove_file', RemoveFileFromBill),
   ('/account/(.*)?/(.*)?/(.*)?/detect_file_type', DetectBillFileType),
   ('/useinvitation/([^/]*)?', UseInvitation),

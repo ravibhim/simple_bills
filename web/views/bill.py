@@ -78,6 +78,21 @@ class EditBill(BaseHandler):
         self.session.add_flash('Bill updated.')
         self.redirect('/account/' + account_id + '/' + bill_id + '/edit_bill')
 
+class DeleteBill(BaseHandler):
+    @check_credentials
+    def post(self, account_id, bill_id):
+        bills_service = get_service(self.session, 'bills')
+        response = bills_service.deleteBill(
+                body={
+                    'accountId': account_id,
+                    'billId': bill_id
+                    }
+                ).execute()
+
+        self.session.add_flash('Bill %s deleted.' % (response['title']))
+        self.redirect('/account/' + account_id)
+
+
 class AddFileToBill(BaseHandler):
     @check_credentials
     def post(self, account_id, bill_id):

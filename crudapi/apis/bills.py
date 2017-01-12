@@ -86,6 +86,20 @@ class BillsApi(remote.Service):
 
         return buildBillMessage(bill)
 
+    @endpoints.method(BillMessage, BillMessage,
+            path='deleteBill',
+            http_method='POST', name='deleteBill')
+    def deleteBill(self,request):
+        user = endpoints.get_current_user()
+        raise_unless_user(user)
+
+        accountId = request.accountId
+        checkAccountAccess(user, accountId, settings.EDITOR_SCOPE)
+
+        bill = Bill.get(accountId, request.billId)
+        bill = bill.delete()
+
+        return buildBillMessage(bill)
 
     @endpoints.method(BillMessage, BillMessage,
             path='addFileToBill',

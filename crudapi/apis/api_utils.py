@@ -120,6 +120,7 @@ def buildBillMessage(bill):
     bm.day = bill.day
     bm.month = bill.month
     bm.year = bill.year
+    bm.deleted = bill.deleted
 
     for tag in hashStringToArray(bill.tagsHashString):
         sm = StringMessage()
