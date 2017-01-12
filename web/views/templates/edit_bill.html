@@ -1,7 +1,9 @@
 {% extends "base.html" %}
+{% block title %}
+  Edit Bill - {{bill.title}}
+{% endblock %}
+
 {% block content %}
-
-
 <div class="container" id="edit_page">
   <a href="/account/{{account_id}}">Back to Account</a>
   <div class="card row">
