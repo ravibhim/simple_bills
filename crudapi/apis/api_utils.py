@@ -116,6 +116,7 @@ def buildBillMessage(bill):
     bm.amount = bill.amount
     bm.notes = bill.notes
     bm.date = str(bill.date)
+    bm.dateHuman = bill.date.strftime("%b %d")
     bm.day = bill.day
     bm.month = bill.month
     bm.year = bill.year

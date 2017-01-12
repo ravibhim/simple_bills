@@ -210,6 +210,7 @@ Note: Your invitation expires in 24 hours.
                 .filter(Bill.accountId == self.id)
                 .filter(Bill.date >= start_date)
                 .filter(Bill.date <= end_date)
+                .order_by(Bill.date)
             )
         if len(tags):
             tags_likes = ["%##{}##%".format(tag) for tag in tags]

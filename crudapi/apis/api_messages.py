@@ -35,6 +35,7 @@ class BillMessage(messages.Message):
 
     billfileToDeleteId = messages.StringField(50)
     billfileToDetect = messages.StringField(60)
+    dateHuman = messages.StringField(70)
 
 class AccountMessage(messages.Message):
     accountId = messages.StringField(1)
