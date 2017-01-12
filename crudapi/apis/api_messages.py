@@ -32,6 +32,7 @@ class BillMessage(messages.Message):
     staging_filepaths = messages.MessageField(StringMessage,12,repeated=True)
     filepaths = messages.MessageField(StringMessage,13,repeated=True)
     files = messages.MessageField(FileMessage,14,repeated=True)
+    deleted = messages.BooleanField(15)
 
     billfileToDeleteId = messages.StringField(50)
     billfileToDetect = messages.StringField(60)

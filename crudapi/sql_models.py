@@ -210,6 +210,7 @@ Note: Your invitation expires in 24 hours.
                 .filter(Bill.accountId == self.id)
                 .filter(Bill.date >= start_date)
                 .filter(Bill.date <= end_date)
+                .filter(Bill.deleted == False)
                 .order_by(Bill.date)
             )
         if len(tags):
@@ -243,6 +244,7 @@ class Bill(Base):
     year = Column(Integer)
     notes = Column(String)
     tagsHashString = Column(String)
+    deleted = Column(Boolean)
 
     BillFiles = relationship("BillFile", lazy='subquery', order_by='BillFile.createdAt')
 
@@ -283,6 +285,16 @@ class Bill(Base):
             )
         session.close()
         return result
+
+    def delete(self):
+        session = Session()
+        self.deleted = True
+        session.add(self)
+        session.commit()
+        session.refresh(self)
+        session.close()
+        return self
+
 
     def addFiles(self,billFiles):
         session = Session()

@@ -45,7 +45,8 @@ class AccountDetail(BaseHandler):
             'owner_accounts': response_accounts.get('owner_accounts') or [],
             'editor_accounts': response_accounts.get('editor_accounts') or [],
             'stats': stats_response,
-            'stats_json': json.dumps(stats_response)
+            'stats_json': json.dumps(stats_response),
+            'flash_msg': self.session.get_flashes()
         }
         template = JINJA_ENVIRONMENT.get_template('account_detail.html')
         self.response.out.write(template.render(template_values))
