@@ -244,7 +244,7 @@ class Bill(Base):
     year = Column(Integer)
     notes = Column(String)
     tagsHashString = Column(String)
-    deleted = Column(Boolean)
+    deleted = Column(Boolean, default=False)
 
     BillFiles = relationship("BillFile", lazy='subquery', order_by='BillFile.createdAt')
 
