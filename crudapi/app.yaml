@@ -1,6 +1,6 @@
 application: simplebills-153311
 module: default
-version: alpha-005
+version: alpha-006
 runtime: python27
 api_version: 1
 threadsafe: true
