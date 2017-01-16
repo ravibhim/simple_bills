@@ -173,6 +173,93 @@ simpleBills.controller("AddBillController", function($scope) {
     $scope.accountId = PageConfig ? PageConfig.accountId : "";
 
     $scope.formValidator = new CustomFormValidator({
-      requiredFields: ['bill_desc', 'bill_amount']
+      fields: [
+        'bill_desc', 'bill_amount', 'filename',
+        'bill_currency_code','bill_date', 'bill_tags'
+      ],
+      requiredFields: ['bill_desc', 'bill_amount'],
+      selectFields: ['bill_currency_code'],
+      checkboxFields: ['bill_tags']
     });
+
+    var ajaxFunc = function($form) {
+      var params = new FormData();
+
+      _.each(
+        _.difference(
+          $scope.formValidator.fields,
+          $scope.formValidator.checkboxFields,
+          $scope.formValidator.selectFields
+        ),
+        function(field) {
+          params.set(field, $form.find('input[name="'+ field + '"]').val());
+        }
+      );
+
+      _.each(
+        $scope.formValidator.selectFields,
+        function(field) {
+          params.set(field, $form.find('select[name="'+ field + '"]').val());
+        }
+      );
+
+      _.each($scope.formValidator.checkboxFields, function(field) {
+        var values = [];
+
+        _.each($form.find('input[name="'+ field + '"]:checked'), function($ele){
+          values.push($($ele).val());
+        });
+
+        params.set(field, values);
+      });
+
+      var file = $form.find('input[name=filename]')[0].files[0];
+      if(file) {
+        params.set('filename', file, file.name);
+      };
+
+      // POST params
+      $.ajax({
+        type: 'POST',
+        url: '/account/' + $scope.accountId + '/create_bill',
+        data: params,
+        contentType: false,
+        cache: false,
+        processData: false,
+        statusCode: {
+          302: function(xhr) {
+            console.log('redirect the page');
+          }
+        }
+      }).done(function(response) {
+          $form.find('.modal').modal('close');
+          $scope.formValidator.resetForm();
+
+          var date = params.get('bill_date').split('/');
+          $scope.$parent.currentYear = parseInt(date[2]);
+          $scope.$parent.currentMonth = parseInt(date[0]);
+          $scope.$parent.updateCurrentYearAndMonthsData();
+          //console.log('success!!', response);
+      }).fail(function(err) {
+          console.log('err!!', err);
+      });
+    };
+
+    $scope.formValidator.ajaxForm = function($event) {
+      $event.preventDefault();
+
+      if($scope.formValidator.validateFields()) {
+        var $submitBtn = $($event.currentTarget);
+        $submitBtn.addClass('disabled');
+        $submitBtn.html($scope.formValidator.submitBtnLoadingText);
+
+        if (!$scope.formValidator.$form) {
+          $scope.formValidator.$form = $submitBtn.closest('form');
+        }
+
+        ajaxFunc($scope.formValidator.$form);
+      } else {
+        $scope.formValidator.highlightRequiredFields();
+      }
+    };
 });

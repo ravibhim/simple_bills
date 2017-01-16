@@ -8,7 +8,11 @@ class CreateBill(BaseHandler):
     def post(self, account_id):
         # Put the file in GCS first and get the stage filepath
         # Send that info to the API so that it would move the file to the right path
-        file_data = self.request.POST['filename']
+        file_data = None
+
+        if self.request.get('filename'):
+            file_data = self.request.POST['filename']
+
         if isFileUploaded(self,'filename'):
             staging_filepath = uploadBillImageToStaging(file_data)
 
@@ -25,12 +29,14 @@ class CreateBill(BaseHandler):
             'date': self.request.get('bill_date'),
             'tags': tags_json
         }
+
         if isFileUploaded(self, 'filename'):
             body['staging_filepaths'] = [{'data': staging_filepath}]
+
         response = bills_service.createBill(body=body).execute()
 
-        self.redirect('/account/' + account_id)
-
+        self.response.headers['Content-Type'] = "application/json"
+        self.response.out.write(json.dumps(response))
 
 class EditBill(BaseHandler):
     @check_credentials
