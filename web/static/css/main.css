@@ -189,7 +189,15 @@ a {
     cursor: default;
 }
 
-
+.btn-delete{
+  background-color: #DC676C;
+}
+.btn-delete:hover{
+  background-color: #c82e35;
+}
+.btn-delete:focus{
+  background-color: #c82e35;
+}
 /******************************************************************************/
 
 
@@ -641,7 +649,12 @@ main .container {
 .bill_currency_label{
   color: #85bb65 !important;
 }
-
+#edit_page .tags_container{
+  margin-bottom: 30px;
+}
+.tags_container .headline-sub{
+  margin-top: 5px;
+}
 #edit_page .btn-update {
     margin-bottom: 16px;
 }
@@ -716,6 +729,16 @@ main .container {
   text-align: center;
   margin-top: 8px;
   margin-bottom: 12px;
+}
+#edit_page #delete_modal{
+  width: 40%;
+}
+#edit_page #delete_modal h4{
+  background-color: transparent;
+  color: #333;
+  margin: 0;
+  margin-top: 14px;
+  padding: 0;
 }
 /*******************************************************************************/
 /* pace theme */
@@ -856,5 +879,5 @@ main .container {
   position: fixed;
   left: 24px;
   bottom: 24px;
-  z-index: 20;
+  z-index: 1000;
 }
