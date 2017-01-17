@@ -26,7 +26,7 @@
 <main>
     <div class="container">
         <div class="row">
-            <div class="col s12">
+            <div class="col s12" ng-controller="SearchBillController">
                 <div class="account_detail_headline">
                     <div class="col s8">
                       <h4 class="headline-main">{{account_name}}</h4>
@@ -54,7 +54,7 @@
                                 <label>Currency </label>
                             </div>
                             <div class="input-field col s6">
-                                <input id="bill_amount" type="text" ng-model="bill_amount" name="bill_amount">
+                                <input id="bill_amount" type="number" ng-model="bill_amount" name="bill_amount">
                                 <label for="bill_amount">Bill Amount</label>
                             </div>
 
@@ -103,7 +103,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn modal-action" type="button" ng-click="formValidator.submitForm($event)">Add</button>
+                            <button class="btn modal-action" type="button" ng-click="formValidator.ajaxForm($event)">Add</button>
                             <a href="" class="modal-action modal-close waves-effect waves-red btn-flat ">Cancel</a>
                         </div>
                     </div>
@@ -117,7 +117,7 @@
                     </p>
                 </div>
                 {% else %}
-                <div class="card col s12" id="search_table" ng-controller="SearchBillController">
+                <div class="card col s12" id="search_table">
                     <div id="spinner-container">
                         <div id="spinner" class="preloader-wrapper active">
                             <div class="spinner-layer spinner-green-only">

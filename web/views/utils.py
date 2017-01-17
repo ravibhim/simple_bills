@@ -22,7 +22,6 @@ def stringMessagesToList(msg_json):
                 items.append(data_item['data'])
     return items
 
-
 def uploadBillImageToStaging(file_data):
     filename = file_data.filename
     file_type = file_data.type
