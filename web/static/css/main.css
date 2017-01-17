@@ -881,3 +881,16 @@ main .container {
   bottom: 24px;
   z-index: 1000;
 }
+
+.bill-link .file_img {
+  display: inline-block;
+}
+
+.bill-link .file_img img {
+  height: 50px;
+}
+
+.bill-link p {
+  display: inline-block;
+  margin: 0;
+}
