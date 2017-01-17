@@ -165,8 +165,14 @@ simpleBills.controller("SearchBillController", function($scope) {
       return ret;
     };
 
+    // Read getParams and update the currentYear and currentMonth
+    var queryParams = SBUtils.getQueryParams(window.location.search);
+    $scope.currentYear = parseInt(queryParams.year) || $scope.currentYear;
+    $scope.currentMonth = (parseInt(queryParams.month) - 1) || $scope.currentMonth;
+
     // Invoke init methods manually for the first time
-    $scope.fetchBills();
+    // $scope.fetchBills();
+    $scope.updateCurrentYearAndMonthsData();
 });
 
 simpleBills.controller("AddBillController", function($scope) {
