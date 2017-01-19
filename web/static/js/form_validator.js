@@ -5,7 +5,7 @@ var CustomFormValidator = function(config) {
   self.requiredFieldsInputs = [];
 
   for(var i = 0; i < self.requiredFields.length; i++) {
-    var $inputEle = $("input[ng-model='" + self.requiredFields[i] + "'");
+    var $inputEle = $("[ng-model='" + self.requiredFields[i] + "'");
     self.requiredFieldsInputs.push($inputEle);
   }
 

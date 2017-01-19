@@ -204,3 +204,21 @@ simpleBills.controller("AddBillController", function($scope) {
     requiredFields: ['bill_desc', 'bill_amount']
   });
 });
+
+simpleBills.controller("FeedbackController", function($scope) {
+  $scope.formValidator = new CustomFormValidator({
+    requiredFields: ['feedback_desc'],
+    submitBtnLoadingText: 'Sending ...'
+  });
+
+  var defaultDesc = "Please type your feedback here ...";
+  $scope.feedback_desc = defaultDesc;
+
+  $scope.submitFeedback = function($event) {
+    if ($scope.feedback_desc != defaultDesc) {
+      $scope.formValidator.submitForm($event);
+    } else {
+      $('[ng-model="feedback_desc"]').addClass('invalid');
+    }
+  };
+});
