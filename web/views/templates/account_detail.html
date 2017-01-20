@@ -1,4 +1,4 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% block title %}
   Account - {{account_name}}
 {% endblock %}
@@ -170,7 +170,7 @@
                             </div>
                         </form>
                         <div class="col s12">
-				<p id="bills_found">#{bills.length || '0'} Bills found</p>
+                          <p id="bills_found">#{bills.length || '0'} Bills found</p>
                         </div>
 
                         <div class="billsgi-table col s12">
@@ -195,7 +195,11 @@
                                         <td>#{bill.dateHuman}</td>
                                         <td>
                                           <span ng-repeat="file in bill.files">
-                                            <a href="#{file.signed_url}" target="_blank">#{file.filename}</a>
+                                            <a class="bill-link" href="#{file.signed_url}" target="_blank" title="#{file.filename}">
+                                              <div class="file_img">
+                                                <img alt="thumbnail" src="#{imageThumbnail(file)}"/>
+                                              </div>
+                                            </a>
                                           </span>
                                         </td>
                                         <td>

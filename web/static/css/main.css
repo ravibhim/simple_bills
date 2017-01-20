@@ -881,3 +881,68 @@ main .container {
   bottom: 24px;
   z-index: 1000;
 }
+
+.bill-link .file_img {
+  display: inline-block;
+}
+
+.bill-link .file_img img {
+  height: 50px;
+}
+
+.bill-link p {
+  display: inline-block;
+  margin: 0;
+}
+
+.feedback-btn {
+  position: fixed;
+  right: 2.2%;
+  bottom: 0;
+  color: #9b9b9b;
+  font-size: 12px;
+  background-color: #fff;
+  padding: 0 15px;
+}
+
+.feedback-btn .material-icons {
+  margin-right: 5px;
+}
+
+.feedback-btn:hover {
+  background-color: #cbcbcb;
+  color: #fff;
+}
+
+.feedback-btn:focus {
+  background-color: #cbcbcb;
+  color: #fff;
+}
+
+#feedback_area textarea {
+  height: 150px;
+  margin-top: 10px;
+  padding: 10px 15px;
+}
+
+#feedback_area textarea.invalid.ng-not-empty.ng-touched {
+  border: 1px solid #000;
+}
+
+#feedback_area textarea.invalid {
+  border: 1px solid #F44336;
+}
+
+#feedback_area .btn-submit {
+  background-color: #85BB65;
+  color: #fff;
+}
+
+#feedback_area form {
+  margin: 0;
+}
+
+#feedback_area .modal-footer {
+  border-top: 1px solid rgba(0,0,0,0.1);
+  padding: 0 25px;
+}

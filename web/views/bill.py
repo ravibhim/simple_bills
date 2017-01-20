@@ -29,8 +29,9 @@ class CreateBill(BaseHandler):
             body['staging_filepaths'] = [{'data': staging_filepath}]
         response = bills_service.createBill(body=body).execute()
 
-        self.redirect('/account/' + account_id)
-
+        date = body['date'].split('/')
+        redirect_url = "/account/{0}?year={1}&month={2}".format(account_id, date[2], date[0])
+        self.redirect(redirect_url)
 
 class EditBill(BaseHandler):
     @check_credentials

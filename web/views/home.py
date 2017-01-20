@@ -1,5 +1,6 @@
 from view_imports import *
 import json
+import urllib2
 
 class MainPage(BaseHandler):
     def get(self):
@@ -46,6 +47,25 @@ class LogoutPage(BaseHandler):
             self.session['credentials'] = None
 
         self.redirect('/')
+
+class FeedbackPage(BaseHandler):
+    @check_credentials
+    def post(self):
+        profiles_service = get_service(self.session, 'profiles')
+        profile = profiles_service.getProfile().execute()
+
+        data = {
+            'note': self.request.get('feedback_desc'),
+            'user': profile['nickname']
+        }
+
+        req = urllib2.Request('https://feedback-dash.herokuapp.com/feedbacks')
+        req.add_header('Content-Type', 'application/json')
+
+        response = urllib2.urlopen(req, json.dumps(data))
+
+        self.session.add_flash('Your feedback is received. Thank you.')
+        self.redirect(self.request.referer)
 
 class UseInvitation(BaseHandler):
     @check_credentials

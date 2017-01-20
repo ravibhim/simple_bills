@@ -12,11 +12,11 @@ config['webapp2_extras.sessions'] = {
 }
 
 app = webapp2.WSGIApplication([
-  #('/test', TestPage),
   ('/', MainPage),
   ('/oauth2callback', OAuth2CallbackPage),
   ('/me', HomePage),
   ('/logout', LogoutPage),
+  ('/feedback', FeedbackPage),
   ('/create_account', CreateAccount),
   ('/account/([^/]*)?', AccountDetail),
   ('/account/(.*)?/settings', AccountSettings),
