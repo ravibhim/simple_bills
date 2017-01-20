@@ -896,7 +896,7 @@ main .container {
 }
 
 .feedback-btn {
-  position: absolute;
+  position: fixed;
   right: 2.2%;
   bottom: 0;
   color: #9b9b9b;
