@@ -137,7 +137,7 @@
                     <div class="search_box col s12" id="search_box">
                       <div id="month-selector-container">
                         <div class="col s1">
-                          <select class="browser-default" ng-change="updateCurrentYearAndMonthsData()" ng-model="currentYear" ng-options="year for year in getStatsYears()"></select>
+                          <select class="browser-default" ng-change="updateCurrentYearAndMonthsData(true)" ng-model="currentYear" ng-options="year for year in getStatsYears()"></select>
                         </div>
                         <div class="col s11">
                           <ul class="custom-tabs" ng-init="monthsData = selectedYearMonthsData()">

@@ -105,8 +105,20 @@ simpleBills.controller("SearchBillController", function($scope) {
     return $scope.allYearsStats()[$scope.currentYear];
   };
 
-  $scope.updateCurrentYearAndMonthsData = function() {
-    $scope.determineTheMonthToShow();
+  $scope.updateQueryParams = function() {
+    var params = "?year=" + $scope.currentYear + "&month=" + ($scope.currentMonth + 1);
+    SBUtils.updateQueryParams(params);
+  };
+
+  $scope.updateCurrentYearAndMonthsData = function(clearGetParams) {
+    if (clearGetParams) {
+      $scope.updateQueryParams();
+      $scope.setStartEndDates();
+      $scope.monthsData = $scope.selectedYearMonthsData();
+      $scope.fetchBills();
+    } else {
+      $scope.determineTheMonthToShow();
+    }
   };
 
   $scope.determineTheMonthToShow = function() {
@@ -133,6 +145,7 @@ simpleBills.controller("SearchBillController", function($scope) {
   $scope.updateCurrentMonth = function(month, disabled) {
     if(disabled) {} else {
       $scope.currentMonth = month;
+      $scope.updateQueryParams();
       $scope.setStartEndDates();
       $scope.currentMonthName = monthNames[month];
       $scope.fetchBills();
