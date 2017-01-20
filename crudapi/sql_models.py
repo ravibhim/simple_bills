@@ -315,6 +315,7 @@ class Bill(Base):
         return hashStringToArray(self.tagsHashString)
 
 listen(Bill, 'before_insert', save_date_fields)
+listen(Bill, 'before_update', save_date_fields)
 
 class BillFile(Base):
     __tablename__ = 'bill_files'
