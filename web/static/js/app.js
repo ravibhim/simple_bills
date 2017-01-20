@@ -101,35 +101,33 @@ simpleBills.controller("SearchBillController", function($scope) {
     $scope.search_end_date = [$scope.currentYear, ($scope.currentMonth + 1), endDay].join('-');
   };
 
-  $scope.setStartEndDates();
-
   $scope.selectedYearMonthsData = function() {
     return $scope.allYearsStats()[$scope.currentYear];
   };
 
   $scope.updateCurrentYearAndMonthsData = function() {
-    $scope.setStartEndDates();
-    $scope.monthsData = $scope.selectedYearMonthsData();
     $scope.determineTheMonthToShow();
-    $scope.fetchBills();
   };
 
   $scope.determineTheMonthToShow = function() {
+    // Read getParams and update the currentYear and currentMonth
+    var queryParams = SBUtils.getQueryParams(window.location.search);
+    $scope.currentYear = parseInt(queryParams.year) || $scope.currentYear;
+    $scope.currentMonth = (parseInt(queryParams.month) - 1) || $scope.currentMonth;
+
+    $scope.monthsData = $scope.selectedYearMonthsData();
+
     // select the months that has bills
     var data = _.filter($scope.monthsData, function(m) { return m.billCount > 0; });
+    var preSelectedMonth;
 
-    if (data.length > 0) {
-      var preSelectedMonth;
-      // If the selected year is the current year then pre-select the current month
-      if ($scope.currentYear == moment().year()) {
-        preSelectedMonth = moment().month();
-      } else {
-        // Pre-select the month based on the available data for that particular year
-        preSelectedMonth = moment().month(data[0].monthName).month();
-      }
-
-      $scope.updateCurrentMonth(preSelectedMonth, false);
+    if ($scope.monthsData[$scope.currentMonth].billCount > 0) {
+      preSelectedMonth = $scope.currentMonth;
+    } else {
+      preSelectedMonth = moment().month(data[0].monthName).month();
     }
+
+    $scope.updateCurrentMonth(preSelectedMonth, false);
   };
 
   $scope.updateCurrentMonth = function(month, disabled) {
@@ -187,13 +185,7 @@ simpleBills.controller("SearchBillController", function($scope) {
     return ret;
   };
 
-  // Read getParams and update the currentYear and currentMonth
-  var queryParams = SBUtils.getQueryParams(window.location.search);
-  $scope.currentYear = parseInt(queryParams.year) || $scope.currentYear;
-  $scope.currentMonth = (parseInt(queryParams.month) - 1) || $scope.currentMonth;
-
   // Invoke init methods manually for the first time
-  // $scope.fetchBills();
   $scope.updateCurrentYearAndMonthsData();
 });
 
