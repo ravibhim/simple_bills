@@ -64,8 +64,6 @@ class FeedbackPage(BaseHandler):
 
         response = urllib2.urlopen(req, json.dumps(data))
 
-        import pdb; pdb.set_trace()
-
         self.redirect(self.request.referer)
 
 class UseInvitation(BaseHandler):
