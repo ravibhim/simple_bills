@@ -195,11 +195,10 @@
                                         <td>#{bill.dateHuman}</td>
                                         <td>
                                           <span ng-repeat="file in bill.files">
-                                            <a class="bill-link" href="#{file.signed_url}" target="_blank">
+                                            <a class="bill-link" href="#{file.signed_url}" target="_blank" title="#{file.filename}">
                                               <div class="file_img">
                                                 <img alt="thumbnail" src="#{imageThumbnail(file)}"/>
                                               </div>
-                                              <p>#{file.filename}</p>
                                             </a>
                                           </span>
                                         </td>
