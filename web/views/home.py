@@ -64,6 +64,7 @@ class FeedbackPage(BaseHandler):
 
         response = urllib2.urlopen(req, json.dumps(data))
 
+        self.session.add_flash('Your feedback is received. Thank you.')
         self.redirect(self.request.referer)
 
 class UseInvitation(BaseHandler):
