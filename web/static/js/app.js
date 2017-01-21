@@ -133,10 +133,14 @@ simpleBills.controller("SearchBillController", function($scope) {
     var data = _.filter($scope.monthsData, function(m) { return m.billCount > 0; });
     var preSelectedMonth;
 
-    if ($scope.monthsData[$scope.currentMonth].billCount > 0) {
-      preSelectedMonth = $scope.currentMonth;
+    if (data.length > 0) {
+      if ($scope.monthsData[$scope.currentMonth].billCount > 0) {
+        preSelectedMonth = $scope.currentMonth;
+      } else {
+        preSelectedMonth = moment().month(data[0].monthName).month();
+      }
     } else {
-      preSelectedMonth = moment().month(data[0].monthName).month();
+      preSelectedMonth = moment().month();
     }
 
     $scope.updateCurrentMonth(preSelectedMonth, false);
