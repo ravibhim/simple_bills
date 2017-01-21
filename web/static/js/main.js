@@ -35,3 +35,13 @@ SBUtils.getQueryParams = function(queryString) {
 
   return params;
 };
+
+SBUtils.updateQueryParams = function(params) {
+  var newUrl = window.location.pathname + params;
+
+  window.history.replaceState(
+    {},
+    window.document.title,
+    params
+  );
+};
