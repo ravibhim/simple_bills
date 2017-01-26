@@ -11,7 +11,7 @@ $(document).ready(function() {
     inDuration: 300,
     outDuration: 225,
     constrain_width: false,
-    hover: true ,
+    hover: false ,
     gutter: 0,
     belowOrigin: true,
     alignment: 'right'
