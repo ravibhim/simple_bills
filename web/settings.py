@@ -1,6 +1,6 @@
 import os
 
-SUPPORTED_CURRENCIES = ['INR', 'USD']
+SUPPORTED_CURRENCIES = ['INR', 'USD', 'EUR', 'CAD', 'GBP', 'JPY']
 
 
 WEB_CLIENT_ID = os.environ['WEB_CLIENT_ID']
