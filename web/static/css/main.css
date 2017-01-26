@@ -292,7 +292,9 @@ a {
 .create_account_modal {
     margin-bottom: 0;
 }
-
+#create_account{
+  overflow-y: visible;
+}
 .account_each .helper-info {
     margin-bottom: 0;
 }
