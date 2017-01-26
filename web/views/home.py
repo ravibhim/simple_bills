@@ -43,7 +43,7 @@ class HomePage(BaseHandler):
 class LogoutPage(BaseHandler):
     def get(self):
         if is_user_logged_in(self):
-            revoke_access_token(self)
+            #revoke_access_token(self)
             self.session['credentials'] = None
 
         self.redirect('/')
