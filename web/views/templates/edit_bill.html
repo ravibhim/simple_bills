@@ -8,10 +8,10 @@
   <a href="/account/{{account_id}}?year={{bill.year}}&month={{bill.month}}">Back to Account</a>
   <div class="card row">
     <h4>Edit a Bill</h4>
-    <div>
+    <div ng-controller="EditBillController">
       <form action="/account/{{account_id}}/{{bill.billId}}/edit_bill" method="post" enctype='multipart/form-data'>
             <div class="input-field col s12">
-              <input id="bill_title" type="text" value="{{bill.title}}" name="bill_desc">
+              <input id="bill_title" type="text" ng-model="bill.title" value="{{bill.title}}" name="bill_desc">
               <label for="bill_title" class="active">Bill Title</label>
             </div>
             <div class="input-field col s6">
@@ -23,12 +23,12 @@
               <label class="bill_currency_label" for="bill_currency_code">Currency</label>
             </div>
             <div class="input-field col s6">
-              <input id="bill_amount" type="text" value="{{bill.amount}}" name="bill_amount">
+              <input id="bill_amount" type="text" value="{{bill.amount}}" ng-model="bill.amount" name="bill_amount">
               <label for="bill_amount" class="active">Bill Amount</label>
             </div>
-            <div class="input-field col s6">
-              <input id="bill_date" type="date" value="{{bill.date}}" name="bill_date">
-              <label for="bill_date" class="active">Bill Date</label>
+            <div class="col s4">
+              <label for="bill_date">Bill Date</label>
+              <input id="bill_date" type="date" value="{{bill.date}}" class="datepicker" ng-model="bill.date" name="bill_date">
             </div>
             <div class="input-field tags_container col s12">
               <h3 class="headline-sub">Tags</h3>
@@ -40,7 +40,7 @@
               {% endfor %}
             </div>
             <div class="col s12 ">
-              <button class="btn waves-effect waves-light right btn-update" type="submit" name="action">Update</button>
+              <button class="btn waves-effect waves-light right btn-update" ng-click="formValidator.submitForm($event)" type="button" name="action">Update</button>
               <div class="clearfix"></div>
             </div>
             <hr />
@@ -109,6 +109,10 @@
     </div>
   </div>
 </div>
-
-
+<script type="text/javascript">
+    var PageConfig = {
+        accountId: "{{account_id}}",
+        bill: {{bill_json|safe}}
+    };
+</script>
 {% endblock %}

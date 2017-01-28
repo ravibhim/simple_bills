@@ -54,26 +54,16 @@
                                 <label>Currency </label>
                             </div>
                             <div class="input-field col s6">
-                                <input id="bill_amount" type="text" ng-model="bill_amount" name="bill_amount">
+                                <input id="bill_amount" type="number" min="0.0" ng-model="bill_amount" name="bill_amount">
                                 <label for="bill_amount">Bill Amount</label>
                             </div>
 
                             <div class="col s12">
-                                <div class="bill_date col s6">
+                                <div class="bill_date col s4 ">
                                     <h3 class="headline-sub">Date</h3>
-                                    <input class="col s8 " id="bill_date" name="bill_date" type="text">
+                                    <input class="datepicker" ng-model="bill_date" name="bill_date" type="date">
                                 </div>
-                                <!-- date picker javascript -->
-                                <script type="text/javascript">
-                                    $(function() {
-                                      $('#bill_date').daterangepicker({
-                                          "singleDatePicker": true,
-                                          "startDate": new Date(),
-                                      });
-                                    });
-                                </script>
-                                <!-- *************************** -->
-                                <div class="col s4">
+                                <div class="col s5 offset-s2">
                                     <div class="file_input file-field input-field">
                                         <h3 class="headline-sub">Upload file</h3>
                                         <div class="btn add_file_btn">
@@ -191,7 +181,7 @@
                                     </tr>
                                     <tr ng-repeat="bill in bills">
                                         <td>#{bill.title}</td>
-                                        <td>#{bill.currency_code} #{bill.amount}</td>
+                                        <td>#{bill.currency_code} #{bill.amount|number:2}</td>
                                         <td>#{bill.dateHuman}</td>
                                         <td>
                                           <span ng-repeat="file in bill.files">
