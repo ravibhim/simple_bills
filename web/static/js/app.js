@@ -210,7 +210,15 @@ simpleBills.controller("AddBillController", function($scope) {
   $scope.accountId = PageConfig ? PageConfig.accountId : "";
 
   $scope.formValidator = new CustomFormValidator({
-    requiredFields: ['bill_desc', 'bill_amount']
+    requiredFields: ['bill_desc', 'bill_amount', 'bill_date']
+  });
+});
+
+simpleBills.controller("EditBillController", function($scope) {
+  $scope.bill = PageConfig ? PageConfig.bill : {};
+
+  $scope.formValidator = new CustomFormValidator({
+    requiredFields: ['bill.title', 'bill.amount', 'bill.date']
   });
 });
 

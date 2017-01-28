@@ -28,9 +28,12 @@ class CreateBill(BaseHandler):
         if isFileUploaded(self, 'filename'):
             body['staging_filepaths'] = [{'data': staging_filepath}]
         response = bills_service.createBill(body=body).execute()
+        bill_date = parser.parse(body['date'])
 
-        date = body['date'].split('/')
-        redirect_url = "/account/{0}?year={1}&month={2}".format(account_id, date[2], date[0])
+        redirect_url = "/account/{0}?year={1}&month={2}".format(
+            account_id, bill_date.year, bill_date.month
+        )
+
         self.redirect(redirect_url)
 
 class EditBill(BaseHandler):
@@ -50,6 +53,7 @@ class EditBill(BaseHandler):
             'account_id': account_id,
             'account_tags': stringMessagesToList(account_response.get('tags')),
             'bill': bill,
+            'bill_json': json.dumps(bill),
             'bill_tags': stringMessagesToList(bill.get('tags')),
             'supported_currencies': settings.SUPPORTED_CURRENCIES,
             'flash_msg': self.session.get_flashes()
