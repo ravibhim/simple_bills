@@ -6,7 +6,6 @@ import jinja2
 import os
 
 import settings
-import pprint
 from views.utils import *
 
 JINJA_ENVIRONMENT = jinja2.Environment(

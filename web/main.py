@@ -8,7 +8,7 @@ from views import *
 
 config = {}
 config['webapp2_extras.sessions'] = {
-    'secret_key': 'my-super-secret-key-foo',
+    'secret_key': os.environ['WEB_SESSION_SECRET'],
 }
 
 app = webapp2.WSGIApplication([

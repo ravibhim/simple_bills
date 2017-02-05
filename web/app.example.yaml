@@ -1,6 +1,6 @@
-application: simplebills-153311
+application:  # GCP project
 module: www
-version: www-alpha-009
+version: www-alpha-009 # Module Version
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -34,11 +34,11 @@ libraries:
   version: latest
 
 env_variables:
-  WEB_SESSION_SECRET: 'youcantfindmeinthedict' # Sessions secret
-  CRUDAPI_SERVER: 'http://localhost:8080'
+  WEB_SESSION_SECRET: '' # Sessions secret
+  CRUDAPI_SERVER: 'http://localhost:8080' # Backend API Server
   OAUTH_REDIRECT_PATH: '/oauth2callback'
-  API_ROOT_PATH: '/_ah/api'
-  FILE_BUCKET: 'simplebills-153311.appspot.com'
-  STAGING_FILE_BUCKET: 'staging.simplebills-153311.appspot.com'
-  WEB_CLIENT_ID: '108166075039-bm76la2ddhbbv775unf3qen60s6qqv4c.apps.googleusercontent.com'
-  WEB_CLIENT_SECRET: 'KOC1rulqiSyczakIrW3TZyCt'
+  API_ROOT_PATH: '/_ah/api' # Backedn API Root Path
+  FILE_BUCKET: '' # GCS Bucket to store assets.
+  STAGING_FILE_BUCKET: '' # GCS Bucket to stage assets.
+  WEB_CLIENT_ID: '' # OAuth Web Client ID
+  WEB_CLIENT_SECRET: '' # OAuth Web Client Secret

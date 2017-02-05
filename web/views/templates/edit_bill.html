@@ -56,7 +56,7 @@
                 <div class="file_img">
                   {% if file.file_type == 'application/pdf' %}
                     <img class="file_pdf"  src="/static/images/pdf256.png"/>
-                  {% elif file.file_type in ['image/png'] %}
+                  {% elif file.file_type in ['image/png', 'image/jpeg'] %}
                     <img src="{{file.thumbnail}}"/>
                   {% else %}
                     <img src="/static/images/file256.png"/>

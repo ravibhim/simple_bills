@@ -1,4 +1,4 @@
-application: simplebills-153311
+application: # GCP Project
 module: default
 version: alpha-007
 runtime: python27
@@ -25,11 +25,10 @@ libraries:
   version: "latest"
 
 env_variables:
-  WEB_CLIENT_ID: '108166075039-bm76la2ddhbbv775unf3qen60s6qqv4c.apps.googleusercontent.com'
-  WEB_CLIENT_SECRET: 'KOC1rulqiSyczakIrW3TZyCt'
-  FILE_BUCKET: 'simplebills-153311.appspot.com'
-  STAGING_FILE_BUCKET: 'staging.simplebills-153311.appspot.com'
+  WEB_CLIENT_ID: '' # Web client ID that can connect to this endpoints application.
+  FILE_BUCKET: '' # GCS bucket to store the assets
+  STAGING_FILE_BUCKET: '' # GCS bucket to stage assets.
   SQLALCHEMY_DATABASE_URI: 'mysql+pymysql://root:@127.0.0.1:3306/simple_bills?charset=utf8'
   WEB_SERVER: 'http://localhost:8081/'
-  ADMIN: 'swetha.bcode@gmail.com'
+  ADMIN: '' # Admins email
 

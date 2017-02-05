@@ -126,7 +126,7 @@ class RemoveFileFromBill(BaseHandler):
 
         self.redirect('/account/' + account_id + '/' + bill_id + '/edit_bill')
 
-# TODO: Secure this web endpoint.
+# TODO: Make this endpoint only callable from app engine.
 class DetectBillFileType(BaseHandler):
     def get(self, account_id, bill_id, billfile_id):
         bills_service = get_service(self.session, 'bills', False)
