@@ -67,10 +67,10 @@ simpleBills.controller("SearchBillController", function($scope) {
         thumbUrl = file.thumbnail;
         break;
       case "image/jpg":
-        thumbnail = file.thumbnail;
+        thumbUrl = file.thumbnail;
         break;
       case "image/jpeg":
-        thumbnail = file.thumbnail;
+        thumbUrl = file.thumbnail;
         break;
 
     }
