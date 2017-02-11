@@ -4,11 +4,11 @@ Simple Bills is a easy to use application to to file and archive bills digitally
 
 ## Architecture
 
-![Architecture](arch.png)
+![Architecture](simplebills_architecture.png)
 
 We’ve taken the traditional backend and frontend approach to build Simple Bills. The backend houses all the business logic and uses a MySQL database for persistence and exposes the JSON APIs via Google Cloud Endpoints. The frontends use the APIs and implement their respective presentation logic. Currently, we’ve only build the web frontend.
 
-We’ve implemented the frontend and backend as two AppEngine python modules - `default/crudapi` and `www`. 
+We’ve implemented the frontend and backend as two AppEngine python modules - `default/crudapi` and `www`.
 
 ## Developer Notes
 
@@ -65,4 +65,3 @@ To run migrations in AppEngine
 * Build an iOS application.
 
 * Build an Android application.
-
